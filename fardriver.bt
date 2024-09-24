@@ -577,7 +577,8 @@ struct {
             ubyte WheelWidth;
             ushort RateRatio;
             // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
-            ushort OneCommCfg;
+            ubyte OneCommCfg;
+            ubyte SpecialFrame; // ESQH
             type = Str("0xD0");
         }
         if (lut == 0xD6) {

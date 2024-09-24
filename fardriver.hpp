@@ -113,28 +113,58 @@ struct FardriverData {
 
 // 0x06
     // 2
-    uint8_t PulseFD : 2;
+    uint8_t Arg2 : 1;
+    enum class EAntiTheftPulse {
+        Invalid = 0,
+        Type1 = 1,
+        Type2 = 2,
+        Type3 = 3
+    } AntiTheftPulse : 2; // PulseFD
+    uint8_t unk02a : 1;
     uint8_t Protocol485 : 4;
-    uint8_t unk : 2;
 
     uint8_t MorseCode;
     uint8_t SpeedKI;
     uint8_t SppedKP;
     uint8_t ThrottleLow; // / 20
     uint8_t ThrottleHigh; // / 20
+
+    // 8-9
     int16_t FAIF;
+
+    // 10-11
     int16_t CurveTime;
     
-    // 11
-    uint8_t BrakeConfig : 4;
-    uint8_t NTC_PTC : 3; // Send(0x11, 0x01)
-    uint8_t unk0A : 1;
+    // 12 cfg11l
+    enum class EBrakeConfig {
+        StopWhenGround = 0,
+        StopWhenFloat = 1,
+        P_StopGnd = 2,
+        P_StopFloat = 3,
+        Disabled = 4
+    } BrakeConfig : 4;
+    enum class ETempSensor {
+        None = 0,
+        PTC = 1,
+        NTC230K = 2,
+        KTY84_130 = 3,
+        CACU = 4,
+        KTY83_122 = 5,
+        NTC10K = 6,
+        NTC100K = 7
+    } TempSensor : 3; // NTC_PTC, Send(0x11, 0x01)
+    uint8_t PhaseExchange : 1;
 
-    // 12
-    uint8_t unk0B : 3;
-    uint8_t PC13Config : 1;
-    uint8_t CurrConfig : 1;
-    uint8_t ParkConfig : 2;
+    // 13 cfg11h
+    uint8_t SlowDown : 3;
+    uint8_t PC13Config : 1; // RaceResponse
+    uint8_t CurrAntiTheft : 1; // CurrFD Valid = 1
+    enum class EParkConfig {
+        ReversePark = 0,
+        SwitchPark = 1,
+        SlowDownPark = 2,
+        Disabled = 3
+    } ParkConfig : 2;
     uint8_t Direction : 1; // Send(0x12, 0x07)
 
 // 0x0C
@@ -158,16 +188,49 @@ struct FardriverData {
     uint16_t RatedVoltage; // / 10, Send(0x12, 0x04)
 
 // 0x18
+    // 2-3
     uint16_t RatedSpeed; // Send(0x12, 0x05)
+
+    // 4-5
     uint16_t MaxLineCurr; // / 4, Send(0x12, 0x1B)
-    uint8_t FollowConfig : 2;
-    uint8_t ECOConfig : 2;
+
+    // 6 cfg26l
+    enum class EFollowConfig {
+        FollowEnabled = 0,
+        Disabled = 1,
+        EABSWhenBreakValid = 2,
+        EABSWhenReleaseThrottle = 3
+    } FollowConfig : 2;
+    enum class EThrottleResponse {
+        Line = 0,
+        Sport = 1,
+        ECO = 2
+    } ThrottleResponse : 2; // ECOConfig
     uint8_t WeakA : 2;
-    uint8_t unk1Aa : 2;
+    enum class ERXD {
+        AF = 0,
+        OD = 1,
+        PP = 2
+    } RXD : 2;
+
+    // 7 cfg26h
     uint8_t SpeedPulse : 5;
-    uint8_t GearConfig : 3;
+    enum class EGearConfig {
+        DefaultN = 0
+        DefaultD = 1,
+        Disabled = 2,
+        DefaultAntiTheft = 3, // DefaultLow in old
+        DefaultButtonHigh = 4,
+        DefaultButtonMiddle = 5
+    } GearConfig : 3;
+
+    // 8-9
     uint16_t LQ;
+
+    // 10-11
     uint16_t BattRatedCap;
+
+    // 12-13
     uint16_t IntRes; // Send(0x0F, 0x08)
 
 // 0x1E
@@ -176,19 +239,24 @@ struct FardriverData {
     // local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
     char CustomCode[2];
 
-    // 8-9
-    // uint16_t RelayDelay;
+    // 8
+    // uint16_t RelayDelay; // ms
     uint8_t BCState : 1;
-    uint8_t Zuotong : 1;
-    uint8_t PGear : 1;
-    uint8_t AutoBackPStat : 1;
-    uint8_t XHStat : 1;
-    uint8_t unk21a : 1;
-    uint8_t TuixingS : 1;
-    uint8_t unk21b : 3;
-    uint8_t GearRemeberS : 1;
+    uint8_t SeatEnable : 1; // Zuotong
+    uint8_t PEnable : 1; // PGear
+    uint8_t AutoBackPEnable : 1; // AutoBackPStat
+    uint8_t CruiseEnable : 1; // XHStat
+    uint8_t EABSEnable : 1;
+    uint8_t PushEnable : 1; // TuixingS
+    uint8_t ForseAntiTheft : 1;
+
+    // 9
+    uint8_t OverSpeedAlarm : 1;
+    uint8_t BrakeStillPark : 1; // ParkDisableBrake
+    uint8_t RememberGear : 1; // GearRememberS
     uint8_t unk21c : 3;
-    uint8_t REGear : 1;
+    uint8_t BackEnable : 1; // REGear
+    uint8_t RelayDelay1S : 1;
 
     uint8_t ModelYear; // + 2000
     uint8_t ModelMonth;
@@ -297,9 +365,28 @@ struct FardriverData {
     uint16_t unk7B;
 
 // 0x7C
-    int8_t unk7Ca; // config_word0
-    int8_t unk7Cb; // config_word1
-    uint TotalTime; // minutes, infoc0
+    // 2 config_word0
+    uint8_t unk7Ca : 1;
+    uint8_t WeakTime : 3;
+    uint8_t unk7Cb : 1;
+    uint8_t QuickDown : 3;
+
+    // 3 config_word1
+    // SpeedMeterConfig has a weird configuration that looks at the 3 variables & computes them to an enum
+    // 0 Pulse none
+    // 1 Analog: 1 & 3
+    // 2 IsolatedPulse: 1 & 2
+    uint8_t SpeedMeterConfig1 : 1; // Pulse
+    uint8_t SpeedMeterConfig2 : 1; // IsolatedPulse
+    uint8_t FastRE : 1;
+    uint8_t SpecialWeak : 1; // DeepWeak Special
+    uint8_t ZeroSwitch : 1; // SpeedSwitch Valid
+    uint8_t unk7Cc;
+    uint8_t MOE : 1;
+    uint8_t SpeedMeterConfig3 : 1; // Analog
+
+    // 4
+    uint TotalTime; // minutes, infoc0, wktime
     uint infoc1;
     uint16_t DistanceH; // this << 16 / 10, km
            
@@ -369,11 +456,13 @@ struct FardriverData {
 
     // AlarmRecord
     // 6
-    uint8_t AN : 4; // 9C
-    uint8_t AlarmRecord_1 : 4;
+    uint8_t AN : 4; // 9C, cfg156l
+    uint8_t AlarmRecord_1 : 1;
+    uint8_t RelayOut : 1; 
+    uint8_t EmptySpeed : 2;
     
     // 7
-    uint8_t LM : 5;
+    uint8_t LM : 5; // cfg156h
     uint8_t unk9Db : 3;
 
     int16_t InitVol; // 9D
@@ -415,32 +504,70 @@ struct FardriverData {
     uint8_t OneCommSec_7;
 
 // 0xB8
-    uint16_t OneCommPos;
+    // 2-3 B8
+    // uint16_t OneCommPos; 
+    uint8_t PPosition : 4;
+    uint8_t BCPosition : 4;
+    uint8_t HBarPosition : 4;
+    uint8_t FDPosition : 4;
+    // 4-5 B9
     uint16_t unkB9;
-    uint16_t OneCommPS; 
+    // 6-7 BA
+    // uint16_t OneCommPS; 
+    uint8_t Pulse;
+    uint8_t SQH;
+    // 8-9 BB
     uint16_t OnelineCurrCoeff;
-    uint16_t GPara0; // NewBlueKey @ arg[11] & 128
+    // 10-11 GPara0, BC
+    uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
+    uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
+    enum class ECANBaud {
+        Baud250K = 0,
+        Baud500K = 1,
+        Baud1M = 2
+    } CANBaud : 4; // CanSel
+    enum class EPasswordStatus {
+        PasswordProtected = 0,
+        AlsoPasswordProtected = 1,
+        NoPassword = 2
+    } PasswordStatus : 2;
+    // 12
     uint8_t Stage1Soc;
+    // 13
     uint8_t Stage2Soc; // paracnt_3 : 4
 
 // 0xBE
-    uint8_t cfg190l;
+    enum class ELowVolWay {
+        Vol2V = 0,
+        Vol4V = 1,
+        Vol8V = 2,
+        Vol12V = 3,
+        Vol16V = 4,
+        Soc5Perc = 5,
+        Soc6Perc = 6,
+        Soc7Perc = 7,
+        Soc8Perc = 8,
+        Soc9Perc = 9,
+        Soc10Perc = 10,
+        SOP = 11,
+        Other = 12
+    } LowVolWay; // cfg190l, CurrLimitWay
 
     // 3, cfg190h
     uint8_t unkBEb : 4; 
     uint8_t AccCoeff : 4; 
 
-    uint16_t BstTime;
-    uint16_t BstRelease;
-    uint16_t ParkTime;
+    uint16_t BstTime; // / 500, seconds
+    uint16_t BstRelease; // / 500, seconds
+    uint16_t ParkTime; // / 500, seconds
     uint16_t InverseTime;
     uint16_t TorqueCoff;
 
 // 0xC4
-    uint16_t LearnVol;
-    uint16_t LearnVoh;
-    uint16_t ParkDiff; 
-    uint16_t IsInStart;
+    uint16_t LearnVolLow; // LearnVol
+    uint16_t LearnVolHigh; // LearnVoh
+    uint16_t SlowDownRpm; // ParkDiff
+    uint16_t StartIs; // IsInStart
     uint16_t ThrottleInsert; // & 0x20 TCS
     uint8_t ExitFollowSpeed;
     uint8_t ReCurrRatio;
@@ -449,7 +576,15 @@ struct FardriverData {
     uint8_t AngleLearn;
     uint8_t SpdLmt_sel : 4;
     uint8_t OneKey_sel : 4;
-    uint8_t NoCanCnt;
+    uint8_t NoCanCnt; // CAN Detect, ms, if >= 6 then * 2 else * 500
+
+    uint16_t GetCanDetectMS() {
+        if (NoCanCnt >= 6) {
+            return NoCanCnt * 2;
+        } else {
+            return NoCanCnt * 500;
+        }
+    }
     
     // uint8_t TaRlB9D0SP; 
     enum class ESPMode {    
@@ -480,11 +615,20 @@ struct FardriverData {
     uint8_t SpeedLimitByCap;
     uint8_t MinSpeedCapCoeff;
     uint8_t ParkCoeff : 4;
-    uint8_t BatSel : 4;
+    enum class EBattSignal {
+        OneLineComm = 0,
+        SerialComm = 1,
+        CAN = 2,
+        LithiumBattery = 3,
+        LeadAcidBattery = 4,
+        LFPBattery = 5
+    } BattSignal : 4; // BatSel
     uint16_t ReIsinAcc;
 
 // 0xD0
-    uint16_t OneCommHead;
+    // uint16_t OneCommHead;
+    uint8_t Data0;
+    uint8_t Data1;
     uint8_t BMQHALL;
     uint8_t AVGPower; // * 4, Wh/km, DataVoltage1
     uint8_t WheelRatio;
@@ -493,7 +637,21 @@ struct FardriverData {
     uint8_t WheelWidth;
     uint16_t RateRatio; // SpeedRatio
     // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
-    uint16_t OneCommCfg;
+    // uint16_t OneCommCfg
+    enum class EIdle {
+        Idle0_5ms = 0,
+        Idle0_9ms = 1,
+        Idle1_5ms = 2,
+        Idle1_9ms = 3
+    } Idle : 2;
+    enum class EStop {
+        Stop24ms = 0,
+        Stop55ms = 1,
+        Stop124ms = 2,
+        Stop216ms = 3
+    } Stop : 2;
+    uint8_t ByteOption : 4; // Byte89Sel
+    uint8_t SpecialFrame; // ESQH
 
 // 0xD6
     int16_t unkD6;
@@ -698,7 +856,7 @@ static_assert(offsetof(FardriverData, nratio_16) == (0x9A << 1));
 static_assert(offsetof(FardriverData, unkA0) == (0xA0 << 1));
 static_assert(offsetof(FardriverData, unkAC) == (0xAC << 1));
 static_assert(offsetof(FardriverData, unkB2) == (0xB2 << 1));
-static_assert(offsetof(FardriverData, OneCommPos) == (0xB8 << 1));
+// static_assert(offsetof(FardriverData, OneCommPos) == (0xB8 << 1));
 static_assert(offsetof(FardriverData, unkD6) == (0xD6 << 1));
 static_assert(offsetof(FardriverData, unkDC) == (0xDC << 1));
 static_assert(offsetof(FardriverData, speed) == (0xE5 << 1));
