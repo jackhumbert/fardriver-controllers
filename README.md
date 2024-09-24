@@ -2,7 +2,7 @@
 
 ## Serial Protocol
 
-You can interact with Fardriver controllers on a computer using the serial port (red 2x2 connector) with a RS232-USB adapter, provided you don't connect the 5V line (so only TX, RX & GND are connected), and your adapter uses 3.3V logic. [Termite](https://www.compuphase.com/software_termite.htm) works well to interact with the controller, as long as you have enabled the `Hex View` plugin under settings.
+You can interact with Fardriver controllers on a computer using the serial port (2x2 connector) with a RS232-USB adapter, provided you don't connect the 5V line (so only TX, RX & GND are connected), and your adapter uses 3.3V logic. [Termite](https://www.compuphase.com/software_termite.htm) works well to interact with the controller, as long as you have enabled the `Hex View` plugin under settings.
 
 Little-endian, unless otherwise specified.
 
