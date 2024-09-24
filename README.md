@@ -27,7 +27,7 @@ struct {
 };
 ```
 
-The `crc` values are calculated like with two tables, available in [fardriver.hpp](/fardriver.hpp), where `length` is the length of the entire message (`16` in the above scenario):
+The `crc` values are calculated with two tables, available in [fardriver.hpp](/fardriver.hpp), where `length` is the length of the entire message (`16` in the above scenario):
 
 ```cpp
 void ComputeCRC(uint8_t * data, uint16_t length) {
