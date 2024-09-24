@@ -1,1 +1,140 @@
-# fardriver-controllers
+# Nanjing Fardriver Controllers
+
+## Serial Protocol
+
+You can interact with Fardriver controllers on a computer using the serial port (red 2x2 connector) with a RS232-USB adapter, provided you don't connect the 5V line (so only TX, RX & GND are connected), and your adapter uses 3.3V logic. [Termite](https://www.compuphase.com/software_termite.htm) works well to interact with the controller, as long as you have enabled the `Hex View` plugin under settings.
+
+Little-endian, unless otherwise specified.
+
+### Receiving messages
+
+Status messages sent by the controller are usually 16 bytes in length. They rotate through nearly all of the internal memory addresses, with more important sections being repeated throughout, every 3-4 normal messages. If you plugin your controller to your computer after initializing it via a Bluetooth adapter, you should see these. Otherwise, you'll need to send some of the commands mentioned later on.
+
+```cpp
+struct {
+    // B0
+    uint8_t magic = 0xAA; // 170
+
+    // B1
+    uint8_t id : 6; // less than 0x37 when receiving updates
+    uint8_t flags : 2; // generally set to 2 when receiving
+
+    // B2-13
+    uint8_t data[12];
+
+    // B14-15
+    uint8_t crc[2];
+};
+```
+
+The `crc` values are calculated like with two tables, available in [fardriver.hpp](/fardriver.hpp), where `length` is the length of the entire message (`16` in the above scenario):
+
+```cpp
+void ComputeCRC(uint8_t * data, uint16_t length) {
+    uint8_t a = 0x3C; // 60
+    uint8_t b = 0x7F; // 127
+    uint8_t pos;
+    for (pos = 0; pos < length - 2; ++pos) {
+        auto i = a ^ data[pos];
+        a = b ^ crcTableHi[i];
+        b = crcTableLo[i];
+    }
+    data[length - 2] = a;
+    data[length - 1] = b;
+}
+```
+
+If `id` is less than `0x37` (`55`), it can be used to lookup the address of the data:
+
+```cpp
+const uint8_t flash_read_addr[55] = {
+  0xE2, 0xE8, 0xEE, 0x00, 0x06, 0x0C, 0x12, 
+  0xE2, 0xE8, 0xEE, 0x18, 0x1E, 0x24, 0x2A, 
+  0xE2, 0xE8, 0xEE, 0x30, 0x5D, 0x63, 0x69, 
+  0xE2, 0xE8, 0xEE, 0x7C, 0x82, 0x88, 0x8E, 
+  0xE2, 0xE8, 0xEE, 0x94, 0x9A, 0xA0, 0xA6, 
+  0xE2, 0xE8, 0xEE, 0xAC, 0xB2, 0xB8, 0xBE, 
+  0xE2, 0xE8, 0xEE, 0xC4, 0xCA, 0xD0,
+  0xE2, 0xE8, 0xEE, 0xD6, 0xDC, 0xF4, 0xFA
+};
+```
+
+Each address stores 16bits. The addresses range from `0x00` to `0xFA`, and the data structs can be referenced in [the `FardriverData` struct in fardriver.hpp](/fardriver.hpp).
+
+When `id` is equal to `0x37` (`55`), a data gathering format is used (unknown at the moment).
+
+You can use [010 Editor](https://www.sweetscape.com/010editor/) with [fardriver.bt](/fardriver.bt) and a dump of the received data to interactively explore the structures (there are some small differences between the .hpp & .bt structs and names).
+
+### Writing addresses directly
+
+This is the "new" way the apps interact with the controller, and allows for variable packet sizes, but most that are sent are 8 bytes total.
+
+```cpp
+struct {
+    // B0
+    uint8_t magic = 0xAA; // 170
+
+    // B1
+    uint8_t compute_length : 6; // length of entire message minus 2 for crc
+    uint8_t flags : 2; // set to 1 for writing addresses
+
+    // B2-3
+    uint8_t addr;
+    uint8_t addr_confirm;
+
+    // B4...
+    uint8_t data[compute_length - 4]; // usually 2 bytes
+
+    // Last two bytes
+    uint8_t crc[2];
+};
+```
+
+The CRC is calculated and assigned to the last two bytes using the `ComputeCRC` method mentioned earlier, passing in `8` for the length, instead of `16`. 
+
+### Sending commands
+
+These are less commonly used, mainly with "old" configs. Commands are sent in 8 byte packets with the following format:
+
+```cpp
+struct {
+    uint8_t magic = 0xAA; // 170
+    uint8_t command;
+    uint8_t command_comp; // ~command
+    uint8_t sub_command;
+    uint8_t value_1;
+    uint8_t value_2;
+    uint8_t crc; // magic + command + command_comp + sub_command + value_1 + value_2
+    uint8_t crc_comp; // ~crc
+};
+```
+
+CRCs are computed differently than the other messages
+
+Some valid `command` values I've seen - children to each list item are `sub_command` values:
+
+* `0x03`
+* `0x04` balance, BMS, shutdown
+    * `0x02` system shutdown, non-following status
+    * `0x6F` related to starting/stopping balance and MOS charging/discharging
+* `0x05` sent after updating date & time
+* `0x07` starts the gathering of data and returns 300 frames of recent data logging?
+* `0x08`
+* `0x09` sets the CAN number
+* `0x0A`
+* `0x0B`
+* `0x0C`
+* `0x0D`
+* `0x0E`
+* `0x0F`
+* `0x10`
+* `0x11` may be used to update params
+* `0x12` updates params
+* `0x13` interacts with the login/binding system, can set password, phone number
+    * `0x07` seems to be related to the login/status update system, any values seem to start status updates for a little while
+    * `0x08` seems to be sent on serial connection close
+    * `0x10`-`0x13` are related to updating the password
+    * `0x14`-`0x24` are related to updating the phone number
+* `0x14` sets the date
+* `0x15` sets the time
+* `0x17`

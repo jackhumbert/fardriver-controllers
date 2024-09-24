@@ -1,0 +1,807 @@
+//------------------------------------------------
+//--- 010 Editor v15.0 Binary Template
+//
+//      File: fardriver.bt
+//   Authors: Jack Humbert
+//   Version: 1.0.0
+//   Purpose: Decoding Fardriver serial data
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local ubyte FlashReadAddr[55] = {
+0xE2, 0xE8, 0xEE, 0x00, 0x06, 0x0C, 0x12, 
+0xE2, 0xE8, 0xEE, 0x18, 0x1E, 0x24, 0x2A, 
+0xE2, 0xE8, 0xEE, 0x30, 0x5D, 0x63, 0x69, 
+0xE2, 0xE8, 0xEE, 0x7C, 0x82, 0x88, 0x8E, 
+0xE2, 0xE8, 0xEE, 0x94, 0x9A, 0xA0, 0xA6, 
+0xE2, 0xE8, 0xEE, 0xAC, 0xB2, 0xB8, 0xBE, 
+0xE2, 0xE8, 0xEE, 0xC4, 0xCA, 0xD0,
+0xE2, 0xE8, 0xEE, 0xD6, 0xDC, 0xF4, 0xFA
+};
+
+// Name[invpintable[id]]
+
+local ubyte invpintable[16] = {
+    0,  // NC
+    10, // PIN24
+    7,  // PIN15
+    3,  // PIN5
+    8,  // PIN17
+    6,  // PIN14
+    2,  // PIN3
+    4,  // PIN8
+    12, // PB4
+    13, // Invalid
+    1,  // PIN2
+    9,  // PIN18
+    5,  // PIN9
+    11, // PD1
+    13, // Invalid
+    13  // Invalid
+};
+
+// local string PINName[16] = {
+//     "0-NC",
+//     "1-PIN2",
+//     "2-PIN3",
+//     "3-PIN5",
+//     "4-PIN8",
+//     "5-PIN9",
+//     "6-PIN14",
+//     "7-PIN15",
+//     "8-PIN17",
+//     "9-PIN18",
+//     "10-PIN24",
+//     "11-PD1",
+//     "12-PB4",
+//     "13-Invalid",
+//     "14-Invalid",
+//     "15-Invalid"
+// };
+
+local ubyte seltable[16] = { 
+    0, 10, 6, 3, 7, 12, 5, 2, 4, 11, 1, 13, 8, 15, 15, 15
+};
+// 0-NC    0
+// 1-PIN2  10
+// 2-PIN3  6
+// 3-PIN5  3
+// 4-PIN8  7
+// 5-PIN9  12
+// 6-PIN14 5
+// 7-PIN15 2
+// 8-PIN17 4
+// 9-PIN18 11
+// 10-PIN24    1
+// 11-PD1  13
+// 12-PB4  8
+// 13-Invalid  15
+
+local ubyte crcTableLo[256] = {
+    0, 192, 193, 1, 195, 3, 2, 194, 198, 6, 7, 199, 5, 197, 196, 4, 204, 12, 13, 205, 15, 207, 206, 14, 10, 202, 203, 11, 201, 9, 8, 200, 216, 24, 25, 217, 27, 219, 218, 26, 30, 222, 223, 31, 221, 29, 28, 220, 20, 212, 213, 21, 215, 23, 22, 214, 210, 18, 19, 211, 17, 209, 208, 16, 240, 48, 49, 241, 51, 243, 242, 50, 54, 246, 247, 55, 245, 53, 52, 244, 60, 252, 253, 61, 255, 63, 62, 254, 250, 58, 59, 251, 57, 249, 248, 56, 40, 232, 233, 41, 235, 43, 42, 234, 238, 46, 47, 239, 45, 237, 236, 44, 228, 36, 37, 229, 39, 231, 230, 38, 34, 226, 227, 35, 225, 33, 32, 224, 160, 96, 97, 161, 99, 163, 162, 98, 102, 166, 167, 103, 165, 101, 100, 164, 108, 172, 173, 109, 175, 111, 110, 174, 170, 106, 107, 171, 105, 169, 168, 104, 120, 184, 185, 121, 187, 123, 122, 186, 190, 126, 127, 191, 125, 189, 188, 124, 180, 116, 117, 181, 119, 183, 182, 118, 114, 178, 179, 115, 177, 113, 112, 176, 80, 144, 145, 81, 147, 83, 82, 146, 150, 86, 87, 151, 85, 149, 148, 84, 156, 92, 93, 157, 95, 159, 158, 94, 90, 154, 155, 91, 153, 89, 88, 152, 136, 72, 73, 137, 75, 139, 138, 74, 78, 142, 143, 79, 141, 77, 76, 140, 68, 132, 133, 69, 135, 71, 70, 134, 130, 66, 67, 131, 65, 129, 128, 64
+};
+local ubyte crcTableHi[256] = {
+    0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+};
+
+ushort CalculateCRC(ubyte data[], ubyte len) {
+    local ubyte num1 = 0x3C; // 60
+    local ubyte num2 = 0x7F; // 127
+    local ubyte index;
+    local ubyte crc_i;
+    for (index = 0; index < len; ++index) {
+        crc_i = num1 ^ data[index];
+        num1 = num2 ^ crcTableHi[crc_i];
+        num2 = crcTableLo[crc_i];
+    }
+    return num1 | (((ushort)num2 << 8) & 0xFF00);
+}
+
+ushort CalculateOldCRC(ubyte data[]) {
+    local ubyte crc = data[0] + data[1] + data[2] + data[3] + data[4] + data[5];
+    return crc | ((ushort)~crc) << 8;
+}
+
+local uint64 packet_start = FTell();
+
+struct {
+    BitfieldDisablePadding();
+    local uint64 start = FTell();
+    ubyte aa;
+    ubyte id : 6;
+    ubyte flags : 2;
+    //local ubyte flag = data[1] & 0xC0;
+    //local ubyte id = 0;
+    local string type = "";
+    if (flags == 2) {
+        if (id < 0x37) {
+        local ubyte lut = FlashReadAddr[id];
+        
+        if (lut == 0xE2) { // repeated often
+            // 2
+            ubyte Gear : 2;
+            ubyte XSControl : 2;
+			ubyte Reversing : 1;
+			ubyte RollingV : 1;
+            ubyte pad1 : 1;
+            ubyte compPhoneOK : 1;
+            
+            // 3
+            ubyte pad2 : 3;
+            ubyte passOK : 2;
+            ubyte Bmq_Hall : 1;
+            ubyte pad3 : 1;
+            ubyte function_state128 : 1;
+            
+            // 4
+            ubyte motor_hall_error : 1;
+            ubyte throttle_error : 1;
+            ubyte current_protect_restart : 1;
+            ubyte phase_current_surge_protect : 1;
+            ubyte voltage_protect : 1;
+            ubyte alarm_protect : 1;
+            ubyte motor_temp_protect : 1;
+            ubyte controller_temp_protect : 1;
+            
+            // 5
+            ubyte phase_current_overflow_protect : 1;
+            ubyte phase_zero_error : 1;
+            ubyte phase_short_protect : 1;
+            ubyte line_current_zero_error : 1;
+            ubyte mosfet_high_side_error : 1;
+            ubyte mosfet_low_side_error : 1;
+            ubyte moe_current_protect : 1;
+            ubyte brake : 1;
+            
+            ubyte ModulationRatio <read=Str("%0.2f", this / 128.0)>;
+            ubyte pad;
+            
+            short speed <read=Str("%d RPM", this)>;
+            short unk1;
+            short unk2;
+            ushort crc;
+            
+            type = Str("  E2 G: %d, XSC: %d, V: %d, RE: %d, Mod: %0.1f, Spd: %d, Unk: %d, %d, Pad: %d, %d, %d", Gear, XSControl, RollingV, Reversing, ModulationRatio / 128.0, speed, unk1, unk2, pad1, pad2, pad3);
+        }
+        if (lut == 0xE8) { // repeated often
+            short Voltage <read=Str("%0.1fV", this / 10.0)>; 
+            short per_mille <read=Str("%0.1f", this * 3.3 * 1.5 / 4096.0)>;
+            short LineCurrent <read=Str("%0.1fA", this / 4.0)>; // / 4   
+            local short InPower = Voltage * LineCurrent;
+            short unk;
+            short unk; // something throttle?
+            short ThrottleDepth;
+            ushort crc;
+            type = Str("  E8 Batt: %0.1fV %0.1f%%, Line: %0.2fA", Voltage / 10.0, per_mille / 10.0, LineCurrent / 4.0);
+        }
+        if (lut == 0xEE) { // repeated often
+            short unk; // 2-3
+            short unk; // 4-5
+            BigEndian();
+            int PhaseACurr : 24 <read=Str("%0.1fA", 125.0 / 64.0 * Sqrt(this))>;
+            int PhaseCCurr : 24  <read=Str("%0.1fA", 125.0 / 64.0 * Sqrt(this))>;
+            LittleEndian();
+            short volts; // maybe
+            ushort crc;
+            type = Str("  EE Motor phases: %0.2f, %0.2f, %0.1fV", 1.953125 * Sqrt((double)PhaseACurr),  1.953125 * Sqrt((double)PhaseCCurr), volts / 10.0);
+        }
+        
+        // less freq updates
+        
+        if (lut == 0x00) {
+            short VolCoeff;
+            short Voltage2Coeff;
+            short PhaseACoeff;
+            short LineCoeff;
+            short PhaseCCoeff;
+            short SaveNum;
+            type = "0x00";
+        }
+        if (lut == 0x06) {
+            // 2
+            ubyte PulseFD : 2;
+            ubyte Protocol485 : 4;
+            ubyte unk : 2;
+
+            ubyte MorseCode;
+            ubyte SpeedKI;
+            ubyte SppedKP;
+            ubyte ThrottleLow <read=Str("%0.2fV", this / 20.0)>; // / 20
+            ubyte ThrottleHigh <read=Str("%0.2fV", this / 20.0)>; // / 20
+            short FAIF;
+            short CurveTime;
+            
+            // 11
+            ubyte BrakeConfig : 4;
+            ubyte NTC_PTC : 3;
+            ubyte unk : 1;
+
+            // 12
+            ubyte unk : 3;
+            ubyte PC13Config ; 1;
+            ubyte CurrConfig ; 1;
+            ubyte ParkConfig : 2;
+            ubyte Direction : 1;
+
+            type = "0x06";
+        }
+        if (lut == 0x0C) {
+            short PhaseOffset <read=Str("%0.1fdeg", this / 10.0)>;
+            short ZeroBattCoeff;
+            short FullBattCoeff;
+            ubyte StartKI;
+            ubyte MidKI;
+            ubyte MaxKI;
+            ubyte StartKP;
+            ubyte MidKP;
+            ubyte MaxKP;
+            type = Str("0x0C");    
+        }
+        if (lut == 0x12) {
+            short LD;
+            ushort AlarmDelay;
+            ubyte PolePairs;
+            ubyte unk;
+            ushort MaxSpeed;
+            ushort RatedPower;
+            ushort RatedVoltage <read=Str("%0.1fV", this / 10.0)>;
+            type = Str("0x12");
+        }
+        if (lut == 0x18) {
+            ushort RatedSpeed;
+            ushort MaxLineCurr <read=Str("%0.1fA", this / 4.0)>;
+            ubyte FollowConfig : 2;
+            ubyte ECOConfig : 2;
+            ubyte WeakA : 2;
+            ubyte unk : 2;
+            ubyte SpeedPulse : 5;
+            ubyte GearConfig : 3;
+            ushort LQ;
+            ushort BattRatedCap;
+            ushort IntRes;
+            type = Str("0x18");
+        }
+        if (lut == 0x1E) {
+            ushort FwReRatio;
+            ushort LowVolProtect <read=Str("%0.1fV", this / 10.0)>;
+            local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
+            char CustomCode[2];
+
+            // 8-9
+            // ushort RelayDelay;
+            ubyte BCState : 1;
+            ubyte Zuotong : 1;
+            ubyte PGear : 1;
+            ubyte AutoBackPStat : 1;
+            ubyte XHStat : 1;
+            ubyte unk : 1;
+            ubyte TuixingS : 1;
+            ubyte unk : 3;
+            ubyte GearRemeberS : 1;
+            ubyte unk : 3;
+            ubyte REGear : 1;
+
+            ubyte ModelYear <read=Str("%d", this + 2000)>;
+            ubyte ModelMonth;
+            ubyte ModelDay;
+            ubyte TimeHour;
+            type = Str("0x1E");
+        }
+        if (lut == 0x24) {
+            ubyte TimeMin;
+            ubyte TimeSecond;
+            ushort HighVolProtect <read=Str("%0.1fV", this / 10.0)>; // / 10
+            ushort CustomMaxLineCurr <read=Str("%0.1fA", this / 4.0)>; // / 4
+            ushort CustomMaxPhaseCurr <read=Str("%0.1fA", this / 4.0)>; // / 4
+            ushort BackSpeed;
+            ushort LowSpeed;
+            type = Str("0x24");
+        }
+        if (lut == 0x2A) {
+            ushort MidSpeed;
+            ushort Max_Dec;
+            ubyte FreeThrottle; 
+            ubyte unk;
+            ushort MaxPhaseCurr <read=Str("%0.1fA", this / 4.0)>; // / 4
+            ushort SpeedAnalog;
+            ushort Max_Acc;
+            type = Str("0x2A");
+        }
+        if (lut == 0x30) {
+            ushort StopBackCurr;
+            ushort MaxBackCurr;
+            // (all * 100) / 128.0 + 0.5
+            ubyte LowSpeedLineCurr <read=Str("%0.1fA", this * 100.0 / 128.8 + 0.5)>; // LowSpeedLineCurr
+            ubyte MidSpeedLineCurr <read=Str("%0.1fA", this * 100.0 / 128.8 + 0.5)>; // MidSpeedLineCurr
+            ubyte LowSpeedPhaseCurr <read=Str("%0.1fA", this * 100.0 / 128.8 + 0.5)>; // LowSpeedPhaseCurr
+            ubyte MidSppedPhaseCurr <read=Str("%0.1fA", this * 100.0 / 128.8 + 0.5)>; // MidSppedPhaseCurr
+            ushort BlockTime; // BlockTime
+            ushort SpdPulseNum; // SpdPulseNum
+            type = Str("0x30");
+        }
+        if (lut == 0x5D) {
+            ushort unk;
+            ushort unk;
+            ushort unk; 
+            ushort unk;
+            ushort unk;
+            ushort unk;
+            type = Str("Unk5D");
+        }
+        if (lut == 0x63) {
+            ushort MaxLineCurr;
+            ushort MaxPhaseCurr;
+            ubyte MotorDia; 
+            ubyte unk;
+            ushort TempCoeff;
+            ushort paracnt_0 <read=Str("%0.1f", this / 10.0)>;
+            ushort paracnt_1 <read=Str("%0.1f", this)>;
+            ushort paracnt_2 <read=Str("%0.1f", this / 4.0)>;
+            ushort paracnt_4 <read=Str("%0.1f", this / 4.0)>;
+            ubyte paracnt_5;
+            type = Str("0x63");
+        }
+        if (lut == 0x69) {
+            // ushort BstXhBcp; // BstXhBcp
+            ubyte PPin : 4;
+            ubyte BCPin : 4;
+            ubyte XHPin : 4;
+            ubyte BoostPin : 4;
+            // ushort FrWeSdhSdl; // FrWeSdhSdl
+            ubyte SDLPin : 4;
+            ubyte SDHPin : 4;
+            ubyte REPin : 4;
+            ubyte FWPin : 4;
+            // ushort ChgFdSeatVol; // ChgFdSeatVol
+            ubyte SwitchVolPin : 4;
+            ubyte SeatPin : 4; // ZuotongPin
+            ubyte FDPin : 4;
+            ubyte CHGPin : 4;
+            ushort LmtSpeed; // LmtSpeed
+            ushort DistanceL <read=Str("%0.1fkm", this / 10.0)>; // mileage? 10ths of km
+            ubyte ParaIndex; // ParaIndex
+            char SpecialCode;
+            local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
+            if (ParaIndex < 10) {
+                local char ParaIndex2 = ParaIndex + 48;
+            } else if (ParaIndex < 20) {
+                local char ParaIndex2 = ParaIndex + 48 - 10;
+            } else {
+                local char ParaIndex2 = ParaIndex;
+            }
+            type = Str("0x69 DistanceL: %0.1f", DistanceL / 10.0);
+        }
+        if (lut == 0x7C) {
+            byte unk; // config_word0
+            byte unk; // config_word1
+            uint TotalTime <read=Str("%0.2fh", this / 60.0)>; // infoc0
+            uint infoc1;
+            ushort DistanceH <read=Str("%0.1fkm", this << 16 / 10.0)>;    
+            type = Str("0x7C Time %0.2f, Distance: %0.1f", TotalTime / 60.0, DistanceH << 16 / 10.0);
+        }
+        if (lut == 0x82) {
+            ushort ThrottleVoltage <read=Str("%0.2f", this * 0.01)>; // 0x82
+            ushort HighVolRestore <read=Str("%0.1fV", this / 10.0)>; // 0x83
+            ubyte MotorTempProtect; // 0x84
+            ubyte MotorTempRestore; 
+            ubyte MosTempProtect; // 0x85
+            ubyte MosTempRestore;
+            
+            // 10
+            ubyte CANConfig : 6; // 0x86
+            ubyte unk : 2;
+
+            ubyte Version0; // HardVer
+            ubyte Version1; // SoftVer0
+            ubyte SoftVer; // SoftVer1
+            type = Str("0x82 Throttle: %0.3fV", ThrottleVoltage * 0.01);
+        }
+        if (lut == 0x88) {
+            ubyte RatioMin;
+            ubyte Ratio500;
+            ubyte Ratio1000;
+            ubyte Ratio1500;
+            ubyte Ratio2000;
+            ubyte Ratio2500;
+            ubyte Ratio3000;
+            ubyte Ratio3500;
+            ubyte Ratio4000;
+            ubyte Ratio4500;
+            ubyte Ratio5000;
+            ubyte Ratio5500;
+            type = Str("0x88");
+        }
+        if (lut == 0x8E) {
+            ubyte Ratio6000;
+            ubyte Ratio6500;
+            ubyte Ratio7000;
+            ubyte Ratio7500;
+            ubyte Ratio8000;
+            ubyte Ratio8500;
+            ubyte Ratio9000;
+            ubyte RatioMax;
+            byte nratio_0;
+            byte nratio_1;
+            byte nratio_2;
+            byte nratio_3;
+            type = Str("0x8E");
+        }
+        if (lut == 0x94) {
+            byte nratio_4;
+            byte nratio_5;
+            byte nratio_6;
+            byte nratio_7;
+            byte nratio_8;
+            byte nratio_9;
+            byte nratio_10;
+            byte nratio_11;
+            byte nratio_12;
+            byte nratio_13;
+            byte nratio_14;
+            byte nratio_15;
+            type = Str("0x94");
+        }
+        if (lut == 0x9A) {
+            byte nratio_16;
+            byte nratio_17;
+            byte nratio_18;
+            byte nratio_19;
+
+            // AlarmRecord
+            // 6
+            ubyte AN : 4;
+            ubyte AlarmRecord_1 : 4;
+            
+            // 7
+            ubyte LM : 5;
+            ubyte unk : 3;
+
+            short InitVol;
+            short Stage1Curr;
+            ubyte VolSelectRatio;
+            type = Str("0x9A");
+        }
+        if (lut == 0xA0) {
+            type = "0xA0 Model number";
+            short unk;
+            char model[10]; 
+        }
+        if (lut == 0xA6) {
+            type = "0xA6 Model number 2";
+            char model[10]; 
+        }
+        if (lut == 0xAC) {
+            ushort unk;
+            ushort unk;
+            ushort unk; 
+            ushort unk;
+            ushort unk;
+            ushort unk;
+            type = Str("UnkAC");
+        }
+        if (lut == 0xB2) {
+            ubyte unk;
+            ubyte unk;
+            ubyte unk;
+            ubyte unk;
+            ubyte OneCommSec_0;
+            ubyte OneCommSec_1;
+            ubyte OneCommSec_2; 
+            ubyte OneCommSec_3;
+            ubyte OneCommSec_4;
+            ubyte OneCommSec_5;
+            ubyte OneCommSec_6;
+            ubyte OneCommSec_7;
+            type = Str("0xB2");
+        }
+        if (lut == 0xB8) {
+            ushort OneCommPos;
+            ushort unk;
+            ushort OneCommPS; 
+            ushort OnelineCurrCoeff;
+            ushort GPara0; // NewBlueKey @ arg[11] & 128
+            ubyte Stage1Soc;
+            ubyte Stage2Soc; // paracnt_3 : 4
+            type = Str("0xB8");
+        }
+        if (lut == 0xBE) {
+            ubyte cfg190l;
+
+            // 3, cfg190h
+            ubyte unk : 4; 
+            ubyte AccCoeff : 4; 
+
+            ushort BstTime;
+            ushort BstRelease;
+            ushort ParkTime;
+            ushort InverseTime;
+            ushort TorqueCoff;
+            type = Str("0xBE");
+        }
+        if (lut == 0xC4) {
+            ushort LearnVol;
+            ushort LearnVoh;
+            ushort ParkDiff; 
+            ushort IsInStart;
+            ushort ThrottleInsert; // & 0x20 TCS
+            ubyte ExitFollowSpeed;
+            ubyte ReCurrRatio;
+            type = Str("0xC4");
+        }
+        if (lut == 0xCA) {
+            ubyte AngleLearn;
+            ubyte SpdLmt_sel : 4;
+            ubyte OneKey_sel : 4;
+            ubyte NoCanCnt;
+            
+            // ubyte TaRlB9D0SP; 
+            ubyte SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
+            // 0-HighOnly
+            // 1-AddDec
+            // 2-ButtonHighLow
+            // 3-ButtonLowMid
+            // 4-Button3SpeedLow
+            // 5-Button3SpeedMid
+            // 6-Button3SpeedHigh
+            // 7-Button4SpeedLow
+            // 8-Button4Speed2
+            // 9-Button4Speed3
+            // 0-Button4SpeedHigh
+            // 1-Line3Speed
+            // 2-SpecialGear
+            // 3-Invalid
+            ubyte Temp70 : 2;
+            ubyte LongBack : 1; // Push RE
+            ubyte ThrottleLost : 1;
+
+            ubyte LearnThrottle;
+            ubyte SpeedLowCap;
+            ubyte MidSpeedCap;
+            ubyte SpeedLimitByCap;
+            ubyte MinSpeedCapCoeff;
+            ubyte ParkCoeff : 4;
+            ubyte BatSel : 4;
+            ushort ReIsinAcc;
+            type = Str("0xCA");
+        }
+        if (lut == 0xD0) {
+            ushort OneCommHead;
+            ubyte BMQHALL;
+            ubyte AVGPower <read=Str("%dWh/km", this * 4)>; // DataVoltage1
+            ubyte WheelRatio;
+            ubyte WheelRadius;
+            ubyte AVGSpeed <read=Str("%dkm/h", this)>; // DataVoltage4
+            ubyte WheelWidth;
+            ushort RateRatio;
+            // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
+            ushort OneCommCfg;
+            type = Str("0xD0");
+        }
+        if (lut == 0xD6) {
+            short unk;
+
+            // 4
+            ubyte Global_state1 : 1;
+            ubyte RunDir1 : 1;
+            ubyte HallPosError : 1;
+            ubyte Global_state1 : 1;
+            ubyte AutoLearn : 1;
+            ubyte NeedAutoLearn : 1;
+            ubyte Global_state1 : 1;
+            ubyte HallError : 1;
+            ubyte MotorRun : 1; // else MotorStop
+            ubyte Global_state1 : 1;
+            ubyte Global_state1 : 1;
+            ubyte PhaseLostAlarm : 1;
+            ubyte MotorCloseEnable : 1;
+            ubyte MotorRun : 1;
+            ubyte VoltageReport : 1;
+            ubyte AngleFix : 1;
+
+
+            //   ((VisualElement) this.RunDir1).IsVisible = (this.Global_state1 & 2) != 0;
+            //   ((VisualElement) this.HallPosError).IsVisible = (this.Global_state1 & 4) != 0;
+
+            //   ((VisualElement) this.AL).IsVisible = (this.Global_state1 & 32) != 0;
+            //   ((VisualElement) this.NeedAL).IsVisible = (this.Global_state1 & 64) != 0;
+
+            //   ((VisualElement) this.HallError).IsVisible = (this.Global_state1 & 256) != 0;
+
+
+
+            //   ((VisualElement) this.MotorCloseEnable).IsVisible = (this.Global_state1 & 4096) != 0;
+            //   ((VisualElement) this.MotorRun).IsVisible = (this.Global_state1 & 8192) != 0;
+            //   ((VisualElement) this.VoltageReport).IsVisible = (this.Global_state1 & 16384) != 0;
+            //   ((VisualElement) this.AngleFix).IsVisible = (this.Global_state1 & 32768) != 0;
+              
+
+
+            //   ((VisualElement) this.FlashWay).IsVisible = (this.Global_state2 & 1) != 0;
+
+            //   ((VisualElement) this.INVControl).IsVisible = (this.Global_state2 & 4) != 0;
+            //   ((VisualElement) this.WeakStat).IsVisible = (this.Global_state2 & 8) != 0;
+            //   ((VisualElement) this.DataError).IsVisible = (this.Global_state2 & 16) != 0;
+            //   ((VisualElement) this.LowVolStop).IsVisible = (this.Global_state2 & 16) != 0;
+            //   ((VisualElement) this.LowVolControl).IsVisible = (this.Global_state2 & 32) != 0;
+            //   ((VisualElement) this.EABSStart).IsVisible = (this.Global_state2 & 64) != 0;
+            //   ((VisualElement) this.Exchange).IsVisible = (this.Global_state2 & 128) != 0;
+
+            //   ((VisualElement) this.GearDisable).IsVisible = (this.Global_state2 & 512) != 0;
+            //   ((VisualElement) this.DefaultFW).IsVisible = (this.Global_state2 & 1024) != 0;
+            //   ((VisualElement) this.SpeedLimit).IsVisible = (this.Global_state2 & 2048) != 0;
+            //   ((VisualElement) this.MidSpeed).IsVisible = (this.Global_state2 & 4096) != 0;
+            //   ((VisualElement) this.HighSpeed).IsVisible = (this.Global_state2 & 8192) != 0;
+            //   ((VisualElement) this.FDEnable).IsVisible = (this.Global_state2 & 16384) != 0;
+            //   ((VisualElement) this.FDBrake).IsVisible = (this.Global_state2 & 32768) != 0;
+              
+
+
+            //   ((VisualElement) this.FDStart).IsVisible = (this.Global_state3 & 2) != 0;
+            //   ((VisualElement) this.FDClose).IsVisible = (this.Global_state3 & 4) != 0;
+            //   ((VisualElement) this.FDWay).IsVisible = (this.Global_state3 & 8) != 0;
+            //   ((VisualElement) this.SpeedLimit).IsVisible = (this.Global_state3 & 16) != 0;
+            //   ((VisualElement) this.PhaseCZero).IsVisible = (this.Global_state3 & 32) != 0;
+            //   ((VisualElement) this.FDWork).IsVisible = (this.Global_state3 & 64) != 0;
+            //   ((VisualElement) this.WUVD).IsVisible = (this.Global_state3 & 128) != 0;
+            //   ((VisualElement) this.PhaseAZero).IsVisible = (this.Global_state3 & 256) != 0;
+            //   ((VisualElement) this.ShouldBeStat).IsVisible = (this.Global_state3 & 512) != 0;
+            //   ((VisualElement) this.ZeroUseable).IsVisible = (this.Global_state3 & 1024) != 0;
+            //   ((VisualElement) this.VUWD).IsVisible = (this.Global_state3 & 2048) != 0;
+            //   ((VisualElement) this.WUUD).IsVisible = (this.Global_state3 & 4096) != 0;
+            //   ((VisualElement) this.UUWD).IsVisible = (this.Global_state3 & 8192) != 0;
+            //   ((VisualElement) this.VUUD).IsVisible = (this.Global_state3 & 16384) != 0;
+            //   ((VisualElement) this.UUVD).IsVisible = (this.Global_state3 & 32768) != 0;
+
+
+
+            //   ((VisualElement) this.VolFlash).IsVisible = (this.Global_state4 & 1) != 0;
+            //   ((VisualElement) this.FlashError).IsVisible = (this.Global_state4 & 2) != 0;
+            //   ((VisualElement) this.DeadZone).IsVisible = (this.Global_state4 & 4) != 0;
+            //   ((VisualElement) this.CommEnable).IsVisible = (this.Global_state4 & 8) != 0;
+            //   ((VisualElement) this.CANType).IsVisible = (this.Global_state4 & 8) != 0;
+            //                         unk
+            //                         unk
+            //                         unk
+            //   ((VisualElement) this.Zsignal).IsVisible = (this.Global_state4 & 128) != 0;
+            //   ((VisualElement) this.ABError).IsVisible = (this.Global_state4 & 512) != 0;
+            //   ((VisualElement) this.SyncCount).IsVisible = (this.Global_state4 & 512) != 0;
+            //   ((VisualElement) this.ZError).IsVisible = (this.Global_state4 & 1024) != 0;
+            //   ((VisualElement) this.PError).IsVisible = (this.Global_state4 & 2048) != 0;
+            //   ((VisualElement) this.MagnetError).IsVisible = (this.Global_state4 & 4096) != 0;
+            //   ((VisualElement) this.ZABError).IsVisible = (this.Global_state4 & 8192) != 0;
+            //   ((VisualElement) this.PABError).IsVisible = (this.Global_state4 & 16384) != 0;
+            //   ((VisualElement) this.AngleError).IsVisible = (this.Global_state4 & 32768) != 0;
+
+
+            // 6
+            // short Global_state2 : 2;
+            // short Weak : 1; // else MTPA
+            // short Global_state2 : 11;
+            // short OverVoltageAlarm : 1;
+
+            ubyte FlashWay : 1;
+            ubyte Global_state_2 : 1;
+            ubyte INVControl : 1;
+            ubyte WeakStat : 1;
+            ubyte LowVolStop : 1; // also DataError
+            ubyte LowVolControl : 1;
+            ubyte EABSStart : 1;
+            ubyte Exchange : 1;
+            ubyte Global_state_2 : 1;
+            ubyte GearDisable : 1;
+            ubyte DefaultFW : 1;
+            ubyte SpeedLimit : 1;
+            ubyte MidSpeed : 1;
+            ubyte HighSpeed : 1;
+            ubyte FDEnable : 1;
+            ubyte FDBrake : 1;
+
+            // 8
+            ubyte Global_state3 : 1;
+            ubyte FDStart : 1;
+            ubyte FDClose : 1;
+            ubyte FDWay : 1;  
+            ubyte SpeedLimit : 1; 
+            ubyte PhaseCZero : 1; 
+            ubyte FDWork : 1; 
+            ubyte WUVD : 1;   
+            ubyte PhaseAZero : 1; 
+            ubyte ShouldBeStat : 1;   
+            ubyte ZeroUseable : 1;
+            ubyte VUWD : 1;   
+            ubyte WUUD : 1;   
+            ubyte UUWD : 1;   
+            ubyte VUUD : 1;   
+            ubyte UUVD : 1;
+
+            // 10
+            // Global_state4;    
+            ubyte VolFlash : 1;
+            ubyte FlashError : 1;
+            ubyte DeadZone : 1;
+            ubyte CANType : 1; // CommEnable
+            ubyte unk : 1;
+            ubyte unk : 1;
+            ubyte unk : 1;
+            ubyte Zsignal : 1;
+            ubyte ABError : 1; // also SyncCount
+            ubyte ZError : 1;
+            ubyte PError : 1;
+            ubyte MagnetError : 1;
+            ubyte ZABError : 1;
+            ubyte PABError : 1;
+            ubyte AngleError : 1;
+
+            short MosTemp;
+            type = "0xD6 Global state";
+        }
+        if (lut == 0xDC) {
+            ushort unk;
+            ushort unk;
+            ushort unk; 
+            ushort unk; // changed from 0x57 00 to 0x01 40
+            ushort unk;
+            ushort unk;
+            type = Str("UnkDC");
+        }
+        if (lut == 0xF4) {
+            short motor_temp;
+            byte unk;
+            byte batt_cap; // SOC
+            ubyte unk;
+            ubyte ManufYear <read=Str("%d", this + 2000)>; // paracnt_6
+            ubyte ManuMonth; // paracnt_7
+            ubyte ManuDay; // paracnt_8
+            ushort paracnt_17;  
+            ushort paracnt_16;  
+            type = Str("0xF4 Motor temp: %d", motor_temp);
+        }
+        if (lut == 0xFA) {
+            short PhaseAZero;
+            short PhaseCZero;
+            ubyte motor_stop_state;
+
+            // 8
+            ubyte unk : 1;
+            ubyte old_blue : 1;
+            ubyte unk : 6;
+            
+            ubyte unk;
+            ubyte unk;
+            ubyte motor_running_state;
+            type = Str("0xFA");
+        }
+        if (!Strcmp(type, "")) {
+            ubyte unk[13];
+            ushort crc;
+            type = Str("%02X: %02X %02X %02X %02X %02X %02X %02X %02X", lut, unk[0], unk[1], unk[2], unk[3], unk[4], unk[5], unk[6], unk[7]);
+        }
+        } else {
+            if (id == 0x37) {
+                // something gather?
+                // only process 512 frames?
+            // BigEndian();
+                short Throttle <read=Str("%f", (-(this >> 1) * 100) / 256.0)>; // purple: Throttle/51, cyan: Weak
+                short Speed <read=Str("%f", 100 - this * 100 / 5000.0)>; // red: Speed/1000
+                short Curr; // blue, Curr/50A
+                short Vol; // black, Vol/5V
+                short Angle; // yellow, Angle/5
+                ubyte Mod; // green
+                ubyte Unk; // dark blue
+            // LittleEndian();
+                ushort crc;
+                type = Str("B7 Data: %0.0f, %0.0f, %0.1fA, %0.1fV, %d, %0.0f", Throttle / 51.0, Speed / 1000.0, Curr / 50.0, Vol / 5.0, Angle / 5, Mod / 0.2);
+            }
+        }
+    } else {
+        // id could be 0-23, handled differently
+        type = "not normal";    
+    }
+    
+    FSeek(start);
+    ubyte data[16];
+    local ushort hash = CalculateCRC(data, 14);
+} packet[(FileSize() - packet_start)/ 16] <read=Str("%s",type), optimize=false>;
