@@ -22,25 +22,6 @@ typedef byte int8_t;
 
 BitfieldDisablePadding();
 
-enum PIN {
-    NC = 0,
-    PIN2 = 1,
-    PIN3 = 2,
-    PIN5 = 3,
-    PIN8 = 4,
-    PIN9 = 5,
-    PIN14 = 6,
-    PIN15 = 7,
-    PIN17 = 8,
-    PIN18 = 9,
-    PIN24 = 10,
-    PD1 = 11,
-    PB4 = 12,
-    PINInvalid1 = 13,
-    PINInvalid2 = 14,
-    PINInvalid3 = 15
-};
-
 Addr00 addr00;
 Addr06 addr06;
 Addr0C addr0C;

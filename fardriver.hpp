@@ -3,6 +3,25 @@
 #include "fardriver_message.hpp"
 #endif
 
+enum PIN {
+    NC = 0, // Normally Closed
+    PIN24 = 1,
+    PIN15 = 2, // CAN RX
+    PIN5 = 3, // CAN TX
+    PIN17 = 4, // Used by encoder units
+    PIN14 = 5,
+    PIN3 = 6,
+    PIN8 = 7,
+    PB4 = 8,
+    PINInvalid1 = 9,
+    PIN2 = 10,
+    PIN18 = 11, // Not available in YJCAN
+    PIN9 = 12, // Not available in YJCAN
+    PD1 = 13,
+    PINInvalid2 = 14,
+    PINInvalid3 = 15
+};
+
 typedef struct {
     uint32_t byte_0 : 8;
     uint32_t byte_1 : 8;
@@ -308,20 +327,20 @@ struct Addr63 {
 // 0x69
 struct Addr69 {
     // uint16_t BstXhBcp; // BstXhBcp
-    uint8_t PPin : 4; // 69
-    uint8_t BCPin : 4;
-    uint8_t XHPin : 4;
-    uint8_t BoostPin : 4;
+    PIN PPin : 4; // 69
+    PIN BCPin : 4;
+    PIN XHPin : 4;
+    PIN BoostPin : 4;
     // uint16_t FrWeSdhSdl; // FrWeSdhSdl
-    uint8_t SDLPin : 4; // 6A
-    uint8_t SDHPin : 4;
-    uint8_t REPin : 4;
-    uint8_t FWPin : 4;
+    PIN SDLPin : 4; // 6A
+    PIN SDHPin : 4;
+    PIN REPin : 4;
+    PIN FWPin : 4;
     // uint16_t ChgFdSeatVol; // ChgFdSeatVol
-    uint8_t SwitchVolPin : 4; // 6B
-    uint8_t SeatPin : 4; // ZuotongPin
-    uint8_t FDPin : 4;
-    uint8_t CHGPin : 4;
+    PIN SwitchVolPin : 4; // 6B
+    PIN SeatPin : 4; // ZuotongPin
+    PIN FDPin : 4;
+    PIN CHGPin : 4;
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceL; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
@@ -606,23 +625,23 @@ struct AddrCA {
     
     // uint8_t TaRlB9D0SP; 
     enum ESPMode {    
-        HighOnly = 0,
-        AddDec,
-        ButtonHighLow,
-        ButtonLowMid,
-        Button3SpeedLow,
-        Button3SpeedMid,
-        Button3SpeedHigh,
-        Button4SpeedLow,
-        Button4Speed2,
-        Button4Speed3,
-        Button4SpeedHigh,
-        Line3Speed,
-        SpecialGear,
+        HighOnly = 0, // Only high speed
+        AddDec = 1, // Increment/Decrement by button
+        ButtonHighLow = 2,
+        ButtonLowMid = 3,
+        Button3SpeedLow = 4,
+        Button3SpeedMid = 5,
+        Button3SpeedHigh = 6,
+        Button4SpeedLow = 7,
+        Button4Speed2 = 8,
+        Button4Speed3 = 9, 
+        Button4SpeedHigh = 10,
+        Line3Speed = 11,
+        SpecialGear = 12,
         ESPInvalid = 13
     } SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
     uint8_t Temp70 : 2;
-    uint8_t LongBack : 1; // Push RE
+    uint8_t LongBack : 1; // Push RE, toggle vs momentary?
     uint8_t ThrottleLost : 1;
 
     uint8_t LearnThrottle;
