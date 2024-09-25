@@ -1,107 +1,45 @@
-#include <cstdint>
+//------------------------------------------------
+//--- 010 Editor v15.0 Binary Template
+//
+//      File: HEB for Fardriver controllers
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: *.heb
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
 
-#pragma pack(push, 1)
-typedef struct {
-    uint32_t byte_0 : 8;
-    uint32_t byte_1 : 8;
-    uint32_t byte_2 : 8;
+typedef uint uint32_t;
+typedef int int32_t;
+typedef ushort uint16_t;
+typedef short int16_t;
+typedef ubyte uint8_t;
+typedef byte int8_t;
 
-    float value(void) {
-        return 1.953125 * sqrt(byte_0 << 16 + byte_1 << 8 + byte_2);
-    }
-} big_end_24b;
-#pragma pack(pop)
+BitfieldDisablePadding();
 
-#pragma pack(push, 1)
-struct FardriverMessage {
-    static constexpr const uint8_t crcTableLo[256] = {
-        0, 192, 193, 1, 195, 3, 2, 194, 198, 6, 7, 199, 5, 197, 196, 4, 204, 12, 13, 205, 15, 207, 206, 14, 10, 202, 203, 11, 201, 9, 8, 200, 216, 24, 25, 217, 27, 219, 218, 26, 30, 222, 223, 31, 221, 29, 28, 220, 20, 212, 213, 21, 215, 23, 22, 214, 210, 18, 19, 211, 17, 209, 208, 16, 240, 48, 49, 241, 51, 243, 242, 50, 54, 246, 247, 55, 245, 53, 52, 244, 60, 252, 253, 61, 255, 63, 62, 254, 250, 58, 59, 251, 57, 249, 248, 56, 40, 232, 233, 41, 235, 43, 42, 234, 238, 46, 47, 239, 45, 237, 236, 44, 228, 36, 37, 229, 39, 231, 230, 38, 34, 226, 227, 35, 225, 33, 32, 224, 160, 96, 97, 161, 99, 163, 162, 98, 102, 166, 167, 103, 165, 101, 100, 164, 108, 172, 173, 109, 175, 111, 110, 174, 170, 106, 107, 171, 105, 169, 168, 104, 120, 184, 185, 121, 187, 123, 122, 186, 190, 126, 127, 191, 125, 189, 188, 124, 180, 116, 117, 181, 119, 183, 182, 118, 114, 178, 179, 115, 177, 113, 112, 176, 80, 144, 145, 81, 147, 83, 82, 146, 150, 86, 87, 151, 85, 149, 148, 84, 156, 92, 93, 157, 95, 159, 158, 94, 90, 154, 155, 91, 153, 89, 88, 152, 136, 72, 73, 137, 75, 139, 138, 74, 78, 142, 143, 79, 141, 77, 76, 140, 68, 132, 133, 69, 135, 71, 70, 134, 130, 66, 67, 131, 65, 129, 128, 64
-    };
-    static constexpr const uint8_t crcTableHi[256] = {
-        0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
-    };
-
-    uint8_t * GetRaw() {
-        return (uint8_t *)(this);
-    }
-
-    bool VerifyCRC() {
-        uint8_t a = 0x3C; // 60
-        uint8_t b = 0x7F; // 127
-        uint8_t index;
-        for (index = 0; index < 14; ++index) {
-            auto crc_i = a ^ this->GetRaw()[index];
-            a = b ^ this->crcTableHi[crc_i];
-            b = this->crcTableLo[crc_i];
-        }
-        return this->crc[0] == a && this->crc[1] == b;
-    }
-
-    uint8_t start = 0xAA;
-    struct Header {
-        uint8_t id : 6;
-        uint8_t flag : 2;
-    } header;
-    uint8_t data[12];
-    uint8_t crc[2];
-
+enum PIN {
+    NC = 0,
+    PIN2 = 1,
+    PIN3 = 2,
+    PIN5 = 3,
+    PIN8 = 4,
+    PIN9 = 5,
+    PIN14 = 6,
+    PIN15 = 7,
+    PIN17 = 8,
+    PIN18 = 9,
+    PIN24 = 10,
+    PD1 = 11,
+    PB4 = 12,
+    PINInvalid1 = 13,
+    PINInvalid2 = 14,
+    PINInvalid3 = 15
 };
-#pragma pack(pop)
 
-constexpr const uint8_t FardriverMessage::crcTableLo[256];
-constexpr const uint8_t FardriverMessage::crcTableHi[256];
-
-#pragma pack(push, 1)
-struct FardriverData {
-
-    uint8_t * GetAddr(uint16_t addr) {
-        return (uint8_t*)this + (addr << 1);
-    }
-
-    uint16_t GetWord(uint16_t addr) {
-        return (uint16_t*)this + addr;
-    }
-
-    // used when App.NewVersion
-    void WriteAddr(uint8_t * data, uint8_t addr, uint8_t length) {
-        length += 4;
-        data[0] = 0xAA; // 170
-        data[1] = 0xC0 + length; // 192
-        data[2] = addr;
-        data[3] = addr;
-        uint8_t a = 0x3C; // 60
-        uint8_t b = 0x7F; // 127
-        uint8_t index;
-        for (pos = 0; pos < length; ++pos) {
-            auto crc_i = a ^ data[pos];
-            a = b ^ FardriverMessage::crcTableHi[crc_i];
-            b = FardriverMessage::crcTableLo[crc_i];
-        }
-        data[length] = a;
-        data[length + 1] = b;
-    // send data
-    }
-
-    void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
-        uint8_t data[8];
-        data[4] = first;
-        data[5] = second;
-        this->WriteAddr(data, addr, 2);
-    }
-
-    // used when !App.NewVersion
-    void SendRS323Data(uint8_t command, uint8_t sub_command, uint8_t value_1, uint8_t value_2) {
-        uint8_t data[8];
-        data[0] = 0xAA; // 170
-        data[1] = command;
-        data[2] = ~command;
-        data[3] = sub_command;
-        data[4] = value_1;
-        data[5] = value_2;
-        data[6] = data[0] + data[1] + data[2] + data[3] + data[4] + data[5];
-        data[7] = ~data[6];
-    // send data
-    }
+local string Addr_00 = Str("%02X", FTell() >> 1);
 
 // 0x00
     int16_t VolCoeff;
@@ -111,10 +49,12 @@ struct FardriverData {
     int16_t PhaseCCoeff;
     int16_t SaveNum;
 
+local string Addr_06 = Str("%02X", FTell() >> 1);
+
 // 0x06
     // 2
     uint8_t Arg2 : 1;
-    enum class EAntiTheftPulse {
+    enum EAntiTheftPulse {
         Invalid = 0,
         Type1 = 1,
         Type2 = 2,
@@ -136,14 +76,14 @@ struct FardriverData {
     int16_t CurveTime;
     
     // 12 cfg11l
-    enum class EBrakeConfig {
+    enum EBrakeConfig {
         StopWhenGround = 0,
         StopWhenFloat = 1,
         P_StopGnd = 2,
         P_StopFloat = 3,
         Disabled = 4
     } BrakeConfig : 4;
-    enum class ETempSensor {
+    enum ETempSensor {
         None = 0,
         PTC = 1,
         NTC230K = 2,
@@ -159,13 +99,16 @@ struct FardriverData {
     uint8_t SlowDown : 3;
     uint8_t PC13Config : 1; // RaceResponse
     uint8_t CurrAntiTheft : 1; // CurrFD Valid = 1
-    enum class EParkConfig {
+    enum EParkConfig {
         ReversePark = 0,
         SwitchPark = 1,
         SlowDownPark = 2,
-        Disabled = 3
+        ParkDisabled = 3
     } ParkConfig : 2;
     uint8_t Direction : 1; // Send(0x12, 0x07)
+
+
+local string Addr_0C = Str("%02X", FTell() >> 1);
 
 // 0x0C
     int16_t PhaseOffset; // / 10.0, Send(0x0A, 0x07)
@@ -178,6 +121,7 @@ struct FardriverData {
     uint8_t MidKP;
     uint8_t MaxKP;
 
+local string Addr_12 = Str("%02X", FTell() >> 1);
 // 0x12
     int16_t LD;
     uint16_t AlarmDelay;
@@ -187,6 +131,7 @@ struct FardriverData {
     uint16_t RatedPower; // Send(0x12, 0x03)
     uint16_t RatedVoltage; // / 10, Send(0x12, 0x04)
 
+local string Addr_18 = Str("%02X", FTell() >> 1);
 // 0x18
     // 2-3
     uint16_t RatedSpeed; // Send(0x12, 0x05)
@@ -195,19 +140,19 @@ struct FardriverData {
     uint16_t MaxLineCurr; // / 4, Send(0x12, 0x1B)
 
     // 6 cfg26l
-    enum class EFollowConfig {
+    enum EFollowConfig {
         FollowEnabled = 0,
-        Disabled = 1,
+        FollowDisabled = 1,
         EABSWhenBreakValid = 2,
         EABSWhenReleaseThrottle = 3
     } FollowConfig : 2;
-    enum class EThrottleResponse {
+    enum EThrottleResponse {
         Line = 0,
         Sport = 1,
         ECO = 2
     } ThrottleResponse : 2; // ECOConfig
     uint8_t WeakA : 2;
-    enum class ERXD {
+    enum ERXD {
         AF = 0,
         OD = 1,
         PP = 2
@@ -215,10 +160,10 @@ struct FardriverData {
 
     // 7 cfg26h
     uint8_t SpeedPulse : 5;
-    enum class EGearConfig {
-        DefaultN = 0
+    enum EGearConfig {
+        DefaultN = 0,
         DefaultD = 1,
-        Disabled = 2,
+        GearDisabled = 2,
         DefaultAntiTheft = 3, // DefaultLow in old
         DefaultButtonHigh = 4,
         DefaultButtonMiddle = 5
@@ -233,6 +178,8 @@ struct FardriverData {
     // 12-13
     uint16_t IntRes; // Send(0x0F, 0x08)
 
+
+local string Addr_1E = Str("%02X", FTell() >> 1);
 // 0x1E
     uint16_t FwReRatio;
     uint16_t LowVolProtect; // / 10
@@ -263,6 +210,7 @@ struct FardriverData {
     uint8_t ModelDay;
     uint8_t TimeHour;
 
+local string Addr_24 = Str("%02X", FTell() >> 1);
 // 0x24
     uint8_t TimeMin;
     uint8_t TimeSecond;
@@ -272,6 +220,7 @@ struct FardriverData {
     uint16_t BackSpeed; // Send(0x11, 0x03)
     uint16_t LowSpeed; // Send(0x11, 0x02)
 
+local string Addr_2A = Str("%02X", FTell() >> 1);
 // 0x2A
     uint16_t MidSpeed;
     uint16_t Max_Dec;
@@ -281,6 +230,7 @@ struct FardriverData {
     uint16_t SpeedAnalog;
     uint16_t Max_Acc;
 
+local string Addr_30 = Str("%02X", FTell() >> 1);
 // 0x30
     uint16_t StopBackCurr; // Send(0x12, 0x18)
     uint16_t MaxBackCurr; // Send(0x12, 0x19)
@@ -291,7 +241,10 @@ struct FardriverData {
     uint8_t MidSppedPhaseCurr;
     uint16_t BlockTime;
     uint16_t SpdPulseNum;
-
+    
+    
+// omitted in HEB
+/*
     uint16_t unk36[6];
     uint16_t unk3A[6];
     uint16_t unk42[6];
@@ -299,7 +252,11 @@ struct FardriverData {
     uint16_t unk4E[6];
     uint16_t unk54[6];
     uint16_t unk5A[3];
+    */
 
+// omitted in HEB
+/*
+local string Addr_5D = Str("%02X", FTell() >> 1);
 // 0x5D
     uint16_t unk5D;
     uint16_t unk5E;
@@ -307,10 +264,12 @@ struct FardriverData {
     uint16_t unk60;
     uint16_t unk61;
     uint16_t unk62;
+    */
     
+local string Addr_63 = Str("%02X", FTell() >> 1);
 // 0x63
-    uint16_t MaxLineCurr2;
-    uint16_t MaxPhaseCurr2; // 0x64
+    int16_t MaxLineCurr2;
+    int16_t MaxPhaseCurr2; // 0x64
     uint8_t MotorDia;  // 65
     uint8_t unk65b;
     uint16_t TempCoeff; // 66
@@ -321,27 +280,28 @@ struct FardriverData {
     // uint8_t paracnt_5;
     // uint8_t unk68b;
 
+local string Addr_69 = Str("%02X", FTell() >> 1);
 // 0x69
     // uint16_t BstXhBcp; // BstXhBcp
-    uint8_t PPin : 4; // 69
-    uint8_t BCPin : 4;
-    uint8_t XHPin : 4;
-    uint8_t BoostPin : 4;
+    PIN PPin : 4; // 69
+    PIN BCPin : 4;
+    PIN XHPin : 4;
+    PIN BoostPin : 4;
     // uint16_t FrWeSdhSdl; // FrWeSdhSdl
-    uint8_t SDLPin : 4; // 6A
-    uint8_t SDHPin : 4;
-    uint8_t REPin : 4;
-    uint8_t FWPin : 4;
+    PIN SDLPin : 4; // 6A
+    PIN SDHPin : 4;
+    PIN REPin : 4;
+    PIN FWPin : 4;
     // uint16_t ChgFdSeatVol; // ChgFdSeatVol
-    uint8_t SwitchVolPin : 4; // 6B
-    uint8_t SeatPin : 4; // ZuotongPin
-    uint8_t FDPin : 4;
-    uint8_t CHGPin : 4;
+    PIN SwitchVolPin : 4; // 6B
+    PIN SeatPin : 4; // ZuotongPin
+    PIN FDPin : 4;
+    PIN CHGPin : 4;
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceL; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
-    uint8_t unk6Fa; // 6F
+    
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
     //     local char ParaIndex2 = ParaIndex + 48;
@@ -350,6 +310,10 @@ struct FardriverData {
     // } else {
     //     local char ParaIndex2 = ParaIndex;
     // }
+
+// omitted in HEB
+    /*
+    uint8_t unk6Fa; // 6F
     uint8_t unk6Fb;
     uint16_t unk70;
     uint16_t unk71;
@@ -363,7 +327,9 @@ struct FardriverData {
     uint16_t unk79;
     uint16_t unk7A;
     uint16_t unk7B;
+    */
 
+local string Addr_7C = Str("%02X", FTell() >> 1);
 // 0x7C
     // 2 config_word0
     uint8_t unk7Ca : 1;
@@ -386,10 +352,11 @@ struct FardriverData {
     uint8_t SpeedMeterConfig3 : 1; // Analog
 
     // 4
-    uint TotalTime; // minutes, infoc0, wktime
-    uint infoc1;
+    uint32_t TotalTime; // minutes, infoc0, wktime
+    uint32_t infoc1;
     uint16_t DistanceH; // this << 16 / 10, km
-           
+        
+local string Addr_82 = Str("%02X", FTell() >> 1);   
 // 0x82
     uint16_t ThrottleVoltage; // * 0.01, 0x82
     uint16_t HighVolRestore; // / 10.0)>; 0x83
@@ -406,6 +373,7 @@ struct FardriverData {
     uint8_t Version1; // SoftVer0
     uint8_t SoftVer; // SoftVer1
 
+local string Addr_88 = Str("%02X", FTell() >> 1);
 // 0x88
     uint8_t RatioMin;
     uint8_t Ratio500;
@@ -420,6 +388,7 @@ struct FardriverData {
     uint8_t Ratio5000;
     uint8_t Ratio5500;
 
+local string Addr_8E = Str("%02X", FTell() >> 1);
 // 0x8E
     uint8_t Ratio6000;
     uint8_t Ratio6500;
@@ -434,6 +403,7 @@ struct FardriverData {
     int8_t nratio_2;
     int8_t nratio_3;
 
+local string Addr_94 = Str("%02X", FTell() >> 1);
 // 0x94
     int8_t nratio_4;
     int8_t nratio_5;
@@ -448,6 +418,7 @@ struct FardriverData {
     int8_t nratio_14;
     int8_t nratio_15;
 
+local string Addr_9A = Str("%02X", FTell() >> 1);
 // 0x9A
     int8_t nratio_16; // 9A
     int8_t nratio_17;
@@ -470,6 +441,7 @@ struct FardriverData {
     uint8_t VolSelectRatio; // 9F
     uint8_t unk9Fb;
 
+local string Addr_A0 = Str("%02X", FTell() >> 1);
 // 0xA0 / 0xA6
     uint8_t unkA0; // 0x88 usually?
     uint8_t SysCmd;
@@ -483,6 +455,7 @@ struct FardriverData {
 
     // AB - where password is stored?
 
+local string Addr_AC = Str("%02X", FTell() >> 1);
 // 0xAC
     uint16_t unkAC; // more password
     uint16_t unkAD; // phone number start1[14]
@@ -491,6 +464,7 @@ struct FardriverData {
     uint16_t unkB0;
     uint16_t unkB1;
 
+local string Addr_B2 = Str("%02X", FTell() >> 1);
 // 0xB2
     uint16_t unkB2;
     uint16_t unkB3;
@@ -503,6 +477,7 @@ struct FardriverData {
     uint8_t OneCommSec_6;
     uint8_t OneCommSec_7;
 
+local string Addr_B8 = Str("%02X", FTell() >> 1);
 // 0xB8
     // 2-3 B8
     // uint16_t OneCommPos; 
@@ -521,12 +496,13 @@ struct FardriverData {
     // 10-11 GPara0, BC
     uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
     uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
-    enum class ECANBaud {
+    enum ECANBaud {
         Baud250K = 0,
         Baud500K = 1,
         Baud1M = 2
-    } CANBaud : 4; // CanSel
-    enum class EPasswordStatus {
+    } CANBaud : 2; // CanSel
+    uint8_t unkBC6 : 2;
+    enum EPasswordStatus {
         PasswordProtected = 0,
         AlsoPasswordProtected = 1,
         NoPassword = 2
@@ -536,8 +512,9 @@ struct FardriverData {
     // 13
     uint8_t Stage2Soc; // paracnt_3 : 4
 
+local string Addr_BE = Str("%02X", FTell() >> 1);
 // 0xBE
-    enum class ELowVolWay {
+    enum ELowVolWay {
         Vol2V = 0,
         Vol4V = 1,
         Vol8V = 2,
@@ -563,6 +540,7 @@ struct FardriverData {
     uint16_t InverseTime;
     uint16_t TorqueCoff;
 
+local string Addr_C4 = Str("%02X", FTell() >> 1);
 // 0xC4
     uint16_t LearnVolLow; // LearnVol
     uint16_t LearnVolHigh; // LearnVoh
@@ -572,6 +550,7 @@ struct FardriverData {
     uint8_t ExitFollowSpeed;
     uint8_t ReCurrRatio;
 
+local string Addr_CA = Str("%02X", FTell() >> 1);
 // 0xCA
     uint8_t AngleLearn;
     uint8_t SpdLmt_sel : 4;
@@ -587,7 +566,7 @@ struct FardriverData {
     }
     
     // uint8_t TaRlB9D0SP; 
-    enum class ESPMode {    
+    enum ESPMode {    
         HighOnly = 0,
         AddDec,
         ButtonHighLow,
@@ -601,7 +580,7 @@ struct FardriverData {
         Button4SpeedHigh,
         Line3Speed,
         SpecialGear,
-        Invalid = 13
+        ESPInvalid = 13
     };
 
     ESPMode SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
@@ -615,7 +594,7 @@ struct FardriverData {
     uint8_t SpeedLimitByCap;
     uint8_t MinSpeedCapCoeff;
     uint8_t ParkCoeff : 4;
-    enum class EBattSignal {
+    enum EBattSignal {
         OneLineComm = 0,
         SerialComm = 1,
         CAN = 2,
@@ -625,6 +604,7 @@ struct FardriverData {
     } BattSignal : 4; // BatSel
     uint16_t ReIsinAcc;
 
+local string Addr_D0 = Str("%02X", FTell() >> 1);
 // 0xD0
     // uint16_t OneCommHead;
     uint8_t Data0;
@@ -638,13 +618,13 @@ struct FardriverData {
     uint16_t RateRatio; // SpeedRatio
     // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
     // uint16_t OneCommCfg
-    enum class EIdle {
+    enum EIdle {
         Idle0_5ms = 0,
         Idle0_9ms = 1,
         Idle1_5ms = 2,
         Idle1_9ms = 3
     } Idle : 2;
-    enum class EStop {
+    enum EStop {
         Stop24ms = 0,
         Stop55ms = 1,
         Stop124ms = 2,
@@ -653,6 +633,11 @@ struct FardriverData {
     uint8_t ByteOption : 4; // Byte89Sel
     uint8_t SpecialFrame; // ESQH
 
+// omitted from HEB
+
+/*
+
+local string Addr_D6 = Str("%02X", FTell() >> 1);
 // 0xD6
     int16_t unkD6;
 
@@ -730,6 +715,7 @@ struct FardriverData {
 
     int16_t MosTemp;
 
+local string Addr_DC = Str("%02X", FTell() >> 1);
 // 0xDC
     uint16_t unkDC;
     uint16_t unkDD;
@@ -738,6 +724,7 @@ struct FardriverData {
     uint16_t unkE0;
     uint16_t unkE1;
 
+local string Addr_E2 = Str("%02X", FTell() >> 1);
 // 0xE2
     // 0
     // uint8_t xsControl : 2;
@@ -798,6 +785,7 @@ struct FardriverData {
     // 10-11
     int16_t unk2; // throttle request?
 
+local string Addr_E8 = Str("%02X", FTell() >> 1);
 // 0xE8
     int16_t deci_volts; 
     int16_t per_mille;
@@ -806,14 +794,20 @@ struct FardriverData {
     int16_t unk4; // something throttle?
     int16_t throttle_depth;
 
+local string Addr_EE = Str("%02X", FTell() >> 1);
 // 0xEE
     int16_t unkEE; // 2-3 pins states? something discovery
     int16_t unkEF; // 4-5
 // 0xF0 - 0x8A, xx written to not enter non-following status
-    big_end_24b phase_Acurr; // 1.953125 * Math.Sqrt(num)
-    big_end_24b phase_Ccurr; // 1.953125 * Math.Sqrt(num)
+    //big_end_24b phase_Acurr; // 1.953125 * Math.Sqrt(num)
+    //big_end_24b phase_Ccurr; // 1.953125 * Math.Sqrt(num)
+    BigEndian();
+    int32_t Phase_ACurr : 24;
+    int32_t Phase_CCurr : 24;
+    LittleEndian();
     int16_t volts; // mabe
 
+local string Addr_F4 = Str("%02X", FTell() >> 1);
 // 0xF4
     int16_t motor_temp;
     int8_t unkF5;
@@ -825,6 +819,7 @@ struct FardriverData {
     uint16_t paracnt_17;  
     uint16_t paracnt_16;  
     
+local string Addr_FA = Str("%02X", FTell() >> 1);
 // 0xFA
     int16_t PhaseAZero2;
     int16_t PhaseCZero2;
@@ -839,28 +834,114 @@ struct FardriverData {
     uint8_t unkFEb;
     uint8_t motor_running_state;
 
+*/
+
+uint8_t DataFormat;
+uint8_t RcvFrameType;
+uint8_t SendFrameType;
+uint16_t SOP_ID;
+uint16_t SOC_ID;
+uint16_t ChargeID;
+uint16_t SideStandID;
+uint16_t SpeedLimitID;
+uint16_t GearID;
+uint16_t ControlID;
+uint16_t OBD_ID;
+uint8_t ControlType;
+uint8_t SOPUnit;
+uint8_t SOPMSB;
+uint8_t SOPLSB;
+uint8_t SOCPos;
+uint8_t ChargeBytePos;
+uint8_t ChargeBitPos;
+uint8_t SideStandBytePos;
+uint8_t SideStandBitPos;
+uint8_t LimitSpeedBytePos;
+uint8_t LimitSpeedBitPos;
+uint8_t GearBytePos;
+uint8_t GearBitPos;
+uint8_t ControlBytePos;
+uint8_t unkCAN[7];
+
+uint32_t SendID0;
+uint32_t SendID1;
+uint32_t SendID2;
+uint32_t SendID3;
+uint32_t SendID4;
+uint32_t SendID5;
+
+uint8_t unk[2];
+
+uint8_t SendID0_Timer;
+uint8_t SendID1_Timer;
+uint8_t SendID2_Timer;
+uint8_t SendID3_Timer;
+uint8_t SendID4_Timer;
+uint8_t SendID5_Timer;
+
+struct CANConfig {
+    uint8_t Length;
+    uint8_t Pos;
+    uint8_t Gain;
+    uint8_t ID : 4;
+    uint8_t Valid : 4;
+    uint16_t Offset;
 };
-#pragma pack(pop)
 
-#define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
+// CAN Data
+CANConfig CustomCode;
+CANConfig SN0;
+CANConfig SN1;
+CANConfig SN2;
+CANConfig HardVer;
+CANConfig SoftVer0;
+CANConfig SoftVer1;
+CANConfig Voltage;
+CANConfig LineCurr;
+CANConfig PhaseCurr;
+CANConfig ThrottleDepth;
+CANConfig ThrottleVoltage;
+CANConfig Torque;
+CANConfig CurrentSpeed;
+CANConfig CurrentRotation;
+CANConfig TotalDistanceMSB;
+CANConfig TotalDistanceLSB;
+CANConfig CurrentDistance;
+CANConfig MosTemp;
+CANConfig MotorTemp;
+CANConfig BatterySOC;
 
-static_assert(offsetof(FardriverData, MaxLineCurr2) == (0x63 << 1));
-static_assert(offsetof(FardriverData, LmtSpeed) == (0x6C << 1));
-// static_assert(offsetof(FardriverData, PPin) == (0x69 << 1));
-static_assert(offsetof(FardriverData, unk7Ca) == (0x7C << 1));
-static_assert(offsetof(FardriverData, ThrottleVoltage) == (0x82 << 1));
-static_assert(offsetof(FardriverData, RatioMin) == (0x88 << 1));
-static_assert(offsetof(FardriverData, Ratio6000) == (0x8E << 1));
-static_assert(offsetof(FardriverData, nratio_4) == (0x94 << 1));
-static_assert(offsetof(FardriverData, nratio_16) == (0x9A << 1));
-static_assert(offsetof(FardriverData, unkA0) == (0xA0 << 1));
-static_assert(offsetof(FardriverData, unkAC) == (0xAC << 1));
-static_assert(offsetof(FardriverData, unkB2) == (0xB2 << 1));
-// static_assert(offsetof(FardriverData, OneCommPos) == (0xB8 << 1));
-static_assert(offsetof(FardriverData, unkD6) == (0xD6 << 1));
-static_assert(offsetof(FardriverData, unkDC) == (0xDC << 1));
-static_assert(offsetof(FardriverData, speed) == (0xE5 << 1));
-static_assert(offsetof(FardriverData, deci_volts) == (0xE8 << 1));
-static_assert(offsetof(FardriverData, unkEE) == (0xEE << 1));
-static_assert(offsetof(FardriverData, motor_temp) == (0xF4 << 1));
-static_assert(offsetof(FardriverData, PhaseAZero2) == (0xFA << 1));
+// CAN Stat
+CANConfig GearStat;
+CANConfig SpeedStat;
+CANConfig AntiTheftStat;
+CANConfig CruiseStat;
+CANConfig SeatStat;
+CANConfig SideStandStat;
+CANConfig SpeedLimitStat;
+CANConfig FixStat;
+CANConfig ReverseStat;
+CANConfig AssistStat;
+CANConfig PushStat;
+CANConfig ParkStat;
+CANConfig ChargeStat;
+CANConfig READYStat;
+CANConfig ECOStat;
+CANConfig EABSStat;
+CANConfig BOOSTStat;
+
+// CAN Alarm
+CANConfig HallAlarm;
+CANConfig HandBarAlarm;
+CANConfig BrakeAlarm;
+CANConfig MOSFETAlarm;
+CANConfig PhaseShortenAlarm;
+CANConfig PhaseLostAlarm;
+CANConfig MosOverTemp;
+CANConfig MotorOverTemp;
+CANConfig OverCurrAlarm;
+CANConfig OverVoltageAlarm;
+CANConfig LowVoltageAlarm;
+CANConfig BlockedStat;
+CANConfig AntiTheftAlarm;
+CANConfig ControllerAlarm;
