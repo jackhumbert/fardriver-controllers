@@ -327,20 +327,20 @@ struct Addr63 {
 // 0x69
 struct Addr69 {
     // uint16_t BstXhBcp; // BstXhBcp
-    PIN PPin : 4; // 69
-    PIN BCPin : 4;
-    PIN XHPin : 4;
-    PIN BoostPin : 4;
+    PIN PausePin : 4; // PPin
+    PIN SideStandPin : 4; // BCPin
+    PIN CruisePin : 4; // XHPin
+    PIN BoostPin : 4; // Boost Pin
     // uint16_t FrWeSdhSdl; // FrWeSdhSdl
-    PIN SDLPin : 4; // 6A
-    PIN SDHPin : 4;
-    PIN REPin : 4;
-    PIN FWPin : 4;
+    PIN SDLPin : 4; // Low Speed Pin
+    PIN SDHPin : 4; // High Speed Pin
+    PIN REPin : 4; // Reverse Pin
+    PIN FWPin : 4; // Forward Pin
     // uint16_t ChgFdSeatVol; // ChgFdSeatVol
-    PIN SwitchVolPin : 4; // 6B
+    PIN SwitchVolPin : 4; // Switch Voltage Pin
     PIN SeatPin : 4; // ZuotongPin
-    PIN FDPin : 4;
-    PIN CHGPin : 4;
+    PIN FDPin : 4; // "Steel" Pin, AntiTheft
+    PIN CHGPin : 4; // Charge pin
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceL; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
@@ -483,7 +483,7 @@ struct Addr9A {
     uint8_t unk9Db : 3;
 
     int16_t InitVol; // 9D
-    int16_t Stage1Curr; // 9E
+    int16_t Stage1Curr; // TurtleSpeedCurrCoeff
     uint8_t VolSelectRatio; // 9F
     uint8_t unk9Fb;
 };
@@ -521,24 +521,24 @@ struct AddrAC {
 struct AddrB2 {
     uint16_t unkB2;
     uint16_t unkB3;
-    uint8_t OneCommSec_0;
-    uint8_t OneCommSec_1;
-    uint8_t OneCommSec_2; 
-    uint8_t OneCommSec_3;
-    uint8_t OneCommSec_4;
-    uint8_t OneCommSec_5;
-    uint8_t OneCommSec_6;
-    uint8_t OneCommSec_7;
+    uint8_t OneCommSec_0; // SEC0
+    uint8_t OneCommSec_1; // SEC1
+    uint8_t OneCommSec_2; // SEC2
+    uint8_t OneCommSec_3; // SEC3
+    uint8_t OneCommSec_4; // SEC4
+    uint8_t OneCommSec_5; // SEC5
+    uint8_t OneCommSec_6; // SEC6
+    uint8_t OneCommSec_7; // SEC7
 };
 
 // 0xB8
 struct AddrB8 {
     // 2-3 B8
     // uint16_t OneCommPos; 
-    uint8_t PPosition : 4;
-    uint8_t BCPosition : 4;
+    uint8_t PPosition : 4; // Pause Position
+    uint8_t BCPosition : 4; // Side Stand Position
     uint8_t HBarPosition : 4;
-    uint8_t FDPosition : 4;
+    uint8_t FDPosition : 4; // AntiTheft Position
     // 4-5 B9
     uint16_t unkB9;
     // 6-7 BA
@@ -546,7 +546,7 @@ struct AddrB8 {
     uint8_t Pulse;
     uint8_t SQH;
     // 8-9 BB
-    uint16_t OnelineCurrCoeff;
+    uint16_t OnelineCurrCoeff; // CurrentCoeff
     // 10-11 GPara0, BC
     uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
     uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
@@ -609,8 +609,8 @@ struct AddrC4 {
 // 0xCA
 struct AddrCA {
     uint8_t AngleLearn;
-    uint8_t SpdLmt_sel : 4;
-    uint8_t OneKey_sel : 4;
+    PIN SpeedLimitPin : 4;
+    PIN RepairPin : 4; // OneKeyPin
     uint8_t NoCanCnt; // CAN Detect, ms, if >= 6 then * 2 else * 500
 
 #ifndef _010EDITOR
@@ -627,8 +627,8 @@ struct AddrCA {
     enum ESPMode {    
         HighOnly = 0, // Only high speed
         AddDec = 1, // Increment/Decrement by button
-        ButtonHighLow = 2,
-        ButtonLowMid = 3,
+        ButtonHighLow = 2, // "Point moving", 2 speed, High & Low
+        ButtonLowMid = 3, // 2 speed, Low & Mid
         Button3SpeedLow = 4,
         Button3SpeedMid = 5,
         Button3SpeedHigh = 6,
@@ -636,20 +636,21 @@ struct AddrCA {
         Button4Speed2 = 8,
         Button4Speed3 = 9, 
         Button4SpeedHigh = 10,
-        Line3Speed = 11,
-        SpecialGear = 12,
-        ESPInvalid = 13
+        Line3Speed = 11, // Also mentions "Dial"
+        CommGear = 12, // Over One Line?
+        CANGear = 13,
+        HighLowDisabled = 14
     } SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
     uint8_t Temp70 : 2;
     uint8_t LongBack : 1; // Push RE, toggle vs momentary?
     uint8_t ThrottleLost : 1;
 
     uint8_t LearnThrottle;
-    uint8_t SpeedLowCap;
-    uint8_t MidSpeedCap;
+    uint8_t SpeedLowCap; // LmtSpdMinCap
+    uint8_t MidSpeedCap; // LmtSpdStartCap
     uint8_t SpeedLimitByCap;
-    uint8_t MinSpeedCapCoeff;
-    uint8_t ParkCoeff : 4;
+    uint8_t MinSpeedCapCoeff; // LmtSpdMaxCoeff
+    uint8_t ParkCoeff : 4; // SlowDownCoeff
     enum EBattSignal {
         OneLineComm = 0,
         SerialComm = 1,
@@ -674,6 +675,7 @@ struct AddrD0 {
     uint8_t WheelWidth;
     uint16_t RateRatio; // SpeedRatio
     // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
+    
     // uint16_t OneCommCfg
     enum EIdle {
         Idle0_5ms = 0,
@@ -688,7 +690,51 @@ struct AddrD0 {
         Stop216ms = 3
     } Stop : 2;
     uint8_t ByteOption : 4; // Byte89Sel
-    uint8_t SpecialFrame; // ESQH
+    enum ESpecialFrame {
+        SpeedPulse = 0,
+        ReadyLamp = 1,
+        FanControl = 2,
+        Reserved = 3,
+        GeneralLink2 = 16,
+        // No One-Line communication
+        // Other One-Line Params are invalid
+        Bluetooth_TBIT = 32, 
+        Bluetooth_XZ_CONTROL = 33,
+        Bluetooth_XMZSBXX = 34,
+        Bluetooth_XM3SPEED = 35,
+        Bluetooth_M2S = 36,
+        Bluetooth_CN = 37,
+        // For InternalSEC & ExternalSEC, You can add these numbers to get the configuration you want
+        // bits 0-1
+        // 0  DATA10: power
+        // 1  DATA10: current percentage
+        // 2  DATA10: voltage in volts
+        // 3  DATA10: use ByteOption
+        // bits 2-3
+        // 0  DATA9: voltage in volts
+        // 4  DATA9: power
+        // 8  DATA9: voltage in half-volts
+        // 12 DATA9: use ByteOption
+        // Different DATA0 values
+        InternalSEC_08 = 48,
+        InternalSEC_07 = 64,
+        InternalSEC_30 = 80,
+        InternalSEC_27 = 96,
+        InternalSEC_10 = 112,
+        InternalSEC_2B = 128,
+        InternalSEC_05 = 144,
+        InternalSEC_05 = 160,
+        InternalSEC_25 = 176,
+        InternalSEC_0A = 192,
+        InternalSEC_1F = 208,
+        ExternalSEC = 224,
+        SpecialFrames = 240,
+        RS485 = 246,
+        NOSQH = 249,
+        YJOneLine = 250,
+        DYOneLine = 253,
+        PIN24_SelectPulseOneLine = 255
+    } SpecialFrame; // ESQH
 };
 
 // 0xD6
