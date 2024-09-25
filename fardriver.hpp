@@ -1,65 +1,27 @@
+#ifndef _010EDITOR
 #include <cstdint>
+#include "fardriver_message.hpp"
+#endif
 
-#pragma pack(push, 1)
 typedef struct {
     uint32_t byte_0 : 8;
     uint32_t byte_1 : 8;
     uint32_t byte_2 : 8;
-
+#ifndef _010EDITOR
     float value(void) {
         return 1.953125 * sqrt(byte_0 << 16 + byte_1 << 8 + byte_2);
     }
+#endif
 } big_end_24b;
-#pragma pack(pop)
 
-#pragma pack(push, 1)
-struct FardriverMessage {
-    static constexpr const uint8_t crcTableLo[256] = {
-        0, 192, 193, 1, 195, 3, 2, 194, 198, 6, 7, 199, 5, 197, 196, 4, 204, 12, 13, 205, 15, 207, 206, 14, 10, 202, 203, 11, 201, 9, 8, 200, 216, 24, 25, 217, 27, 219, 218, 26, 30, 222, 223, 31, 221, 29, 28, 220, 20, 212, 213, 21, 215, 23, 22, 214, 210, 18, 19, 211, 17, 209, 208, 16, 240, 48, 49, 241, 51, 243, 242, 50, 54, 246, 247, 55, 245, 53, 52, 244, 60, 252, 253, 61, 255, 63, 62, 254, 250, 58, 59, 251, 57, 249, 248, 56, 40, 232, 233, 41, 235, 43, 42, 234, 238, 46, 47, 239, 45, 237, 236, 44, 228, 36, 37, 229, 39, 231, 230, 38, 34, 226, 227, 35, 225, 33, 32, 224, 160, 96, 97, 161, 99, 163, 162, 98, 102, 166, 167, 103, 165, 101, 100, 164, 108, 172, 173, 109, 175, 111, 110, 174, 170, 106, 107, 171, 105, 169, 168, 104, 120, 184, 185, 121, 187, 123, 122, 186, 190, 126, 127, 191, 125, 189, 188, 124, 180, 116, 117, 181, 119, 183, 182, 118, 114, 178, 179, 115, 177, 113, 112, 176, 80, 144, 145, 81, 147, 83, 82, 146, 150, 86, 87, 151, 85, 149, 148, 84, 156, 92, 93, 157, 95, 159, 158, 94, 90, 154, 155, 91, 153, 89, 88, 152, 136, 72, 73, 137, 75, 139, 138, 74, 78, 142, 143, 79, 141, 77, 76, 140, 68, 132, 133, 69, 135, 71, 70, 134, 130, 66, 67, 131, 65, 129, 128, 64
-    };
-    static constexpr const uint8_t crcTableHi[256] = {
-        0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65, 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
-    };
-
-    uint8_t * GetRaw() {
-        return (uint8_t *)(this);
-    }
-
-    bool VerifyCRC() {
-        uint8_t a = 0x3C; // 60
-        uint8_t b = 0x7F; // 127
-        uint8_t index;
-        for (index = 0; index < 14; ++index) {
-            auto crc_i = a ^ this->GetRaw()[index];
-            a = b ^ this->crcTableHi[crc_i];
-            b = this->crcTableLo[crc_i];
-        }
-        return this->crc[0] == a && this->crc[1] == b;
-    }
-
-    uint8_t start = 0xAA;
-    struct Header {
-        uint8_t id : 6;
-        uint8_t flag : 2;
-    } header;
-    uint8_t data[12];
-    uint8_t crc[2];
-
-};
-#pragma pack(pop)
-
-constexpr const uint8_t FardriverMessage::crcTableLo[256];
-constexpr const uint8_t FardriverMessage::crcTableHi[256];
-
-#pragma pack(push, 1)
 struct FardriverData {
-
+#ifndef _010EDITOR
     uint8_t * GetAddr(uint16_t addr) {
         return (uint8_t*)this + (addr << 1);
     }
 
     uint16_t GetWord(uint16_t addr) {
-        return (uint16_t*)this + addr;
+        return *((uint16_t*)this + addr);
     }
 
     // used when App.NewVersion
@@ -71,8 +33,7 @@ struct FardriverData {
         data[3] = addr;
         uint8_t a = 0x3C; // 60
         uint8_t b = 0x7F; // 127
-        uint8_t index;
-        for (pos = 0; pos < length; ++pos) {
+        for (uint8_t pos = 0; pos < length; ++pos) {
             auto crc_i = a ^ data[pos];
             a = b ^ FardriverMessage::crcTableHi[crc_i];
             b = FardriverMessage::crcTableLo[crc_i];
@@ -102,19 +63,23 @@ struct FardriverData {
         data[7] = ~data[6];
     // send data
     }
+#endif
 
 // 0x00
+struct Addr00 {
     int16_t VolCoeff;
     int16_t Voltage2Coeff;
     int16_t PhaseACoeff;
     int16_t LineCoeff;
     int16_t PhaseCCoeff;
     int16_t SaveNum;
+} addr00;
 
 // 0x06
+struct Addr06 {
     // 2
     uint8_t Arg2 : 1;
-    enum class EAntiTheftPulse {
+    enum EAntiTheftPulse {
         Invalid = 0,
         Type1 = 1,
         Type2 = 2,
@@ -136,15 +101,15 @@ struct FardriverData {
     int16_t CurveTime;
     
     // 12 cfg11l
-    enum class EBrakeConfig {
+    enum EBrakeConfig {
         StopWhenGround = 0,
         StopWhenFloat = 1,
         P_StopGnd = 2,
         P_StopFloat = 3,
-        Disabled = 4
+        BrakeDisabled = 4
     } BrakeConfig : 4;
-    enum class ETempSensor {
-        None = 0,
+    enum ETempSensor {
+        NoTempSensor = 0,
         PTC = 1,
         NTC230K = 2,
         KTY84_130 = 3,
@@ -159,15 +124,17 @@ struct FardriverData {
     uint8_t SlowDown : 3;
     uint8_t PC13Config : 1; // RaceResponse
     uint8_t CurrAntiTheft : 1; // CurrFD Valid = 1
-    enum class EParkConfig {
+    enum EParkConfig {
         ReversePark = 0,
         SwitchPark = 1,
         SlowDownPark = 2,
-        Disabled = 3
+        ParkDisabled = 3
     } ParkConfig : 2;
     uint8_t Direction : 1; // Send(0x12, 0x07)
+} addr06;
 
 // 0x0C
+struct Addr0C {
     int16_t PhaseOffset; // / 10.0, Send(0x0A, 0x07)
     int16_t ZeroBattCoeff;
     int16_t FullBattCoeff;
@@ -177,8 +144,10 @@ struct FardriverData {
     uint8_t StartKP;
     uint8_t MidKP;
     uint8_t MaxKP;
+};
 
 // 0x12
+struct Addr12 {
     int16_t LD;
     uint16_t AlarmDelay;
     uint8_t PolePairs; // Send(0x12, 0x01)
@@ -186,8 +155,10 @@ struct FardriverData {
     uint16_t MaxSpeed; // Send(0x12, 0x02)
     uint16_t RatedPower; // Send(0x12, 0x03)
     uint16_t RatedVoltage; // / 10, Send(0x12, 0x04)
+};
 
 // 0x18
+struct Addr18 {
     // 2-3
     uint16_t RatedSpeed; // Send(0x12, 0x05)
 
@@ -195,19 +166,19 @@ struct FardriverData {
     uint16_t MaxLineCurr; // / 4, Send(0x12, 0x1B)
 
     // 6 cfg26l
-    enum class EFollowConfig {
+    enum EFollowConfig {
         FollowEnabled = 0,
-        Disabled = 1,
+        FollowDisabled = 1,
         EABSWhenBreakValid = 2,
         EABSWhenReleaseThrottle = 3
     } FollowConfig : 2;
-    enum class EThrottleResponse {
+    enum EThrottleResponse {
         Line = 0,
         Sport = 1,
         ECO = 2
     } ThrottleResponse : 2; // ECOConfig
     uint8_t WeakA : 2;
-    enum class ERXD {
+    enum ERXD {
         AF = 0,
         OD = 1,
         PP = 2
@@ -215,10 +186,10 @@ struct FardriverData {
 
     // 7 cfg26h
     uint8_t SpeedPulse : 5;
-    enum class EGearConfig {
+    enum EGearConfig {
         DefaultN = 0,
         DefaultD = 1,
-        Disabled = 2,
+        GearConfig = 2,
         DefaultAntiTheft = 3, // DefaultLow in old
         DefaultButtonHigh = 4,
         DefaultButtonMiddle = 5
@@ -232,8 +203,10 @@ struct FardriverData {
 
     // 12-13
     uint16_t IntRes; // Send(0x0F, 0x08)
+};
 
 // 0x1E
+struct Addr1E {
     uint16_t FwReRatio;
     uint16_t LowVolProtect; // / 10
     // local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
@@ -262,8 +235,10 @@ struct FardriverData {
     uint8_t ModelMonth;
     uint8_t ModelDay;
     uint8_t TimeHour;
+};
 
 // 0x24
+struct Addr24 {
     uint8_t TimeMin;
     uint8_t TimeSecond;
     uint16_t HighVolProtect; // / 10
@@ -271,8 +246,10 @@ struct FardriverData {
     uint16_t CustomMaxPhaseCurr; // / 4
     uint16_t BackSpeed; // Send(0x11, 0x03)
     uint16_t LowSpeed; // Send(0x11, 0x02)
+};
 
 // 0x2A
+struct Addr2A {
     uint16_t MidSpeed;
     uint16_t Max_Dec;
     uint8_t FreeThrottle; 
@@ -280,8 +257,10 @@ struct FardriverData {
     uint16_t MaxPhaseCurr; // / 4, Send(0x12, 0x1A)
     uint16_t SpeedAnalog;
     uint16_t Max_Acc;
+};
 
 // 0x30
+struct Addr30 {
     uint16_t StopBackCurr; // Send(0x12, 0x18)
     uint16_t MaxBackCurr; // Send(0x12, 0x19)
     // (all * 100) / 128.0 + 0.5
@@ -291,6 +270,7 @@ struct FardriverData {
     uint8_t MidSppedPhaseCurr;
     uint16_t BlockTime;
     uint16_t SpdPulseNum;
+};
 
     uint16_t unk36[6];
     uint16_t unk3A[6];
@@ -301,14 +281,17 @@ struct FardriverData {
     uint16_t unk5A[3];
 
 // 0x5D
+struct Addr5D {
     uint16_t unk5D;
     uint16_t unk5E;
     uint16_t unk5F; 
     uint16_t unk60;
     uint16_t unk61;
     uint16_t unk62;
+};
     
 // 0x63
+struct Addr63 {
     uint16_t MaxLineCurr2;
     uint16_t MaxPhaseCurr2; // 0x64
     uint8_t MotorDia;  // 65
@@ -320,8 +303,10 @@ struct FardriverData {
     // uint16_t paracnt_4; // / 4.0 6A
     // uint8_t paracnt_5;
     // uint8_t unk68b;
+};
 
 // 0x69
+struct Addr69 {
     // uint16_t BstXhBcp; // BstXhBcp
     uint8_t PPin : 4; // 69
     uint8_t BCPin : 4;
@@ -341,6 +326,8 @@ struct FardriverData {
     uint16_t DistanceL; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
+};
+
     uint8_t unk6Fa; // 6F
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
@@ -365,6 +352,7 @@ struct FardriverData {
     uint16_t unk7B;
 
 // 0x7C
+struct Addr7C {
     // 2 config_word0
     uint8_t unk7Ca : 1;
     uint8_t WeakTime : 3;
@@ -386,11 +374,13 @@ struct FardriverData {
     uint8_t SpeedMeterConfig3 : 1; // Analog
 
     // 4
-    uint TotalTime; // minutes, infoc0, wktime
-    uint infoc1;
+    uint32_t TotalTime; // minutes, infoc0, wktime
+    uint32_t infoc1;
     uint16_t DistanceH; // this << 16 / 10, km
-           
+};    
+
 // 0x82
+struct Addr82 {
     uint16_t ThrottleVoltage; // * 0.01, 0x82
     uint16_t HighVolRestore; // / 10.0)>; 0x83
     uint8_t MotorTempProtect; // 0x84
@@ -405,8 +395,10 @@ struct FardriverData {
     uint8_t Version0; // HardVer
     uint8_t Version1; // SoftVer0
     uint8_t SoftVer; // SoftVer1
+};
 
 // 0x88
+struct Addr88 {
     uint8_t RatioMin;
     uint8_t Ratio500;
     uint8_t Ratio1000;
@@ -419,8 +411,10 @@ struct FardriverData {
     uint8_t Ratio4500;
     uint8_t Ratio5000;
     uint8_t Ratio5500;
+};
 
 // 0x8E
+struct Addr8E {
     uint8_t Ratio6000;
     uint8_t Ratio6500;
     uint8_t Ratio7000;
@@ -433,8 +427,10 @@ struct FardriverData {
     int8_t nratio_1;
     int8_t nratio_2;
     int8_t nratio_3;
+};
 
 // 0x94
+struct Addr94 {
     int8_t nratio_4;
     int8_t nratio_5;
     int8_t nratio_6;
@@ -447,8 +443,10 @@ struct FardriverData {
     int8_t nratio_13;
     int8_t nratio_14;
     int8_t nratio_15;
+};
 
 // 0x9A
+struct Addr9A {
     int8_t nratio_16; // 9A
     int8_t nratio_17;
     int8_t nratio_18; // 9B
@@ -469,8 +467,10 @@ struct FardriverData {
     int16_t Stage1Curr; // 9E
     uint8_t VolSelectRatio; // 9F
     uint8_t unk9Fb;
+};
 
-// 0xA0 / 0xA6
+// 0xA0
+struct AddrA0 {
     uint8_t unkA0; // 0x88 usually?
     uint8_t SysCmd;
     // 01 non-following status
@@ -479,19 +479,27 @@ struct FardriverData {
     // 05 non-ISOLATE_
     // 06 gather data
     // 0F ISOLATE_
-    char ModelName[22]; 
+    char ModelName[10]; 
+};
 
-    // AB - where password is stored?
+// 0xA6
+struct AddrA6 { 
+    char ModelName[10];
+    uint16_t unkAB; // where password is stored?
+};
 
 // 0xAC
+struct AddrAC {
     uint16_t unkAC; // more password
     uint16_t unkAD; // phone number start1[14]
     uint16_t unkAE; // phone number start0[14] 
     uint16_t unkAF;
     uint16_t unkB0;
     uint16_t unkB1;
+};
 
 // 0xB2
+struct AddrB2 {
     uint16_t unkB2;
     uint16_t unkB3;
     uint8_t OneCommSec_0;
@@ -502,8 +510,10 @@ struct FardriverData {
     uint8_t OneCommSec_5;
     uint8_t OneCommSec_6;
     uint8_t OneCommSec_7;
+};
 
 // 0xB8
+struct AddrB8 {
     // 2-3 B8
     // uint16_t OneCommPos; 
     uint8_t PPosition : 4;
@@ -521,12 +531,12 @@ struct FardriverData {
     // 10-11 GPara0, BC
     uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
     uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
-    enum class ECANBaud {
+    enum ECANBaud {
         Baud250K = 0,
         Baud500K = 1,
         Baud1M = 2
     } CANBaud : 4; // CanSel
-    enum class EPasswordStatus {
+    enum EPasswordStatus {
         PasswordProtected = 0,
         AlsoPasswordProtected = 1,
         NoPassword = 2
@@ -535,9 +545,11 @@ struct FardriverData {
     uint8_t Stage1Soc;
     // 13
     uint8_t Stage2Soc; // paracnt_3 : 4
+};
 
 // 0xBE
-    enum class ELowVolWay {
+struct AddrBE {
+    enum ELowVolWay {
         Vol2V = 0,
         Vol4V = 1,
         Vol8V = 2,
@@ -562,8 +574,10 @@ struct FardriverData {
     uint16_t ParkTime; // / 500, seconds
     uint16_t InverseTime;
     uint16_t TorqueCoff;
+};
 
 // 0xC4
+struct AddrC4 {
     uint16_t LearnVolLow; // LearnVol
     uint16_t LearnVolHigh; // LearnVoh
     uint16_t SlowDownRpm; // ParkDiff
@@ -571,13 +585,16 @@ struct FardriverData {
     uint16_t ThrottleInsert; // & 0x20 TCS
     uint8_t ExitFollowSpeed;
     uint8_t ReCurrRatio;
+};
 
 // 0xCA
+struct AddrCA {
     uint8_t AngleLearn;
     uint8_t SpdLmt_sel : 4;
     uint8_t OneKey_sel : 4;
     uint8_t NoCanCnt; // CAN Detect, ms, if >= 6 then * 2 else * 500
 
+#ifndef _010EDITOR
     uint16_t GetCanDetectMS() {
         if (NoCanCnt >= 6) {
             return NoCanCnt * 2;
@@ -585,9 +602,10 @@ struct FardriverData {
             return NoCanCnt * 500;
         }
     }
+#endif
     
     // uint8_t TaRlB9D0SP; 
-    enum class ESPMode {    
+    enum ESPMode {    
         HighOnly = 0,
         AddDec,
         ButtonHighLow,
@@ -601,10 +619,8 @@ struct FardriverData {
         Button4SpeedHigh,
         Line3Speed,
         SpecialGear,
-        Invalid = 13
-    };
-
-    ESPMode SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
+        ESPInvalid = 13
+    } SPModeConfig : 4; // HighLowSpeed, SDHDs/SDLDs
     uint8_t Temp70 : 2;
     uint8_t LongBack : 1; // Push RE
     uint8_t ThrottleLost : 1;
@@ -615,7 +631,7 @@ struct FardriverData {
     uint8_t SpeedLimitByCap;
     uint8_t MinSpeedCapCoeff;
     uint8_t ParkCoeff : 4;
-    enum class EBattSignal {
+    enum EBattSignal {
         OneLineComm = 0,
         SerialComm = 1,
         CAN = 2,
@@ -624,8 +640,10 @@ struct FardriverData {
         LFPBattery = 5
     } BattSignal : 4; // BatSel
     uint16_t ReIsinAcc;
+};
 
 // 0xD0
+struct AddrD0 {
     // uint16_t OneCommHead;
     uint8_t Data0;
     uint8_t Data1;
@@ -638,13 +656,13 @@ struct FardriverData {
     uint16_t RateRatio; // SpeedRatio
     // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
     // uint16_t OneCommCfg
-    enum class EIdle {
+    enum EIdle {
         Idle0_5ms = 0,
         Idle0_9ms = 1,
         Idle1_5ms = 2,
         Idle1_9ms = 3
     } Idle : 2;
-    enum class EStop {
+    enum EStop {
         Stop24ms = 0,
         Stop55ms = 1,
         Stop124ms = 2,
@@ -652,8 +670,10 @@ struct FardriverData {
     } Stop : 2;
     uint8_t ByteOption : 4; // Byte89Sel
     uint8_t SpecialFrame; // ESQH
+};
 
 // 0xD6
+struct AddrD6 {
     int16_t unkD6;
 
     // 4
@@ -729,16 +749,20 @@ struct FardriverData {
     uint8_t AngleError : 1;
 
     int16_t MosTemp;
+};
 
 // 0xDC
+struct AddrDC {
     uint16_t unkDC;
     uint16_t unkDD;
     uint16_t unkDE; 
     uint16_t unkDF; // changed from 0x57 00 to 0x01 40
     uint16_t unkE0;
     uint16_t unkE1;
+};
 
 // 0xE2
+struct AddrE2 {
     // 0
     // uint8_t xsControl : 2;
     // uint8_t gear : 2;
@@ -797,24 +821,30 @@ struct FardriverData {
 
     // 10-11
     int16_t unk2; // throttle request?
+};
 
 // 0xE8
+struct AddrE8 {
     int16_t deci_volts; 
     int16_t per_mille;
     int16_t lineCurrent; // / 4   
     int16_t unk3;
     int16_t unk4; // something throttle?
     int16_t throttle_depth;
+};
 
 // 0xEE
+struct AddrEE {
     int16_t unkEE; // 2-3 pins states? something discovery
     int16_t unkEF; // 4-5
-// 0xF0 - 0x8A, xx written to not enter non-following status
-    big_end_24b phase_Acurr; // 1.953125 * Math.Sqrt(num)
-    big_end_24b phase_Ccurr; // 1.953125 * Math.Sqrt(num)
+    // 0xF0 - 0x8A, xx written to not enter non-following status
+    big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)
+    big_end_24b PhaseCCurr; // 1.953125 * Math.Sqrt(num)
     int16_t volts; // mabe
+};
 
 // 0xF4
+struct AddrF4 {
     int16_t motor_temp;
     int8_t unkF5;
     int8_t batt_cap; // SOC
@@ -824,8 +854,10 @@ struct FardriverData {
     uint8_t ManuDay; // paracnt_8
     uint16_t paracnt_17;  
     uint16_t paracnt_16;  
-    
+};
+
 // 0xFA
+struct AddrFA {
     int16_t PhaseAZero2;
     int16_t PhaseCZero2;
     uint8_t motor_stop_state;
@@ -838,9 +870,11 @@ struct FardriverData {
     uint8_t unkFEa;
     uint8_t unkFEb;
     uint8_t motor_running_state;
+};
 
 };
-#pragma pack(pop)
+
+#ifndef _010EDITOR
 
 #define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
 
@@ -864,3 +898,4 @@ static_assert(offsetof(FardriverData, deci_volts) == (0xE8 << 1));
 static_assert(offsetof(FardriverData, unkEE) == (0xEE << 1));
 static_assert(offsetof(FardriverData, motor_temp) == (0xF4 << 1));
 static_assert(offsetof(FardriverData, PhaseAZero2) == (0xFA << 1));
+#endif
