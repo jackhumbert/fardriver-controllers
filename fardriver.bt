@@ -11,6 +11,13 @@
 //   History: 
 //------------------------------------------------
 
+typedef uint uint32_t;
+typedef int int32_t;
+typedef ushort uint16_t;
+typedef short int16_t;
+typedef ubyte uint8_t;
+typedef byte int8_t;
+
 local ubyte FlashReadAddr[55] = {
 0xE2, 0xE8, 0xEE, 0x00, 0x06, 0x0C, 0x12, 
 0xE2, 0xE8, 0xEE, 0x18, 0x1E, 0x24, 0x2A, 
@@ -202,29 +209,59 @@ struct {
         }
         if (lut == 0x06) {
             // 2
-            ubyte PulseFD : 2;
-            ubyte Protocol485 : 4;
-            ubyte unk : 2;
 
-            ubyte MorseCode;
-            ubyte SpeedKI;
-            ubyte SppedKP;
-            ubyte ThrottleLow <read=Str("%0.2fV", this / 20.0)>; // / 20
-            ubyte ThrottleHigh <read=Str("%0.2fV", this / 20.0)>; // / 20
+    uint8_t Arg2 : 1;
+    enum EAntiTheftPulse {
+        Invalid = 0,
+        Type1 = 1,
+        Type2 = 2,
+        Type3 = 3
+    } AntiTheftPulse : 2; // PulseFD
+    uint8_t unk02a : 1;
+    uint8_t Protocol485 : 4;
+
+    uint8_t MorseCode;
+    uint8_t SpeedKI;
+    uint8_t SppedKP;
+    uint8_t ThrottleLow; // / 20
+    uint8_t ThrottleHigh; // / 20
+    
+    
             short FAIF;
             short CurveTime;
-            
-            // 11
-            ubyte BrakeConfig : 4;
-            ubyte NTC_PTC : 3;
-            ubyte unk : 1;
 
             // 12
-            ubyte unk : 3;
-            ubyte PC13Config ; 1;
-            ubyte CurrConfig ; 1;
-            ubyte ParkConfig : 2;
-            ubyte Direction : 1;
+    enum EBrakeConfig {
+        StopWhenGround = 0,
+        StopWhenFloat = 1,
+        P_StopGnd = 2,
+        P_StopFloat = 3,
+        BrakeDisabled = 4
+    } BrakeConfig : 4;
+    enum ETempSensor {
+        None = 0,
+        PTC = 1,
+        NTC230K = 2,
+        KTY84_130 = 3,
+        CACU = 4,
+        KTY83_122 = 5,
+        NTC10K = 6,
+        NTC100K = 7
+    } TempSensor : 3; // NTC_PTC, Send(0x11, 0x01)
+    uint8_t PhaseExchange : 1;
+    
+    
+    // 13 cfg11h
+    uint8_t SlowDown : 3;
+    uint8_t PC13Config : 1; // RaceResponse
+    uint8_t CurrAntiTheft : 1; // CurrFD Valid = 1
+    enum EParkConfig {
+        ReversePark = 0,
+        SwitchPark = 1,
+        SlowDownPark = 2,
+        ParkDisabled = 3
+    } ParkConfig : 2;
+    uint8_t Direction : 1; // Send(0x12, 0x07)
 
             type = "0x06";
         }
@@ -253,36 +290,74 @@ struct {
         if (lut == 0x18) {
             ushort RatedSpeed;
             ushort MaxLineCurr <read=Str("%0.1fA", this / 4.0)>;
-            ubyte FollowConfig : 2;
-            ubyte ECOConfig : 2;
-            ubyte WeakA : 2;
-            ubyte unk : 2;
-            ubyte SpeedPulse : 5;
-            ubyte GearConfig : 3;
-            ushort LQ;
-            ushort BattRatedCap;
-            ushort IntRes;
+
+    // 6
+    enum EFollowConfig {
+        FollowEnabled = 0,
+        FollowDisabled = 1,
+        EABSWhenBreakValid = 2,
+        EABSWhenReleaseThrottle = 3
+    } FollowConfig : 2;
+    enum EThrottleResponse {
+        Line = 0,
+        Sport = 1,
+        ECO = 2
+    } ThrottleResponse : 2; // ECOConfig
+    uint8_t WeakA : 2;
+    enum ERXD {
+        AF = 0,
+        OD = 1,
+        PP = 2
+    } RXD : 2;
+    
+    
+    // 7 cfg26h
+    uint8_t SpeedPulse : 5;
+    enum EGearConfig {
+        DefaultN = 0,
+        DefaultD = 1,
+        GearDisabled = 2,
+        DefaultAntiTheft = 3, // DefaultLow in old
+        DefaultButtonHigh = 4,
+        DefaultButtonMiddle = 5
+    } GearConfig : 3;
+
+    // 8-9
+    uint16_t LQ;
+
+    // 10-11
+    uint16_t BattRatedCap;
+
+    // 12-13
+    uint16_t IntRes; // Send(0x0F, 0x08)
+
             type = Str("0x18");
         }
         if (lut == 0x1E) {
-            ushort FwReRatio;
+            ushort FwReRatio; // FWRE_SpeedRatio
             ushort LowVolProtect <read=Str("%0.1fV", this / 10.0)>;
             local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
             char CustomCode[2];
 
-            // 8-9
-            // ushort RelayDelay;
-            ubyte BCState : 1;
-            ubyte Zuotong : 1;
-            ubyte PGear : 1;
-            ubyte AutoBackPStat : 1;
-            ubyte XHStat : 1;
-            ubyte unk : 1;
-            ubyte TuixingS : 1;
-            ubyte unk : 3;
-            ubyte GearRemeberS : 1;
-            ubyte unk : 3;
-            ubyte REGear : 1;
+ 
+    // 8
+    // uint16_t RelayDelay; // ms
+    uint8_t BCState : 1;
+    uint8_t SeatEnable : 1; // Zuotong
+    uint8_t PEnable : 1; // PGear
+    uint8_t AutoBackPEnable : 1; // AutoBackPStat
+    uint8_t CruiseEnable : 1; // XHStat
+    uint8_t EABSEnable : 1;
+    uint8_t PushEnable : 1; // TuixingS
+    uint8_t ForseAntiTheft : 1;
+
+    // 9
+    uint8_t OverSpeedAlarm : 1;
+    uint8_t BrakeStillPark : 1; // ParkDisableBrake
+    uint8_t RememberGear : 1; // GearRememberS
+    uint8_t unk21c : 3;
+    uint8_t BackEnable : 1; // REGear
+    uint8_t RelayDelay1S : 1;
 
             ubyte ModelYear <read=Str("%d", this + 2000)>;
             ubyte ModelMonth;
@@ -375,8 +450,26 @@ struct {
             type = Str("0x69 DistanceL: %0.1f", DistanceL / 10.0);
         }
         if (lut == 0x7C) {
-            byte unk; // config_word0
-            byte unk; // config_word1
+    // 2 config_word0
+    uint8_t unk7Ca : 1;
+    uint8_t WeakTime : 3;
+    uint8_t unk7Cb : 1;
+    uint8_t QuickDown : 3;
+    
+    // 3 config_word1
+    // SpeedMeterConfig has a weird configuration that looks at the 3 variables & computes them to an enum
+    // 0 Pulse none
+    // 1 Analog: 1 & 3
+    // 2 IsolatedPulse: 1 & 2
+    uint8_t SpeedMeterConfig1 : 1; // Pulse
+    uint8_t SpeedMeterConfig2 : 1; // IsolatedPulse
+    uint8_t FastRE : 1;
+    uint8_t SpecialWeak : 1; // DeepWeak Special
+    uint8_t ZeroSwitch : 1; // SpeedSwitch Valid
+    uint8_t unk7Cc : 1;
+    uint8_t MOE : 1;
+    uint8_t SpeedMeterConfig3 : 1; // Analog
+    
             uint TotalTime <read=Str("%0.2fh", this / 60.0)>; // infoc0
             uint infoc1;
             ushort DistanceH <read=Str("%0.1fkm", this << 16 / 10.0)>;    

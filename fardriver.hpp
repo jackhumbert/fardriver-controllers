@@ -216,7 +216,7 @@ struct FardriverData {
     // 7 cfg26h
     uint8_t SpeedPulse : 5;
     enum class EGearConfig {
-        DefaultN = 0
+        DefaultN = 0,
         DefaultD = 1,
         Disabled = 2,
         DefaultAntiTheft = 3, // DefaultLow in old
