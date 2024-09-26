@@ -6,10 +6,10 @@
 enum PIN {
     NC = 0, // Normally Closed
     PIN24 = 1,
-    PIN15 = 2, // CAN RX
-    PIN5 = 3, // CAN TX
+    PIN15 = 2, // Actually P4, CAN RX
+    PIN5 = 3, // Actually P5, CAN TX
     PIN17 = 4, // Used by encoder units
-    PIN14 = 5,
+    PIN14 = 5, // Actually P6 (or maybe P17)
     PIN3 = 6,
     PIN8 = 7,
     PB4 = 8,
@@ -339,8 +339,8 @@ struct Addr69 {
     // uint16_t ChgFdSeatVol; // ChgFdSeatVol
     PIN SwitchVolPin : 4; // Switch Voltage Pin
     PIN SeatPin : 4; // ZuotongPin
-    PIN FDPin : 4; // "Steel" Pin, AntiTheft
-    PIN CHGPin : 4; // Charge pin
+    PIN AntiTheftPin : 4; // FDPin, "Steel" Pin
+    PIN ChargePin : 4; // CHGPin
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceL; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
@@ -723,7 +723,7 @@ struct AddrD0 {
         InternalSEC_10 = 112,
         InternalSEC_2B = 128,
         InternalSEC_05 = 144,
-        InternalSEC_05 = 160,
+        InternalSEC_052 = 160,
         InternalSEC_25 = 176,
         InternalSEC_0A = 192,
         InternalSEC_1F = 208,
@@ -749,7 +749,7 @@ struct AddrD6 {
     uint8_t AutoLearn : 1;
     uint8_t NeedAutoLearn : 1;
     uint8_t Global_state1c : 1;
-    uint8_t HallError : 1;
+    uint8_t HallError : 1; // Seated
     uint8_t MotorRun : 1; // else MotorStop
     uint8_t Global_state1d : 1;
     uint8_t Global_state1e : 1;
@@ -779,12 +779,12 @@ struct AddrD6 {
 
     // 8
     uint8_t Global_state3 : 1;
-    uint8_t FDStart : 1;
-    uint8_t FDClose : 1;
-    uint8_t FDWay : 1;  
+    uint8_t FDStart : 1; // Relay
+    uint8_t FDClose : 1; // Boost
+    uint8_t FDWay : 1;  // Charge
     uint8_t SpeedLimitEnabled : 1; 
     uint8_t PhaseCZero : 1; 
-    uint8_t FDWork : 1; 
+    uint8_t FDWork : 1;  // StlWork
     uint8_t WUVD : 1;   
     uint8_t PhaseAZero : 1; 
     uint8_t ShouldBeStat : 1;   
@@ -847,10 +847,10 @@ struct AddrE2 {
     uint8_t phaseA_active : 1;
     uint8_t phaseB_active : 1;
     uint8_t phaseC_active : 1;
-    uint8_t passOK : 2; // 2
+    uint8_t passOK : 2; // = 2
     uint8_t Bmq_Hall : 1;
-    uint8_t unkE2b : 1;
-    uint8_t function_state128 : 1;
+    uint8_t LowVolRem : 1;
+    uint8_t MosfetCheck : 1;
 
     // 2
     uint8_t motor_hall_error : 1; // E3
@@ -890,17 +890,34 @@ struct AddrE2 {
 
 // 0xE8
 struct AddrE8 {
+    // 2-3
     int16_t deci_volts; 
-    int16_t per_mille;
+    // 4-5
+    int16_t per_mille; // * 3.3 * 1.5 / 4096.0
+    // 6-7
     int16_t lineCurrent; // / 4   
+    // 8-9
     int16_t unk3;
+    // 10-11
     int16_t unk4; // something throttle?
+    // 12-13
     int16_t throttle_depth;
 };
 
 // 0xEE
 struct AddrEE {
-    int16_t unkEE; // 2-3 pins states? something discovery
+    // 2-3 pin states?
+    // analyzetype:
+    // P = 0
+    // BC = 1
+    // RE = 2
+    // SDH = 3
+    // SDL = 4
+    // XH = 5
+    // SEAT = 6
+    // analyzetype written to unkEE[0] and anaylzenum (bit index) written to unkEE[1]
+    // H97 later support
+    int8_t unkEE[2];
     int16_t unkEF; // 4-5
     // 0xF0 - 0x8A, xx written to not enter non-following status
     big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)

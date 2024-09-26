@@ -131,7 +131,7 @@ struct {
         
         if (lut == 0xE2) { // repeated often
             AddrE2 addr;
-            type = Str("  0xEE");
+            type = Str("  0xE2");
         }
         if (lut == 0xE8) { // repeated often
             //short Voltage <read=Str("%0.1fV", this / 10.0)>; 
@@ -147,7 +147,7 @@ struct {
             //int PhaseCCurr : 24  <read=Str("%0.1fA", 125.0 / 64.0 * Sqrt(this))>;
             //LittleEndian();
             AddrEE addr;
-            type = Str("  0xEE");
+            type = Str("  0xEE %02X %02X", addr.unkEE[0], addr.unkEE[1]);
         }
         
         // less freq updates
