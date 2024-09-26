@@ -92,6 +92,18 @@ struct {
 
 The CRC is calculated and assigned to the last two bytes using the `ComputeCRC` method mentioned earlier, passing in `8` for the length, instead of `16`. 
 
+System commands can be sent by writing `0x88 XX` to the address `0xA0`:
+
+* `0x01` enters non-following status
+* `0x02` starts self-learning/balance?
+* `0x03` stops balancing
+* `0x04` gets CAN parameters?
+* `0x05` related to `0x0F`
+* `0x06` starts data gathering
+* `0x07` stops something?
+* `0x08` unknown
+* `0x0F` same as `0x05` if Version0 == 73
+
 ### Sending commands
 
 These are less commonly used, mainly with "old" configs. Commands are sent in 8 byte packets with the following format:
@@ -118,6 +130,7 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
     * `0x02` system shutdown, non-following status
     * `0x6F` related to starting/stopping balance and MOS charging/discharging
 * `0x05` sent after updating date & time
+    * `0x01 0x5F 0x5F` may get CAN params
 * `0x07` starts the gathering of data and returns 300 frames of recent data logging?
 * `0x08`
 * `0x09` sets the CAN number

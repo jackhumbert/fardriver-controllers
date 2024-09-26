@@ -48,7 +48,19 @@ struct FardriverData {
     void WriteAddr(uint8_t * data, uint8_t addr, uint8_t length) {
         length += 4;
         data[0] = 0xAA; // 170
-        data[1] = 0xC0 + length; // 192
+        if (length == 0x184) {
+            // CAN Data, 0x180 bytes long
+            // addr is 0
+            data[1] = 0xFF; 
+        } else if (length == 0x13C) {
+            // All params?, 0x138 bytes long
+            // addr is 0 or 1
+            data[1] = 0xFE;
+        } else if {
+            data[1] = 0xFD;
+        } else {
+            data[1] = 0xC0 + length; // Normal flash memory
+        }
         data[2] = addr;
         data[3] = addr;
         uint8_t a = 0x3C; // 60
@@ -97,7 +109,7 @@ struct Addr00 {
 
 // 0x06
 struct Addr06 {
-    // 2
+    // 2, 0x06
     uint8_t Arg2 : 1;
     enum EAntiTheftPulse {
         Invalid = 0,
@@ -108,19 +120,24 @@ struct Addr06 {
     uint8_t unk02a : 1;
     uint8_t Protocol485 : 4;
 
+    // 3
     uint8_t MorseCode;
+
+    // 4, 0x07
     uint8_t SpeedKI;
     uint8_t SppedKP;
+
+    // 6, 0x08
     uint8_t ThrottleLow; // / 20
     uint8_t ThrottleHigh; // / 20
 
-    // 8-9
+    // 8-9, 0x09
     int16_t FAIF;
 
-    // 10-11
+    // 10-11, 0x0A
     int16_t CurveTime;
     
-    // 12 cfg11l
+    // 12, 0x0B, cfg11l
     enum EBrakeConfig {
         StopWhenGround = 0,
         StopWhenFloat = 1,
@@ -140,7 +157,7 @@ struct Addr06 {
     } TempSensor : 3; // NTC_PTC, Send(0x11, 0x01)
     uint8_t PhaseExchange : 1;
 
-    // 13 cfg11h
+    // 13, cfg11h
     uint8_t SlowDown : 3;
     uint8_t PC13Config : 1; // RaceResponse
     // CurrFD, Current Anti-Theft
@@ -171,24 +188,24 @@ struct Addr0C {
 
 // 0x12
 struct Addr12 {
-    int16_t LD;
-    uint16_t AlarmDelay;
-    uint8_t PolePairs; // Send(0x12, 0x01)
+    int16_t LD; // 0x12
+    uint16_t AlarmDelay; // 0x13
+    uint8_t PolePairs; // 0x14, Send(0x12, 0x01)
     uint8_t unk14b; // alway_s sent 0x59?
-    uint16_t MaxSpeed; // Send(0x12, 0x02)
-    uint16_t RatedPower; // Send(0x12, 0x03)
-    uint16_t RatedVoltage; // / 10, Send(0x12, 0x04)
+    uint16_t MaxSpeed; // 0x15, Send(0x12, 0x02)
+    uint16_t RatedPower; // 0x16, Send(0x12, 0x03)
+    uint16_t RatedVoltage; // 0x17 / 10, Send(0x12, 0x04)
 };
 
 // 0x18
 struct Addr18 {
-    // 2-3
+    // 2-3, 0x18
     uint16_t RatedSpeed; // Send(0x12, 0x05)
 
-    // 4-5
+    // 4-5, 0x19
     uint16_t MaxLineCurr; // / 4, Send(0x12, 0x1B)
 
-    // 6 cfg26l
+    // 6, 0x1A, cfg26l
     enum EFollowConfig {
         FollowEnabled = 0,
         FollowDisabled = 1,
@@ -569,9 +586,11 @@ struct AddrB8 {
     // 8-9 BB
     uint16_t OnelineCurrCoeff; // CurrentCoeff
 
-    // 10-11, 0xBC, GPara0
+    // 10, 0xBC, GPara0
     uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
     uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
+
+    // 11
     enum ECANBaud {
         Baud250K = 0,
         Baud500K = 1,
@@ -583,11 +602,12 @@ struct AddrB8 {
         AlsoPasswordProtected = 1,
         NoPassword = 2
     } PasswordStatus : 2;
+    uint8_t unkBCb : 2;
 
-    // 12
+    // 12, 0xBD
     uint8_t Stage1Soc;
 
-    // 13
+    // 13, 0xBE
     uint8_t Stage2Soc; // paracnt_3 : 4, LINECURR?
 };
 
@@ -689,19 +709,27 @@ struct AddrCA {
 
 // 0xD0
 struct AddrD0 {
-    // uint16_t OneCommHead;
+    // 2, 0xD0 OneCommHead;
     uint8_t Data0;
     uint8_t Data1;
+
+    // 4, 0xD1
     uint8_t BMQHALL;
     uint8_t AVGPower; // * 4, Wh/km, DataVoltage1
+
+    // 6, 0xD2
     uint8_t WheelRatio;
     uint8_t WheelRadius;
+
+    // 8, 0xD3
     uint8_t AVGSpeed; // km/h, DataVoltage4
     uint8_t WheelWidth;
+
+    // 10-11, 0xD4
     uint16_t RateRatio; // SpeedRatio
     // speed = MeasureSpeed * (0.00376991136 * (WheelRadius * 1270 + WheelWidth * WheelRatio) / RateRatio)
     
-    // uint16_t OneCommCfg
+    // 12-13, 0xD5 OneCommCfg
     enum EIdle {
         Idle0_5ms = 0,
         Idle0_9ms = 1,
