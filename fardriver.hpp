@@ -3,15 +3,16 @@
 #include "fardriver_message.hpp"
 #endif
 
+// Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
 enum PIN {
     NC = 0, // Normally Closed
     PIN24 = 1,
     PIN15 = 2, // Actually P4, CAN RX
     PIN5 = 3, // Actually P5, CAN TX
     PIN17 = 4, // Used by encoder units
-    PIN14 = 5, // Actually P6 (or maybe P17)
-    PIN3 = 6,
-    PIN8 = 7,
+    PIN14 = 5, // Actually P17
+    PIN3 = 6, // Actually P7
+    PIN8 = 7, // Actually P8
     PB4 = 8,
     PINInvalid1 = 9,
     PIN2 = 10,
@@ -327,23 +328,23 @@ struct Addr63 {
 
 // 0x69
 struct Addr69 {
-    // uint16_t BstXhBcp; // BstXhBcp
-    PIN PausePin : 4; // PPin
+    // uint16_t BstXhBcp;
+    PIN PausePin : 4; // PPin, park? NC disables this feature
     PIN SideStandPin : 4; // BCPin
     PIN CruisePin : 4; // XHPin
     PIN BoostPin : 4; // Boost Pin
-    // uint16_t FrWeSdhSdl; // FrWeSdhSdl
-    PIN SDLPin : 4; // Low Speed Pin
-    PIN SDHPin : 4; // High Speed Pin
-    PIN REPin : 4; // Reverse Pin
-    PIN FWPin : 4; // Forward Pin
-    // uint16_t ChgFdSeatVol; // ChgFdSeatVol
+    // uint16_t FrWeSdhSdl;
+    PIN LowSpeedPin : 4; // SDLPin Low Speed Pin
+    PIN HighSpeedPin : 4; // SDHPin
+    PIN ReversePin : 4; // REPin
+    PIN ForwardPin : 4; // FWPin
+    // uint16_t ChgFdSeatVol;
     PIN SwitchVolPin : 4; // Switch Voltage Pin
     PIN SeatPin : 4; // ZuotongPin
     PIN AntiTheftPin : 4; // FDPin, "Steel" Pin
     PIN ChargePin : 4; // CHGPin
     uint16_t LmtSpeed; // LmtSpeed 6C
-    uint16_t DistanceL; // / 10 6D
+    uint16_t DistanceLSB; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
 };
@@ -396,7 +397,7 @@ struct Addr7C {
     // 4
     uint32_t TotalTime; // minutes, infoc0, wktime
     uint32_t infoc1;
-    uint16_t DistanceH; // this << 16 / 10, km
+    uint16_t DistanceMSB; // this << 16 / 10, km
 };    
 
 // 0x82

@@ -226,13 +226,13 @@ struct {
             } else {
                 local char ParaIndex2 = addr.ParaIndex;
             }
-            type = Str("0x69 DistanceL: %0.1f", addr.DistanceL / 10.0);
+            type = Str("0x69 DistanceLSB: %0.1f", addr.DistanceLSB / 10.0);
         }
         if (lut == 0x7C) {
             Addr7C addr;
             // uint TotalTime <read=Str("%0.2fh", this / 60.0)>; // infoc0
             //ushort DistanceH <read=Str("%0.1fkm", this << 16 / 10.0)>;    
-            type = Str("0x7C Time %0.2f, Distance: %0.1f", addr.TotalTime / 60.0, addr.DistanceH << 16 / 10.0);
+            type = Str("0x7C Time %0.2f, DistanceMSB: %0.1f", addr.TotalTime / 60.0, addr.DistanceMSB << 16 / 10.0);
         }
         if (lut == 0x82) {
             //ushort ThrottleVoltage <read=Str("%0.2f", this * 0.01)>; // 0x82
