@@ -316,13 +316,14 @@ struct Addr63 {
     uint8_t MotorDia;  // 65
     uint8_t unk65b;
     uint16_t TempCoeff; // 66
-    uint16_t paracnt_0; // / 10.0 67
-    uint16_t paracnt_1; // 68
+    uint16_t ProdMaxVol; // / 10.0 67, paracnt_0
+    uint16_t ISMax; // 68, paracnt_1
     // uint16_t paracnt_2; // / 4.0 69
     // uint16_t paracnt_4; // / 4.0 6A
     // uint8_t paracnt_5;
     // uint8_t unk68b;
 };
+
 
 // 0x69
 struct Addr69 {
@@ -563,7 +564,7 @@ struct AddrB8 {
     // 12
     uint8_t Stage1Soc;
     // 13
-    uint8_t Stage2Soc; // paracnt_3 : 4
+    uint8_t Stage2Soc; // paracnt_3 : 4, LINECURR?
 };
 
 // 0xBE
@@ -818,12 +819,13 @@ struct AddrD6 {
 
 // 0xDC
 struct AddrDC {
-    uint16_t unkDC;
-    uint16_t unkDD;
-    uint16_t unkDE; 
-    uint16_t unkDF; // changed from 0x57 00 to 0x01 40
-    uint16_t unkE0;
-    uint16_t unkE1;
+    // all formatted as %d
+    int16_t unkDC;
+    int16_t unkDD;
+    int16_t unkDE; 
+    int16_t unkDF; // changed from 0x57 00 to 0x01 40
+    int16_t unkE0;
+    int16_t unkE1;
 };
 
 // 0xE2
@@ -922,36 +924,57 @@ struct AddrEE {
     // 0xF0 - 0x8A, xx written to not enter non-following status
     big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)
     big_end_24b PhaseCCurr; // 1.953125 * Math.Sqrt(num)
-    int16_t volts; // mabe
+    int16_t volts; // mabe / 16
 };
 
 // 0xF4
 struct AddrF4 {
     int16_t motor_temp;
-    int8_t unkF5;
+    int8_t unkF5; // * 3600 / 256
     int8_t batt_cap; // SOC
     uint8_t unkF6;
-    uint8_t ManufYear; // + 2000, paracnt_6
-    uint8_t ManuMonth; // paracnt_7
-    uint8_t ManuDay; // paracnt_8
-    uint16_t paracnt_17;  
-    uint16_t paracnt_16;  
+    uint8_t ModifyYear; // + 2000, paracnt_6
+    uint8_t ModifyMonth; // paracnt_7
+    uint8_t ModifyDay; // paracnt_8
+    uint16_t EXETotal; // F8 / 8.0, us, paracnt_17
+    uint16_t EXESingle; // F9 / 8.0, us, paracnt_16
 };
+
+    //  0 "ProdMaxVol",
+    //  1 "ISMax",
+    //  2 "ProdMaxLine",
+    //  3 "LINECURR",
+    //  4 "ProdMaxPhase",
+    //  5 "ISG",
+    //  6 "ModifyYear",
+    //  7 "ModifyMonth",
+    //  8 "ModifyDay",
+    //  9 "P_Position",
+    //  10 "B_Position",
+    //  11 "",
+    //  12 "Line Zero",
+    //  13 "PhaseA Zero",
+    //  14 "PhaseC Zero",
+    //  15 " ",
+    //  16 "EXESingle",
+    //  17 "EXETotal"
 
 // 0xFA
 struct AddrFA {
-    int16_t PhaseAZero2;
-    int16_t PhaseCZero2;
-    uint8_t motor_stop_state;
-
-    // 8
-    uint8_t unkFC : 1;
+    int16_t PhaseAZero2; // FA
+    int16_t PhaseCZero2; // FB
+    uint8_t motor_stop_state; // FC
+    uint8_t unkFCa : 1;
     uint8_t old_blue : 1;
-    uint8_t unkFD : 6;
+    uint8_t unkFCb : 6;
     
-    uint8_t unkFEa;
+    uint8_t unkFD; // FD
+    uint8_t unkFD;
+
+    uint8_t motor_running_state; // FE
     uint8_t unkFEb;
-    uint8_t motor_running_state;
+
+    uint16_t unkFF;
 };
 
 };
