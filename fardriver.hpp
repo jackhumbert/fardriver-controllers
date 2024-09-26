@@ -830,7 +830,7 @@ struct AddrDC {
 
 // 0xE2
 struct AddrE2 {
-    // 0
+    // 2
     // uint8_t xsControl : 2;
     // uint8_t gear : 2;
     // uint8_t reversing : 1;
@@ -845,7 +845,7 @@ struct AddrE2 {
     uint8_t unkE2a : 1;
     uint8_t compPhoneOK : 1; // 1
 
-    // 1 function state?
+    // 3 function state?
     uint8_t phaseA_active : 1;
     uint8_t phaseB_active : 1;
     uint8_t phaseC_active : 1;
@@ -854,7 +854,7 @@ struct AddrE2 {
     uint8_t LowVolRem : 1;
     uint8_t MosfetCheck : 1;
 
-    // 2
+    // 4
     uint8_t motor_hall_error : 1; // E3
     uint8_t throttle_error : 1;
     uint8_t current_protect_restart : 1;
@@ -864,7 +864,7 @@ struct AddrE2 {
     uint8_t motor_temp_protect : 1;
     uint8_t controller_temp_protect : 1;
 
-    // 3
+    // 5
     uint8_t phase_current_overflow_protect : 1;
     uint8_t phase_zero_error : 1;
     uint8_t phase_int16_t_protect : 1;
@@ -872,21 +872,21 @@ struct AddrE2 {
     uint8_t mosfet_high_side_error : 1;
     uint8_t mosfet_low_side_error : 1;
     uint8_t moe_current_protect : 1;
-    uint8_t brake : 1;
+    uint8_t brake : 1; // stop
 
-    // 4
-    uint8_t modulation; // / , E4
+    // 6, 0xE4
+    uint8_t modulation; // / 128
 
-    // 5
+    // 7
     uint8_t pad;
 
-    // 6-7
-    uint16_t speed; // E5
-
-    // 8-9
-    int16_t unk1;
+    // 8-9, 0xE5
+    uint16_t speed; // MeasureSpeed
 
     // 10-11
+    int16_t unk1;
+
+    // 12-13
     int16_t unk2; // throttle request?
 };
 
