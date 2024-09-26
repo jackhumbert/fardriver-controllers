@@ -145,7 +145,7 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
 
 Pin | Color        | FD Name | Description
 ----------------------------------------------------------------------------
-1   | Orange       | 60VKEY  | Ignition for Anti-theft
+1   | Orange       | KEY     | Ignition for Anti-theft
 2   | Pink         | 60VC    | Anti-theft power (+72V)
 3   | Red          | RXD     | Serial RX (3.3V)
 4   | Yellow/White | SDH     | High speed, pull-down to enable (3.3V)
@@ -155,9 +155,9 @@ Pin | Color        | FD Name | Description
 8   | Brown/white  | RE      | Reverse, pull-down to enable
 9   | Light Blue   | SPD     | Speed pulse/one wire (12V)
 10  | Purple       | SPA     | Speedometer PWM (72V)
-11  | Orange       | 60VKEY  | Ignition that accepts battery plus (72V, etc)
+11  | Orange       | KEY     | Ignition that accepts battery plus (72V, etc)
 12  | Brown/Blue   | TXD     | Serial TX (3.3V)
-13  | White/Black  | GND     | Serial GND
+13  | White/Black  | GND     | Reverse/Serial GND
 14  | Green        | SV      | Throttle signal (5V)
 15  | Black        | GND     | Anti-theft GND
 16  | Black        | GND     | Motor GND
@@ -166,7 +166,7 @@ Pin | Color        | FD Name | Description
 19  | Grey         | BH      | Brake, pull-up to enable (12V)
 20  | Yellow/Green | BL      | Brake, pull-down to enable (3.3V)
 21  | Brown/Red    | U       | Anti-theft phase wire
-22  | Brown/Green  | ??      | Serial power (5V)
+22  | Brown/Green  | BW5V    | Serial power (5V)
 23  | White/Red    | ACC+    | Throttle power (5V)
 24  | Black        | GND     | Throttle GND
 25  | White        | TEMP    | Motor temperature sensor
