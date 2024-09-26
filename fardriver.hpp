@@ -3,15 +3,16 @@
 #include "fardriver_message.hpp"
 #endif
 
+// Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
 enum PIN {
     NC = 0, // Normally Closed
     PIN24 = 1,
     PIN15 = 2, // Actually P4, CAN RX
     PIN5 = 3, // Actually P5, CAN TX
     PIN17 = 4, // Used by encoder units
-    PIN14 = 5, // Actually P6 (or maybe P17)
-    PIN3 = 6,
-    PIN8 = 7,
+    PIN14 = 5, // Actually P17
+    PIN3 = 6, // Actually P7
+    PIN8 = 7, // Actually P8
     PB4 = 8,
     PINInvalid1 = 9,
     PIN2 = 10,
@@ -142,7 +143,10 @@ struct Addr06 {
     // 13 cfg11h
     uint8_t SlowDown : 3;
     uint8_t PC13Config : 1; // RaceResponse
-    uint8_t CurrAntiTheft : 1; // CurrFD Valid = 1
+    // CurrFD, Current Anti-Theft
+    // 0: provide resistance to motor, does not consume battery
+    // 1: lock motor, consumes battery
+    uint8_t CurrAntiTheft : 1;
     enum EParkConfig {
         ReversePark = 0,
         SwitchPark = 1,
@@ -233,20 +237,22 @@ struct Addr1E {
 
     // 8
     // uint16_t RelayDelay; // ms
-    uint8_t BCState : 1;
-    uint8_t SeatEnable : 1; // Zuotong
-    uint8_t PEnable : 1; // PGear
+    uint8_t BCState : 1; // Edge support
+    uint8_t SeatEnable : 1; // Zuotong, "bucket"
+    uint8_t PEnable : 1; // PGear, "P file"
     uint8_t AutoBackPEnable : 1; // AutoBackPStat
     uint8_t CruiseEnable : 1; // XHStat
     uint8_t EABSEnable : 1;
-    uint8_t PushEnable : 1; // TuixingS
-    uint8_t ForseAntiTheft : 1;
+    uint8_t PushEnable : 1; // TuixingS, "Power implementation function", enabling cancels PEnable
+    uint8_t ForceAntiTheft : 1;
 
     // 9
     uint8_t OverSpeedAlarm : 1;
     uint8_t BrakeStillPark : 1; // ParkDisableBrake
     uint8_t RememberGear : 1; // GearRememberS
-    uint8_t unk21c : 3;
+    uint8_t unk21a : 1; // default 1
+    uint8_t unk21b : 1; // default 1
+    uint8_t unk21c : 1; // default 0
     uint8_t BackEnable : 1; // REGear
     uint8_t RelayDelay1S : 1;
 
@@ -291,6 +297,7 @@ struct Addr30 {
     uint16_t SpdPulseNum;
 };
 
+// skip 78 bytes (0x27 addresses)
     uint16_t unk36[6];
     uint16_t unk3A[6];
     uint16_t unk42[6];
@@ -324,31 +331,28 @@ struct Addr63 {
     // uint8_t unk68b;
 };
 
-
 // 0x69
 struct Addr69 {
-    // uint16_t BstXhBcp; // BstXhBcp
-    PIN PausePin : 4; // PPin
+    // uint16_t BstXhBcp;
+    PIN PausePin : 4; // PPin, park? NC disables this feature
     PIN SideStandPin : 4; // BCPin
     PIN CruisePin : 4; // XHPin
     PIN BoostPin : 4; // Boost Pin
-    // uint16_t FrWeSdhSdl; // FrWeSdhSdl
-    PIN SDLPin : 4; // Low Speed Pin
-    PIN SDHPin : 4; // High Speed Pin
-    PIN REPin : 4; // Reverse Pin
-    PIN FWPin : 4; // Forward Pin
-    // uint16_t ChgFdSeatVol; // ChgFdSeatVol
+    // uint16_t FrWeSdhSdl;
+    PIN LowSpeedPin : 4; // SDLPin Low Speed Pin
+    PIN HighSpeedPin : 4; // SDHPin
+    PIN ReversePin : 4; // REPin
+    PIN ForwardPin : 4; // FWPin
+    // uint16_t ChgFdSeatVol;
     PIN SwitchVolPin : 4; // Switch Voltage Pin
     PIN SeatPin : 4; // ZuotongPin
     PIN AntiTheftPin : 4; // FDPin, "Steel" Pin
     PIN ChargePin : 4; // CHGPin
     uint16_t LmtSpeed; // LmtSpeed 6C
-    uint16_t DistanceL; // / 10 6D
+    uint16_t DistanceLSB; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
 };
-
-    uint8_t unk6Fa; // 6F
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
     //     local char ParaIndex2 = ParaIndex + 48;
@@ -357,7 +361,9 @@ struct Addr69 {
     // } else {
     //     local char ParaIndex2 = ParaIndex;
     // }
-    uint8_t unk6Fb;
+
+// skip 26 bytes (0x0D addresses)
+    uint16_t unk6F; // 6F
     uint16_t unk70;
     uint16_t unk71;
     uint16_t unk72;
@@ -396,13 +402,13 @@ struct Addr7C {
     // 4
     uint32_t TotalTime; // minutes, infoc0, wktime
     uint32_t infoc1;
-    uint16_t DistanceH; // this << 16 / 10, km
+    uint16_t DistanceMSB; // this << 16 / 10, km
 };    
 
 // 0x82
 struct Addr82 {
     uint16_t ThrottleVoltage; // * 0.01, 0x82
-    uint16_t HighVolRestore; // / 10.0)>; 0x83
+    uint16_t HighVolRestore; // / 10.0, 0x83
     uint8_t MotorTempProtect; // 0x84
     uint8_t MotorTempRestore; 
     uint8_t MosTempProtect; // 0x85
@@ -419,6 +425,7 @@ struct Addr82 {
 
 // 0x88
 struct Addr88 {
+    // Current % for each RPM
     uint8_t RatioMin;
     uint8_t Ratio500;
     uint8_t Ratio1000;
@@ -443,6 +450,8 @@ struct Addr8E {
     uint8_t Ratio8500;
     uint8_t Ratio9000;
     uint8_t RatioMax;
+
+    // Energy regen % for each RPM
     int8_t nratio_0;
     int8_t nratio_1;
     int8_t nratio_2;
@@ -473,14 +482,22 @@ struct Addr9A {
     int8_t nratio_19;
 
     // AlarmRecord
-    // 6
-    uint8_t AN : 4; // 9C, cfg156l
+    // 6, cfg156l, 0x9C
+
+    // AN (Wave Type - Magnetic field weakening)
+    // This function is used to control motor vibration and change the wave type used for magnetic field weakening. You can change this number from 0-16 for best results. We have found that it is best to use a low number if you are using a high power system. An example of this is one of the test bikes we have using 300amps dc in and 800 phase we use AN set to 2 to limit motor vibration across the whole RPM range. Where as a stock Sur-Ron bike would use a value of around 4. This setting should generally not be changed from the stock setting for a particular firmware but they can be adjusted in certain circumstances. 
+    // - KO MOTO
+    uint8_t AN : 4;
     uint8_t AlarmRecord_1 : 1;
     uint8_t RelayOut : 1; 
     uint8_t EmptySpeed : 2;
     
-    // 7
-    uint8_t LM : 5; // cfg156h
+    // 7, cfg156h
+
+    // LM (Wave interval - Magnetic field weakening)
+    // This setting works in conjunction with AM and changes the interval of the waves being sent. This can also be used to prevent motor vibration in your set up but should be used after AM has been adjusted and has not had the desired effect. This setting should generally not be changed from the stock setting for a particular firmware but they can be adjusted in certain circumstances. 
+    // - KO MOTO
+    uint8_t LM : 5;
     uint8_t unk9Db : 3;
 
     int16_t InitVol; // 9D
@@ -534,35 +551,42 @@ struct AddrB2 {
 
 // 0xB8
 struct AddrB8 {
-    // 2-3 B8
-    // uint16_t OneCommPos; 
-    uint8_t PPosition : 4; // Pause Position
-    uint8_t BCPosition : 4; // Side Stand Position
+    // 2-3, 0xB8, OneCommPos
+
+    // One-Line Communication Byte Positions
+    uint8_t PausePosition : 4; // PPosition
+    uint8_t SideStandPosition : 4; // BCPosition
     uint8_t HBarPosition : 4;
-    uint8_t FDPosition : 4; // AntiTheft Position
+    uint8_t AntiTheftPosition : 4; // FDPosition
+
     // 4-5 B9
     uint16_t unkB9;
-    // 6-7 BA
-    // uint16_t OneCommPS; 
+
+    // 6-7, 0xBA, OneCommPS
     uint8_t Pulse;
     uint8_t SQH;
+
     // 8-9 BB
     uint16_t OnelineCurrCoeff; // CurrentCoeff
-    // 10-11 GPara0, BC
+
+    // 10-11, 0xBC, GPara0
     uint8_t BackPTime : 5; // ReleasePTime, ReleaseToPTime, * 10, seconds
     uint8_t ReleaseToSeat : 3; // SeatDelay, seconds
     enum ECANBaud {
         Baud250K = 0,
         Baud500K = 1,
         Baud1M = 2
-    } CANBaud : 4; // CanSel
+    } CANBaud : 2; // CanSel
+    uint8_t unkBC : 2;
     enum EPasswordStatus {
         PasswordProtected = 0,
         AlsoPasswordProtected = 1,
         NoPassword = 2
     } PasswordStatus : 2;
+
     // 12
     uint8_t Stage1Soc;
+
     // 13
     uint8_t Stage2Soc; // paracnt_3 : 4, LINECURR?
 };
@@ -735,7 +759,7 @@ struct AddrD0 {
         YJOneLine = 250,
         DYOneLine = 253,
         PIN24_SelectPulseOneLine = 255
-    } SpecialFrame; // ESQH
+    } SpecialFrame : 8; // ESQH
 };
 
 // 0xD6

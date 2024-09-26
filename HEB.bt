@@ -49,6 +49,8 @@ AddrC4 addrC4;
 AddrCA addrCA;
 AddrD0 addrD0;
 
+// 384, 0x180 bytes (0xC0 addresses?) for CAN config
+
 uint8_t DataFormat;
 uint8_t RcvFrameType;
 uint8_t SendFrameType;
