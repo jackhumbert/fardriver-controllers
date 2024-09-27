@@ -102,7 +102,7 @@ System commands can be sent by writing `0x88 XX` to the address `0xA0`:
 * `0x06` starts data gathering
 * `0x07` stops something?
 * `0x08` unknown
-* `0x0F` same as `0x05` if Version0 == 73
+* `0x0F` same as `0x05` if Version0 == 73 or filename contains `ISOLATE_`
 
 ### Sending commands
 
