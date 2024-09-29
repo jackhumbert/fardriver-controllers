@@ -6,7 +6,7 @@
 #endif
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
-enum PIN : uint8_t {
+enum PIN {
     NC = 0, // Normally Closed
     PIN24 = 1,
     PIN15 = 2, // Actually P4, CAN RX
