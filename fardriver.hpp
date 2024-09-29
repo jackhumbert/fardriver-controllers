@@ -3,6 +3,7 @@
 #include "fardriver_message.hpp"
 
 #pragma pack(push, 1)
+
 #endif
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
@@ -41,6 +42,7 @@ struct big_end_24b {
     auto name() -> type& { return addr.name; }; \
     auto name() const -> const type& { return addr.name; }
 
+extern HardwareSerial * FardriverSerial;
 #endif
 
 struct FardriverData {
@@ -54,7 +56,7 @@ struct FardriverData {
     }
 
     // used when App.NewVersion
-    void WriteAddr(uint8_t * data, uint8_t addr, uint8_t length) {
+    static void WriteAddr(uint8_t * data, uint8_t addr, uint8_t length) {
         length += 4;
         data[0] = 0xAA; // 170
         if (length == 0x184) {
@@ -81,18 +83,18 @@ struct FardriverData {
         }
         data[length] = a;
         data[length + 1] = b;
-    // send data
+        FardriverSerial->write(data, length + 2);
     }
 
-    void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
+    static void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
         uint8_t data[8];
         data[4] = first;
         data[5] = second;
-        this->WriteAddr(data, addr, 2);
+        WriteAddr(data, addr, 2);
     }
 
     // used when !App.NewVersion
-    void SendRS323Data(uint8_t command, uint8_t sub_command, uint8_t value_1, uint8_t value_2) {
+    static void SendRS323Data(uint8_t command, uint8_t sub_command, uint8_t value_1, uint8_t value_2) {
         uint8_t data[8];
         data[0] = 0xAA; // 170
         data[1] = command;
@@ -102,7 +104,7 @@ struct FardriverData {
         data[5] = value_2;
         data[6] = data[0] + data[1] + data[2] + data[3] + data[4] + data[5];
         data[7] = ~data[6];
-    // send data
+        FardriverSerial->write(data, 8);
     }
 #endif
 
