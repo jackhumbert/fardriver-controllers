@@ -1,10 +1,12 @@
 #ifndef _010EDITOR
 #include <cstdint>
 #include "fardriver_message.hpp"
+
+#pragma pack(push, 1)
 #endif
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
-enum PIN {
+enum PIN : uint8_t {
     NC = 0, // Normally Closed
     PIN24 = 1,
     PIN15 = 2, // Actually P4, CAN RX
@@ -23,7 +25,7 @@ enum PIN {
     PINInvalid3 = 15
 };
 
-typedef struct {
+struct big_end_24b {
     uint32_t byte_0 : 8;
     uint32_t byte_1 : 8;
     uint32_t byte_2 : 8;
@@ -32,7 +34,14 @@ typedef struct {
         return 1.953125 * sqrt(byte_0 << 16 + byte_1 << 8 + byte_2);
     }
 #endif
-} big_end_24b;
+};
+
+#ifndef _010EDITOR
+#define GETSET(name, type, addr) \
+    auto name() -> type& { return addr.name; }; \
+    auto name() const -> const type& { return addr.name; }
+
+#endif
 
 struct FardriverData {
 #ifndef _010EDITOR
@@ -56,7 +65,7 @@ struct FardriverData {
             // All params?, 0x138 bytes long
             // addr is 0 or 1
             data[1] = 0xFE;
-        } else if {
+        } else if (length == 0x8C) {
             data[1] = 0xFD;
         } else {
             data[1] = 0xC0 + length; // Normal flash memory
@@ -107,11 +116,22 @@ struct Addr00 {
     int16_t SaveNum;
 } addr00;
 
+#ifndef _010EDITOR
+
+GETSET(VolCoeff, int16_t, addr00);
+GETSET(Voltage2Coeff, int16_t, addr00);
+GETSET(PhaseACoeff, int16_t, addr00);
+GETSET(LineCoeff, int16_t, addr00);
+GETSET(PhaseCCoeff, int16_t, addr00);
+GETSET(SaveNum, int16_t, addr00);
+
+#endif
+
 // 0x06
 struct Addr06 {
     // 2, 0x06
     uint8_t Arg2 : 1;
-    enum EAntiTheftPulse {
+    enum EAntiTheftPulse{
         Invalid = 0,
         Type1 = 1,
         Type2 = 2,
@@ -184,7 +204,7 @@ struct Addr0C {
     uint8_t StartKP;
     uint8_t MidKP;
     uint8_t MaxKP;
-} add0C;
+} addr0C;
 
 // 0x12
 struct Addr12 {
@@ -229,7 +249,7 @@ struct Addr18 {
     enum EGearConfig {
         DefaultN = 0,
         DefaultD = 1,
-        GearConfig = 2,
+        GearConfig2 = 2,
         DefaultAntiTheft = 3, // DefaultLow in old
         DefaultButtonHigh = 4,
         DefaultButtonMiddle = 5
@@ -332,6 +352,8 @@ struct Addr5D {
     uint16_t unk61;
     uint16_t unk62;
 } addr5D;
+
+static_assert(sizeof(addr5D) == 12);
     
 // 0x63
 struct Addr63 {
@@ -348,6 +370,8 @@ struct Addr63 {
     // uint8_t unk68b;
 } addr63;
 
+static_assert(sizeof(addr63) == 12);
+
 // 0x69
 struct Addr69 {
     // uint16_t BstXhBcp;
@@ -356,7 +380,7 @@ struct Addr69 {
     PIN CruisePin : 4; // XHPin
     PIN BoostPin : 4; // Boost Pin
     // uint16_t FrWeSdhSdl;
-    PIN LowSpeedPin : 4; // SDLPin Low Speed Pin
+    PIN LowSpeedPin : 4; // SDLPin
     PIN HighSpeedPin : 4; // SDHPin
     PIN ReversePin : 4; // REPin
     PIN ForwardPin : 4; // FWPin
@@ -370,6 +394,9 @@ struct Addr69 {
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
 } addr69;
+
+static_assert(sizeof(addr69) == 12);
+
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
     //     local char ParaIndex2 = ParaIndex + 48;
@@ -404,9 +431,9 @@ struct Addr7C {
 
     // 3 config_word1
     // SpeedMeterConfig has a weird configuration that looks at the 3 variables & computes them to an enum
-    // 0 Pulse none
-    // 1 Analog: 1 & 3
-    // 2 IsolatedPulse: 1 & 2
+    // * 0 Pulse none
+    // * 1 Analog: 1 & 3
+    // * 2 IsolatedPulse: 1 & 2
     uint8_t SpeedMeterConfig1 : 1; // Pulse
     uint8_t SpeedMeterConfig2 : 1; // IsolatedPulse
     uint8_t FastRE : 1;
@@ -416,11 +443,17 @@ struct Addr7C {
     uint8_t MOE : 1;
     uint8_t SpeedMeterConfig3 : 1; // Analog
 
-    // 4
+    // 4-7
     uint32_t TotalTime; // minutes, infoc0, wktime
+
+    // 8-11
     uint32_t infoc1;
+
+    // 12-13
     uint16_t DistanceMSB; // this << 16 / 10, km
 } addr7C;
+
+static_assert(sizeof(addr7C) == 12);
 
 // 0x82
 struct Addr82 {
@@ -933,7 +966,7 @@ struct AddrE2 {
     uint8_t pad;
 
     // 8-9, 0xE5
-    uint16_t speed; // MeasureSpeed
+    uint16_t MeasureSpeed;
 
     // 10-11
     int16_t unk1;
@@ -941,6 +974,12 @@ struct AddrE2 {
     // 12-13
     int16_t unk2; // throttle request?
 } addrE2;
+
+#ifndef _010EDITOR
+
+GETSET(MeasureSpeed, uint16_t, addrE2);
+
+#endif
 
 // 0xE8
 struct AddrE8 {
@@ -958,6 +997,8 @@ struct AddrE8 {
     int16_t throttle_depth;
 } addrE8;
 
+static_assert(sizeof(addrE8) == 12);
+
 // 0xEE
 struct AddrEE {
     // 2-3 pin states?
@@ -972,12 +1013,21 @@ struct AddrEE {
     // analyzetype written to unkEE[0] and anaylzenum (bit index) written to unkEE[1]
     // H97 later support
     int8_t unkEE[2];
-    int16_t unkEF; // 4-5
-    // 0xF0 - 0x8A, xx written to not enter non-following status
+
+    // 4-5, 0xEF
+    int16_t unkEF;
+
+    // 6-8
     big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)
+
+    // 9-11
     big_end_24b PhaseCCurr; // 1.953125 * Math.Sqrt(num)
+
+    // 12-13
     int16_t volts; // mabe / 16
 } addrEE;
+
+static_assert(sizeof(addrEE) == 12);
 
 // 0xF4
 struct AddrF4 {
@@ -992,24 +1042,27 @@ struct AddrF4 {
     uint16_t EXESingle; // F9 / 8.0, us, paracnt_16
 } addrF4;
 
-    //  0 "ProdMaxVol",
-    //  1 "ISMax",
-    //  2 "ProdMaxLine",
-    //  3 "LINECURR",
-    //  4 "ProdMaxPhase",
-    //  5 "ISG",
-    //  6 "ModifyYear",
-    //  7 "ModifyMonth",
-    //  8 "ModifyDay",
-    //  9 "P_Position",
-    //  10 "B_Position",
-    //  11 "",
-    //  12 "Line Zero",
-    //  13 "PhaseA Zero",
-    //  14 "PhaseC Zero",
-    //  15 " ",
-    //  16 "EXESingle",
-    //  17 "EXETotal"
+static_assert(sizeof(addrF4) == 12);
+
+// paracnt strings
+//  0 "ProdMaxVol",
+//  1 "ISMax",
+//  2 "ProdMaxLine",
+//  3 "LINECURR",
+//  4 "ProdMaxPhase",
+//  5 "ISG",
+//  6 "ModifyYear",
+//  7 "ModifyMonth",
+//  8 "ModifyDay",
+//  9 "P_Position",
+//  10 "B_Position",
+//  11 "",
+//  12 "Line Zero",
+//  13 "PhaseA Zero",
+//  14 "PhaseC Zero",
+//  15 " ",
+//  16 "EXESingle",
+//  17 "EXETotal"
 
 // 0xFA
 struct AddrFA {
@@ -1020,8 +1073,8 @@ struct AddrFA {
     uint8_t old_blue : 1;
     uint8_t unkFCb : 6;
     
-    uint8_t unkFD; // FD
-    uint8_t unkFD;
+    uint8_t unkFDa; // FD
+    uint8_t unkFDb;
 
     uint8_t motor_running_state; // FE
     uint8_t unkFEb;
@@ -1029,9 +1082,12 @@ struct AddrFA {
     uint16_t unkFF;
 } addrFA;
 
+static_assert(sizeof(addrFA) == 12);
+
 };
 
 #ifndef _010EDITOR
+#pragma pack(pop)
 
 #define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
 
@@ -1042,7 +1098,7 @@ static_assert(offsetof(FardriverData, addr18) == (0x18 << 1));
 static_assert(offsetof(FardriverData, addr1E) == (0x1E << 1));
 static_assert(offsetof(FardriverData, addr24) == (0x24 << 1));
 static_assert(offsetof(FardriverData, addr2A) == (0x2A << 1));
-static_assert(offsetof(FardriverData, addr30) == (0x06 << 1));
+static_assert(offsetof(FardriverData, addr30) == (0x30 << 1));
 static_assert(offsetof(FardriverData, addr63) == (0x63 << 1));
 static_assert(offsetof(FardriverData, addr69) == (0x69 << 1));
 static_assert(offsetof(FardriverData, addr7C) == (0x7C << 1));
