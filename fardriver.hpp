@@ -184,7 +184,7 @@ struct Addr0C {
     uint8_t StartKP;
     uint8_t MidKP;
     uint8_t MaxKP;
-};
+} add0C;
 
 // 0x12
 struct Addr12 {
@@ -195,7 +195,7 @@ struct Addr12 {
     uint16_t MaxSpeed; // 0x15, Send(0x12, 0x02)
     uint16_t RatedPower; // 0x16, Send(0x12, 0x03)
     uint16_t RatedVoltage; // 0x17 / 10, Send(0x12, 0x04)
-};
+} addr12;
 
 // 0x18
 struct Addr18 {
@@ -243,7 +243,7 @@ struct Addr18 {
 
     // 12-13
     uint16_t IntRes; // Send(0x0F, 0x08)
-};
+} addr18;
 
 // 0x1E
 struct Addr1E {
@@ -277,7 +277,7 @@ struct Addr1E {
     uint8_t ModelMonth;
     uint8_t ModelDay;
     uint8_t TimeHour;
-};
+} addr1E;
 
 // 0x24
 struct Addr24 {
@@ -288,7 +288,7 @@ struct Addr24 {
     uint16_t CustomMaxPhaseCurr; // / 4
     uint16_t BackSpeed; // Send(0x11, 0x03)
     uint16_t LowSpeed; // Send(0x11, 0x02)
-};
+} addr24;
 
 // 0x2A
 struct Addr2A {
@@ -299,7 +299,7 @@ struct Addr2A {
     uint16_t MaxPhaseCurr; // / 4, Send(0x12, 0x1A)
     uint16_t SpeedAnalog;
     uint16_t Max_Acc;
-};
+} addr2A;
 
 // 0x30
 struct Addr30 {
@@ -312,7 +312,7 @@ struct Addr30 {
     uint8_t MidSppedPhaseCurr;
     uint16_t BlockTime;
     uint16_t SpdPulseNum;
-};
+} addr30;
 
 // skip 78 bytes (0x27 addresses)
     uint16_t unk36[6];
@@ -331,7 +331,7 @@ struct Addr5D {
     uint16_t unk60;
     uint16_t unk61;
     uint16_t unk62;
-};
+} addr5D;
     
 // 0x63
 struct Addr63 {
@@ -346,7 +346,7 @@ struct Addr63 {
     // uint16_t paracnt_4; // / 4.0 6A
     // uint8_t paracnt_5;
     // uint8_t unk68b;
-};
+} addr63;
 
 // 0x69
 struct Addr69 {
@@ -369,7 +369,7 @@ struct Addr69 {
     uint16_t DistanceLSB; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
     char SpecialCode;
-};
+} addr69;
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
     //     local char ParaIndex2 = ParaIndex + 48;
@@ -420,7 +420,7 @@ struct Addr7C {
     uint32_t TotalTime; // minutes, infoc0, wktime
     uint32_t infoc1;
     uint16_t DistanceMSB; // this << 16 / 10, km
-};    
+} addr7C;
 
 // 0x82
 struct Addr82 {
@@ -438,7 +438,7 @@ struct Addr82 {
     uint8_t Version0; // HardVer
     uint8_t Version1; // SoftVer0
     uint8_t SoftVer; // SoftVer1
-};
+} addr82;
 
 // 0x88
 struct Addr88 {
@@ -455,7 +455,7 @@ struct Addr88 {
     uint8_t Ratio4500;
     uint8_t Ratio5000;
     uint8_t Ratio5500;
-};
+} addr88;
 
 // 0x8E
 struct Addr8E {
@@ -473,7 +473,7 @@ struct Addr8E {
     int8_t nratio_1;
     int8_t nratio_2;
     int8_t nratio_3;
-};
+} addr8E;
 
 // 0x94
 struct Addr94 {
@@ -489,7 +489,7 @@ struct Addr94 {
     int8_t nratio_13;
     int8_t nratio_14;
     int8_t nratio_15;
-};
+} addr94;
 
 // 0x9A
 struct Addr9A {
@@ -521,7 +521,7 @@ struct Addr9A {
     int16_t Stage1Curr; // TurtleSpeedCurrCoeff
     uint8_t VolSelectRatio; // 9F
     uint8_t unk9Fb;
-};
+} addr9A;
 
 // 0xA0
 struct AddrA0 {
@@ -534,13 +534,13 @@ struct AddrA0 {
     // 06 gather data
     // 0F ISOLATE_
     char ModelName[10]; 
-};
+} addrA0;
 
 // 0xA6
 struct AddrA6 { 
     char ModelName[10];
     uint16_t unkAB; // where password is stored?
-};
+} addrA6;
 
 // 0xAC
 struct AddrAC {
@@ -550,7 +550,7 @@ struct AddrAC {
     uint16_t unkAF;
     uint16_t unkB0;
     uint16_t unkB1;
-};
+} addrAC;
 
 // 0xB2
 struct AddrB2 {
@@ -564,7 +564,7 @@ struct AddrB2 {
     uint8_t OneCommSec_5; // SEC5
     uint8_t OneCommSec_6; // SEC6
     uint8_t OneCommSec_7; // SEC7
-};
+} addrB2;
 
 // 0xB8
 struct AddrB8 {
@@ -609,7 +609,7 @@ struct AddrB8 {
 
     // 13, 0xBE
     uint8_t Stage2Soc; // paracnt_3 : 4, LINECURR?
-};
+} addrB8;
 
 // 0xBE
 struct AddrBE {
@@ -638,7 +638,7 @@ struct AddrBE {
     uint16_t ParkTime; // / 500, seconds
     uint16_t InverseTime;
     uint16_t TorqueCoff;
-};
+} addrBE;
 
 // 0xC4
 struct AddrC4 {
@@ -649,7 +649,7 @@ struct AddrC4 {
     uint16_t ThrottleInsert; // & 0x20 TCS
     uint8_t ExitFollowSpeed;
     uint8_t ReCurrRatio;
-};
+} addrC4;
 
 // 0xCA
 struct AddrCA {
@@ -705,7 +705,7 @@ struct AddrCA {
         LFPBattery = 5
     } BattSignal : 4; // BatSel
     uint16_t ReIsinAcc;
-};
+} addrCA;
 
 // 0xD0
 struct AddrD0 {
@@ -788,7 +788,7 @@ struct AddrD0 {
         DYOneLine = 253,
         PIN24_SelectPulseOneLine = 255
     } SpecialFrame : 8; // ESQH
-};
+} addrD0;
 
 // 0xD6
 struct AddrD6 {
@@ -867,7 +867,7 @@ struct AddrD6 {
     uint8_t AngleError : 1;
 
     int16_t MosTemp;
-};
+} addrD6;
 
 // 0xDC
 struct AddrDC {
@@ -878,7 +878,7 @@ struct AddrDC {
     int16_t unkDF; // changed from 0x57 00 to 0x01 40
     int16_t unkE0;
     int16_t unkE1;
-};
+} addrDC;
 
 // 0xE2
 struct AddrE2 {
@@ -940,7 +940,7 @@ struct AddrE2 {
 
     // 12-13
     int16_t unk2; // throttle request?
-};
+} addrE2;
 
 // 0xE8
 struct AddrE8 {
@@ -956,7 +956,7 @@ struct AddrE8 {
     int16_t unk4; // something throttle?
     // 12-13
     int16_t throttle_depth;
-};
+} addrE8;
 
 // 0xEE
 struct AddrEE {
@@ -977,7 +977,7 @@ struct AddrEE {
     big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)
     big_end_24b PhaseCCurr; // 1.953125 * Math.Sqrt(num)
     int16_t volts; // mabe / 16
-};
+} addrEE;
 
 // 0xF4
 struct AddrF4 {
@@ -990,7 +990,7 @@ struct AddrF4 {
     uint8_t ModifyDay; // paracnt_8
     uint16_t EXETotal; // F8 / 8.0, us, paracnt_17
     uint16_t EXESingle; // F9 / 8.0, us, paracnt_16
-};
+} addrF4;
 
     //  0 "ProdMaxVol",
     //  1 "ISMax",
@@ -1027,7 +1027,7 @@ struct AddrFA {
     uint8_t unkFEb;
 
     uint16_t unkFF;
-};
+} addrFA;
 
 };
 
@@ -1035,24 +1035,36 @@ struct AddrFA {
 
 #define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
 
-static_assert(offsetof(FardriverData, MaxLineCurr2) == (0x63 << 1));
-static_assert(offsetof(FardriverData, LmtSpeed) == (0x6C << 1));
-// static_assert(offsetof(FardriverData, PPin) == (0x69 << 1));
-static_assert(offsetof(FardriverData, unk7Ca) == (0x7C << 1));
-static_assert(offsetof(FardriverData, ThrottleVoltage) == (0x82 << 1));
-static_assert(offsetof(FardriverData, RatioMin) == (0x88 << 1));
-static_assert(offsetof(FardriverData, Ratio6000) == (0x8E << 1));
-static_assert(offsetof(FardriverData, nratio_4) == (0x94 << 1));
-static_assert(offsetof(FardriverData, nratio_16) == (0x9A << 1));
-static_assert(offsetof(FardriverData, unkA0) == (0xA0 << 1));
-static_assert(offsetof(FardriverData, unkAC) == (0xAC << 1));
-static_assert(offsetof(FardriverData, unkB2) == (0xB2 << 1));
-// static_assert(offsetof(FardriverData, OneCommPos) == (0xB8 << 1));
-static_assert(offsetof(FardriverData, unkD6) == (0xD6 << 1));
-static_assert(offsetof(FardriverData, unkDC) == (0xDC << 1));
-static_assert(offsetof(FardriverData, speed) == (0xE5 << 1));
-static_assert(offsetof(FardriverData, deci_volts) == (0xE8 << 1));
-static_assert(offsetof(FardriverData, unkEE) == (0xEE << 1));
-static_assert(offsetof(FardriverData, motor_temp) == (0xF4 << 1));
-static_assert(offsetof(FardriverData, PhaseAZero2) == (0xFA << 1));
+static_assert(offsetof(FardriverData, addr06) == (0x06 << 1));
+static_assert(offsetof(FardriverData, addr0C) == (0x0C << 1));
+static_assert(offsetof(FardriverData, addr12) == (0x12 << 1));
+static_assert(offsetof(FardriverData, addr18) == (0x18 << 1));
+static_assert(offsetof(FardriverData, addr1E) == (0x1E << 1));
+static_assert(offsetof(FardriverData, addr24) == (0x24 << 1));
+static_assert(offsetof(FardriverData, addr2A) == (0x2A << 1));
+static_assert(offsetof(FardriverData, addr30) == (0x06 << 1));
+static_assert(offsetof(FardriverData, addr63) == (0x63 << 1));
+static_assert(offsetof(FardriverData, addr69) == (0x69 << 1));
+static_assert(offsetof(FardriverData, addr7C) == (0x7C << 1));
+static_assert(offsetof(FardriverData, addr82) == (0x82 << 1));
+static_assert(offsetof(FardriverData, addr88) == (0x88 << 1));
+static_assert(offsetof(FardriverData, addr8E) == (0x8E << 1));
+static_assert(offsetof(FardriverData, addr94) == (0x94 << 1));
+static_assert(offsetof(FardriverData, addr9A) == (0x9A << 1));
+static_assert(offsetof(FardriverData, addrA0) == (0xA0 << 1));
+static_assert(offsetof(FardriverData, addrA6) == (0xA6 << 1));
+static_assert(offsetof(FardriverData, addrAC) == (0xAC << 1));
+static_assert(offsetof(FardriverData, addrB2) == (0xB2 << 1));
+static_assert(offsetof(FardriverData, addrB8) == (0xB8 << 1));
+static_assert(offsetof(FardriverData, addrBE) == (0xBE << 1));
+static_assert(offsetof(FardriverData, addrC4) == (0xC4 << 1));
+static_assert(offsetof(FardriverData, addrCA) == (0xCA << 1));
+static_assert(offsetof(FardriverData, addrD0) == (0xD0 << 1));
+static_assert(offsetof(FardriverData, addrD6) == (0xD6 << 1));
+static_assert(offsetof(FardriverData, addrDC) == (0xDC << 1));
+static_assert(offsetof(FardriverData, addrE2) == (0xE2 << 1));
+static_assert(offsetof(FardriverData, addrE8) == (0xE8 << 1));
+static_assert(offsetof(FardriverData, addrEE) == (0xEE << 1));
+static_assert(offsetof(FardriverData, addrF4) == (0xF4 << 1));
+static_assert(offsetof(FardriverData, addrFA) == (0xFA << 1));
 #endif
