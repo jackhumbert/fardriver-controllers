@@ -7,6 +7,8 @@
 #define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
 #define PRINT_SIZEOF(A) char (*__daniel_kleinstein_is_cool)[sizeof(char[sizeof(A)])] = 1
 
+#define ASSERT_SIZE(a, b) static_assert(sizeof(a) == b);
+
 #endif
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
@@ -130,7 +132,9 @@ struct Addr00 {
     int16_t SaveNum;
 } addr00;
 
-static_assert(sizeof(addr00) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(Addr00, 12);
+#endif
 
 #ifndef _010EDITOR
 
@@ -209,7 +213,9 @@ struct Addr06 {
     uint8_t Direction : 1; // Send(0x12, 0x07)
 } addr06;
 
-static_assert(sizeof(addr06) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr06, 12);
+#endif
 
 // 0x0C
 struct Addr0C {
@@ -224,7 +230,9 @@ struct Addr0C {
     uint8_t MaxKP;
 } addr0C;
 
-static_assert(sizeof(addr0C) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr0C, 12);
+#endif
 
 // 0x12
 struct Addr12 {
@@ -237,7 +245,9 @@ struct Addr12 {
     uint16_t RatedVoltage; // 0x17 / 10, Send(0x12, 0x04)
 } addr12;
 
-static_assert(sizeof(addr12) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr12, 12);
+#endif
 
 // 0x18
 struct Addr18 {
@@ -287,7 +297,9 @@ struct Addr18 {
     uint16_t IntRes; // Send(0x0F, 0x08)
 } addr18;
 
-static_assert(sizeof(addr18) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr18, 12);
+#endif
 
 // 0x1E
 struct Addr1E {
@@ -323,7 +335,9 @@ struct Addr1E {
     uint8_t TimeHour;
 } addr1E;
 
-static_assert(sizeof(addr1E) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr1E, 12);
+#endif
 
 // 0x24
 struct Addr24 {
@@ -336,7 +350,9 @@ struct Addr24 {
     uint16_t LowSpeed; // Send(0x11, 0x02)
 } addr24;
 
-static_assert(sizeof(addr24) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr24, 12);
+#endif
 
 // 0x2A
 struct Addr2A {
@@ -349,7 +365,9 @@ struct Addr2A {
     uint16_t Max_Acc;
 } addr2A;
 
-static_assert(sizeof(addr2A) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr2A, 12);
+#endif
 
 // 0x30
 // omitted in save
@@ -365,7 +383,9 @@ struct Addr30 {
     uint16_t SpdPulseNum;
 } addr30;
 
-static_assert(sizeof(addr30) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr30, 12);
+#endif
 
 // skip 78 bytes (0x27 addresses)
 // omitted in save
@@ -388,7 +408,9 @@ struct Addr5D {
     uint16_t unk62;
 } addr5D;
 
-static_assert(sizeof(addr5D) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr5D, 12);
+#endif
     
 // 0x63
 struct Addr63 {
@@ -405,7 +427,9 @@ struct Addr63 {
     // uint8_t unk68b;
 } addr63;
 
-static_assert(sizeof(addr63) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr63, 12);
+#endif
 
 // 0x69
 struct Addr69 {
@@ -430,7 +454,9 @@ struct Addr69 {
     char SpecialCode;
 } addr69;
 
-static_assert(sizeof(addr69) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr69, 12);
+#endif
 
     // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
     // if (ParaIndex < 10) {
@@ -488,7 +514,9 @@ struct Addr7C {
     uint16_t DistanceMSB; // this << 16 / 10, km
 } addr7C;
 
-static_assert(sizeof(addr7C) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addr7C, 12);
+#endif
 
 // 0x82
 struct Addr82 {
@@ -1033,7 +1061,9 @@ struct AddrE8 {
     int16_t throttle_depth;
 } addrE8;
 
-static_assert(sizeof(addrE8) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addrE8, 12);
+#endif
 
 // 0xEE
 struct AddrEE {
@@ -1063,7 +1093,9 @@ struct AddrEE {
     int16_t volts; // mabe / 16
 } addrEE;
 
-static_assert(sizeof(addrEE) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addrEE, 12);
+#endif
 
 // 0xF4
 struct AddrF4 {
@@ -1078,7 +1110,9 @@ struct AddrF4 {
     uint16_t EXESingle; // F9 / 8.0, us, paracnt_16
 } addrF4;
 
-static_assert(sizeof(addrF4) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addrF4, 12);
+#endif
 
 // paracnt strings
 //  0 "ProdMaxVol",
@@ -1118,11 +1152,15 @@ struct AddrFA {
     uint16_t unkFF;
 } addrFA;
 
-static_assert(sizeof(addrFA) == 12);
+#ifndef _010EDITOR
+ASSERT_SIZE(addrFA, 12);
+#endif
 
 };
 
-static_assert(sizeof(FardriverData) == 512);
+#ifndef _010EDITOR
+ASSERT_SIZE(FardriverData, 512);
+#endif
 
 // PRINT_SIZEOF(FardriverData)
 
