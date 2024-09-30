@@ -31,6 +31,7 @@ enum PIN {
     PINInvalid3 = 15
 };
 
+/*
 uint32_t PIN_lut[16] = {
     0,
     10,
@@ -68,7 +69,8 @@ uint32_t PIN_inv_lut [16] = {
     15,
     15
 };
-struct, big_end_24b {
+*/
+struct big_end_24b {
     uint32_t byte_0 : 8;
     uint32_t byte_1 : 8;
     uint32_t byte_2 : 8;
