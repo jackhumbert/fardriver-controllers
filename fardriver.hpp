@@ -4,6 +4,9 @@
 
 #pragma pack(push, 1)
 
+#define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
+#define PRINT_SIZEOF(A) char (*__daniel_kleinstein_is_cool)[sizeof(char[sizeof(A)])] = 1
+
 #endif
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
@@ -56,7 +59,7 @@ struct FardriverData {
     }
 
     // used when App.NewVersion
-    static void WriteAddr(uint8_t * data, uint8_t addr, uint8_t length) {
+    static void WriteAddr(uint8_t * data, uint8_t addr, uint16_t length) {
         length += 4;
         data[0] = 0xAA; // 170
         if (length == 0x184) {
@@ -70,7 +73,8 @@ struct FardriverData {
         } else if (length == 0x8C) {
             data[1] = 0xFD;
         } else {
-            data[1] = 0xC0 + length; // Normal flash memory
+            // Normal flash memory
+            data[1] = 0xC0 + length; 
         }
         data[2] = addr;
         data[3] = addr;
@@ -84,6 +88,14 @@ struct FardriverData {
         data[length] = a;
         data[length + 1] = b;
         FardriverSerial->write(data, length + 2);
+    }
+
+    void SaveParameters(void) {
+        uint8_t data[0x138];
+        // not quite right, 330 total
+        memcpy(data + 4, &this->addr00, 0x30 * 2);
+        memcpy(data + 4 + (0x30 * 2), &this->addr63, (0xD6 - 0x63) * 2);
+        WriteAddr(data, 1, 4 + (0x30 * 2) + ((0xD6 - 0x63) * 2));
     }
 
     static void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
@@ -118,6 +130,8 @@ struct Addr00 {
     int16_t SaveNum;
 } addr00;
 
+static_assert(sizeof(addr00) == 12);
+
 #ifndef _010EDITOR
 
 GETSET(VolCoeff, int16_t, addr00);
@@ -133,7 +147,7 @@ GETSET(SaveNum, int16_t, addr00);
 struct Addr06 {
     // 2, 0x06
     uint8_t Arg2 : 1;
-    enum EAntiTheftPulse{
+    enum EAntiTheftPulse {
         Invalid = 0,
         Type1 = 1,
         Type2 = 2,
@@ -195,6 +209,8 @@ struct Addr06 {
     uint8_t Direction : 1; // Send(0x12, 0x07)
 } addr06;
 
+static_assert(sizeof(addr06) == 12);
+
 // 0x0C
 struct Addr0C {
     int16_t PhaseOffset; // / 10.0, Send(0x0A, 0x07)
@@ -208,6 +224,8 @@ struct Addr0C {
     uint8_t MaxKP;
 } addr0C;
 
+static_assert(sizeof(addr0C) == 12);
+
 // 0x12
 struct Addr12 {
     int16_t LD; // 0x12
@@ -218,6 +236,8 @@ struct Addr12 {
     uint16_t RatedPower; // 0x16, Send(0x12, 0x03)
     uint16_t RatedVoltage; // 0x17 / 10, Send(0x12, 0x04)
 } addr12;
+
+static_assert(sizeof(addr12) == 12);
 
 // 0x18
 struct Addr18 {
@@ -267,6 +287,8 @@ struct Addr18 {
     uint16_t IntRes; // Send(0x0F, 0x08)
 } addr18;
 
+static_assert(sizeof(addr18) == 12);
+
 // 0x1E
 struct Addr1E {
     uint16_t FwReRatio;
@@ -301,6 +323,8 @@ struct Addr1E {
     uint8_t TimeHour;
 } addr1E;
 
+static_assert(sizeof(addr1E) == 12);
+
 // 0x24
 struct Addr24 {
     uint8_t TimeMin;
@@ -311,6 +335,8 @@ struct Addr24 {
     uint16_t BackSpeed; // Send(0x11, 0x03)
     uint16_t LowSpeed; // Send(0x11, 0x02)
 } addr24;
+
+static_assert(sizeof(addr24) == 12);
 
 // 0x2A
 struct Addr2A {
@@ -323,7 +349,10 @@ struct Addr2A {
     uint16_t Max_Acc;
 } addr2A;
 
+static_assert(sizeof(addr2A) == 12);
+
 // 0x30
+// omitted in save
 struct Addr30 {
     uint16_t StopBackCurr; // Send(0x12, 0x18)
     uint16_t MaxBackCurr; // Send(0x12, 0x19)
@@ -336,7 +365,10 @@ struct Addr30 {
     uint16_t SpdPulseNum;
 } addr30;
 
+static_assert(sizeof(addr30) == 12);
+
 // skip 78 bytes (0x27 addresses)
+// omitted in save
     uint16_t unk36[6];
     uint16_t unk3A[6];
     uint16_t unk42[6];
@@ -346,6 +378,7 @@ struct Addr30 {
     uint16_t unk5A[3];
 
 // 0x5D
+// omitted in save
 struct Addr5D {
     uint16_t unk5D;
     uint16_t unk5E;
@@ -826,6 +859,7 @@ struct AddrD0 {
 } addrD0;
 
 // 0xD6
+// omitted in save
 struct AddrD6 {
     int16_t unkD6;
 
@@ -1088,10 +1122,12 @@ static_assert(sizeof(addrFA) == 12);
 
 };
 
+static_assert(sizeof(FardriverData) == 512);
+
+// PRINT_SIZEOF(FardriverData)
+
 #ifndef _010EDITOR
 #pragma pack(pop)
-
-#define PRINT_OFFSETOF(A, B) char (*__daniel_kleinstein_is_cool)[sizeof(char[offsetof(A, B)])] = 1
 
 static_assert(offsetof(FardriverData, addr06) == (0x06 << 1));
 static_assert(offsetof(FardriverData, addr0C) == (0x0C << 1));
