@@ -51,6 +51,38 @@ AddrD0 addrD0;
 
 // 384, 0x180 bytes (0xC0 addresses?) for CAN config
 
+uint32_t unk00[8];
+
+enum EFrameType {
+    Standard = 0,
+    Extended = 1
+};
+
+EFrameType frameTypeRecv : 4;
+EFrameType frameTypeSend : 4;
+uint8_t unk21;
+uint8_t unk22a : 3;
+uint8_t unk22b : 3;
+enum EByteOrder {
+    INTEL = 0,
+    Motorola = 1
+} byteOrder : 2;
+uint8_t amps_23;
+uint8_t unk24;
+
+uint8_t unk25a : 3;
+uint8_t unk25b : 3;
+uint8_t _unk25c : 2;
+
+uint8_t unk26a : 3;
+uint8_t unk26b : 3;
+uint8_t _unk26c : 2;
+
+uint8_t unk27a : 3;
+uint8_t unk27b : 3;
+uint8_t _unk27c : 2;
+
+/*
 uint8_t DataFormat;
 uint8_t RcvFrameType;
 uint8_t SendFrameType;
@@ -77,6 +109,7 @@ uint8_t GearBytePos;
 uint8_t GearBitPos;
 uint8_t ControlBytePos;
 uint8_t unkCAN[7];
+*/
 
 uint32_t SendID0;
 uint32_t SendID1;
@@ -85,7 +118,12 @@ uint32_t SendID3;
 uint32_t SendID4;
 uint32_t SendID5;
 
-uint8_t unk[2];
+uint8_t unk46a : 3;
+uint8_t unk46b : 3;
+uint8_t _unk46c : 2;
+
+uint8_t unk47a : 3;
+uint8_t _unk47b : 5;
 
 uint8_t SendID0_Timer;
 uint8_t SendID1_Timer;

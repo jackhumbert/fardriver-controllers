@@ -52,14 +52,6 @@ extern HardwareSerial * FardriverSerial;
 
 struct FardriverData {
 #ifndef _010EDITOR
-    uint8_t * GetAddr(uint16_t addr) {
-        return (uint8_t*)this + (addr << 1);
-    }
-
-    uint16_t GetWord(uint16_t addr) {
-        return *((uint16_t*)this + addr);
-    }
-
     // used when App.NewVersion
     static void WriteAddr(uint8_t * data, uint8_t addr, uint16_t length) {
         length += 4;
@@ -92,14 +84,6 @@ struct FardriverData {
         FardriverSerial->write(data, length + 2);
     }
 
-    void SaveParameters(void) {
-        uint8_t data[0x138];
-        // not quite right, 330 total
-        memcpy(data + 4, &this->addr00, 0x30 * 2);
-        memcpy(data + 4 + (0x30 * 2), &this->addr63, (0xD6 - 0x63) * 2);
-        WriteAddr(data, 1, 4 + (0x30 * 2) + ((0xD6 - 0x63) * 2));
-    }
-
     static void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
         uint8_t data[8];
         data[4] = first;
@@ -119,6 +103,44 @@ struct FardriverData {
         data[6] = data[0] + data[1] + data[2] + data[3] + data[4] + data[5];
         data[7] = ~data[6];
         FardriverSerial->write(data, 8);
+    }
+
+    uint8_t * GetAddr(uint16_t addr) {
+        return (uint8_t*)this + (addr << 1);
+    }
+
+    uint16_t GetWord(uint16_t addr) {
+        return *((uint16_t*)this + addr);
+    }
+
+    // sent immediately after opening port
+    void Open(void) {
+       SendRS323Data(0x13, 0x07, 0x01, 0xF1);
+    }
+
+    // saves "cflash"
+    void SaveCANParameters(void) {
+        uint8_t data[0x180 + 4];
+        uint8_t * pos = data + 4;
+        uint16_t size = (0x180) * 2;
+        memcpy(pos, GetAddr(0x100), size);
+        WriteAddr(data, 0x00, 0x180);
+    }
+
+    // saves "wflash"
+    void SaveParameters(void) {
+        uint8_t data[0x138 + 4];
+        uint8_t * pos = data + 4;
+        uint16_t size = (0x36) * 2;
+        memcpy(pos, GetAddr(0x00), size);
+        pos += size;
+        size = (0x6F - 0x63) * 2;
+        memcpy(pos, GetAddr(0x63), size);
+        pos += size;
+        size = (0xD6 - 0x7C) * 2;
+        memcpy(pos, GetAddr(0x7C), size);
+        pos += size;
+        WriteAddr(data, 0x01, 0x138);
     }
 #endif
 
