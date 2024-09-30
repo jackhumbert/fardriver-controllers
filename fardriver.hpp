@@ -295,7 +295,9 @@ ASSERT_SIZE(addr0C, 12);
 
 // 0x12
 struct Addr12 {
-    int16_t LD; // 0x12
+    // 2-3, 0x12
+    // Weak Magnetic Function Coefficient
+    int16_t LD;
     uint16_t AlarmDelay; // 0x13
     uint8_t PolePairs; // 0x14, Send(0x12, 0x01)
     uint8_t unk14b; // alway_s sent 0x59?
