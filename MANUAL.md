@@ -2,19 +2,20 @@
 
 ## 2023 08 08
 
-**1 PC upper computer software interface:**
+# 1 PC upper computer software interface
 
-```
 When the serial port and CAN analyzer are not connected, the following screen is
 displayed:
-```
-```
+
+![image](/images/1.jpg)
+
 When you connect the serial port or turn on CAN, the following screen is displayed:
-```
 
-Once connected to the controller, the data is uploaded from the controller to the host
+![image](/images/2.jpg)
 
-computer page:
+Once connected to the controller, the data is uploaded from the controller to the host computer page:
+
+![image](/images/3.jpg)
 
 **The view contains a dashboard page to dynamically view the working
 parameters, a statistics page to view the dynamic characteristics of the
@@ -24,11 +25,15 @@ samples after the first refueling door of the running data, without turning off
 the power, it has been saved in the controller. For example, 0. 1 second
 sampling**
 
-**For one set of data, the controller can record 205 seconds of data to analyze the**
+**For one set of data, the controller can record 205 seconds of data to analyze the vehicle's driving characteristics.**
 
-**vehicle's driving characteristics.**
+![image](/images/4.jpg)
+![image](/images/5.jpg)
+![image](/images/6.jpg)
 
 # 2 Parameters
+
+![image](/images/7.jpg)
 
 ## 2.1 Basic motor parameters
 
@@ -378,6 +383,8 @@ throttle high threshold based on this voltage.
 
 # 3 Current Limit
 
+![image](/images/8.jpg)
+
 ## 3.1 Motor current limiting protection factor
 
 Conversion of 500RPM,1000RPM,.......8500RPM,9000RPM in current limiting.
@@ -486,15 +493,13 @@ power saving at the highest speed.
 
 #### 4 Energy Return
 
-For the throttle back brake function, during the ride, the throttle back goes into the e-
-brake state.
+![image](/images/9.jpg)
+
+For the throttle back brake function, during the ride, the throttle back goes into the e-brake state.
 For the e-brake function, when braking, the whole vehicle gives 🎧 brake signal to
-the controller, and the controller detects the brake signal and then enters the e-brake
-state.
+the controller, and the controller detects the brake signal and then enters the e-brake state.
 Note that to use the e-brake function, you must enable this function by selecting
-**e-brake or return throttle brake** in the **follow** item. And set the return current. Note
-that the maximum return current is generally 25%~50% larger than the stop return current
-when setting the parameter.
+**e-brake or return throttle brake** in the **follow** item. And set the return current. Note that the maximum return current is generally 25%~50% larger than the stop return current when setting the parameter.
 
 ## 4.1 Brake current limitation
 
@@ -536,7 +541,9 @@ think it is not enough, then change it to -15%, -20%, don't set it to -50%~-100%
 of a sudden, as this kind of operation is easy to bring the danger of braking sharply.
 Older versions of the controller do not come with a negative current factor.
 
-# 5 functionality
+# 5 Functionality
+
+![image](/images/10.jpg)
 
 ## 5.1 Function input pin
 
@@ -693,6 +700,8 @@ The amount of time it takes to start BOOST again after BOOST has finished, defau
 seconds, maximum 131 seconds;
 
 # 6 meter (i.e. measuring instrument)
+
+![image](/images/11.jpg)
 
 ## 6.1 Instrumentation
 
@@ -1058,6 +1067,8 @@ Total miles traveled by the controller.
 
 # 7 safeguard
 
+![image](/images/13.jpg)
+
 ## 7.1 voltage protection
 
 ### 7.1.1 Overvoltage protection, recovery
@@ -1198,6 +1209,8 @@ Base value: 0~255, default 8
 
 # 8 PID control
 
+![image](/images/14.jpg)
+
 ## 8.1 AN
 
 Motor body characteristic AN value, parameter range 0~16.
@@ -1255,9 +1268,9 @@ MOE defaults On to turn on the protection, select Off to turn off the protection
 
 Sampling in ms intervals, Hxx and above have 2560 points in the acceleration curve, the following versions have a total of 510 points in the acceleration curve, for example, if you set 100ms sampling, then the acceleration curve will have 510 points, and the total time will be 256 seconds/51 seconds.
 
-## 8.7 special code
+## 8.7 Special Code
 
-| Normal code version | special code | releases | special code |
+| Version | Special code | Version | Special code |
 |---|---|---|---|
 | Hall Speed 128 Regular | 1 | 8x PID | +8 |
 | Hall Speed 256 Light Jump Edition | 2 | Detecting brake voltage | +16 |
@@ -1287,16 +1300,16 @@ The default ratio is 64, the setting 64 is 1:1, 128 is 2:1, 32 is 0.5:1.
 
 A parameter required for forward and reverse gear shifting systems. 0~255
 
-||added functionality||drop-in feature|
-|---|---|---|---|
-| +256 | Reverse side support signal | un- | Reverse side support signal
-| +512 | Allows small current switching | un- | Small current switching not allowed
-| +1024 | Neutral Anti-Skid Parking | un- | The gap does not prevent backward skidding.
-| +2048 | Record mileage | un- | Mileage not recorded |
-| +4096 | Extension code Y Lower magnetic brake switch | un- | Extended code Y under the Bullseye function
-| +8192 | Downhill reverse charge overvoltage cutoff |  un- | Downhill reverse charge control overvoltage
-| +16384 | Shielded gear speed limit 2 | un- | Enable gear speed limit 2
-| +32768 | PD1 Input | un- | PD1 Loss 🎧
+|add value|with|without|
+|---|---|---|
+| +256 | Reverse side support signal | Reverse side support signal
+| +512 | Allows small current switching | Small current switching not allowed
+| +1024 | Neutral Anti-Skid Parking | The gap does not prevent backward skidding.
+| +2048 | Record mileage | Mileage not recorded |
+| +4096 | Extension code Y Lower magnetic brake switch | Extended code Y under the Bullseye function
+| +8192 | Downhill reverse charge overvoltage cutoff |  Downhill reverse charge control overvoltage
+| +16384 | Shielded gear speed limit 2 | Enable gear speed limit 2
+| +32768 | PD1 Input | PD1 Loss 🎧
 
 ## 10.3 Voltage selection factor
 
@@ -1315,12 +1328,11 @@ Range 48~80, default 64
 
 Backward Maximum Acceleration Factor Default 32, Maximum 224
 
-
 ## 10.7 Alarm Delay
 
 Burglar alarm generates alarm recovery delay time setting, default 500ms Select a multiple of 100. The use of digits:1~9 means that the brakes do not respond within 100RPM~900RPM. 0 means that the brakes respond.
 
-| Ten digits (H59) | One Line Display | When the READY lamp turns | One Line Electronic Brake Status (H60) |
+| Tens digits (H59) | One Line Display | When the READY lamp turns | One Line Electronic Brake Status (H60) |
 |---|----|---|---|
 | 0 | brake condition | go out (of a fire etc) | demonstrate
 | 1 | brake condition | go out (of a fire etc) | not shown
@@ -1391,7 +1403,7 @@ Time to initiate jog and park in reverse, 2-48, default 36. odd: excessive gear 
 
 Even: low gear lash, parking normalized H78
 
-|| with | without |
+|add value| with | without |
 |---|---|---|
 | +64 | JL National Standard Status <br />Maximum speed ratio for SEC5=48V<br />Maximum speed ratio for SEC6=60V<br /> Maximum speed ratio for SEC7 = 72V | common state |
 | +128 | Solve for P under 2 | Solve for P under 1
@@ -1486,6 +1498,8 @@ Base Default Value 24320, Base Wide Range Value = 31744, Normally the default va
 
 # 11 Calibrate
 
+![image](/images/17.jpg)
+
 ## 11.1 Voltage
 
 Displays the input voltage of the controller
@@ -1494,115 +1508,90 @@ Displays the input voltage of the controller
 
 Displays the number of controller parameter modifications
 
-# 12 Correspond (by letter etc)
+# 12 Communication
 
-**12.1 communications serial port**
+![image](/images/18.jpg)
 
+## 12.1 Communications serial port
 
-**Port:** Depending on the user's computer, check the COM port number in the Device
-Manager to select it.
-**Baud rate:** fixed 19200.
-**12.2 Software upgrades:**
+* Port: Depending on the user's computer, check the COM port number in the Device Manager to select it.
+* Baud rate: fixed 19200.
+
+## 12.2 Software upgrades
+
 Only the code is upgraded, no parameters are changed.
-**12.3 Brush** :
+
+## 12.3 Brush
+
 Upgrade the code while resetting to the parameters that come with the
 program. Note that the HXX version brushes the data clear but not with
 customer data, you also need to use the HEB file to download the data inside the
 controller.
-**12.4 manipulate
-Self-learning:**
-initiating self-
-learning **canceling
-self-learning
-Save:** Save the data to the controller internal, the next reset
-start using the new data work. **12.5 Product number**
-Controller Internal Product Number: The controller's unique number, used for product
-registration and password retrieval.
-**12.6 Area, type of control: reserved
-12.7 Log in:**
-The generated version of the software can be set with a 30-digit password, allowing the
-controller to modify parameters only if the password is entered.
+
+## 12.4 Manipulate
+
+### Self-learning
+
+* Initiating self-learning
+* Canceling self-learning
+* Save: Save the data to the controller internal, the next reset start using the new data work. 
+
+## 12.5 Product number
+
+Controller Internal Product Number: The controller's unique number, used for product registration and password retrieval.
+
+## 12.6 Area, type of control: reserved
+
+## 12.7 Log in
+
+The generated version of the software can be set with a 30-digit password, allowing the controller to modify parameters only if the password is entered.
 Ordinary models do not have a password, some models of controllers according to the
 requirements of the 🎧 factory set 30-digit password, set the password
-The user can only view the parameters and status after the code. Click Login and enter
-the correct 30-digit password to modify the parameters.
-**12.8 Recovery 🎧 Factory**
+The user can only view the parameters and status after the code. Click Login and enter the correct 30-digit password to modify the parameters.
+
+## 12.8 Recovery 🎧 Factory
+
 Restore the parameters that come with the 🎧 Factory Program BIN file.
-**12.9 Open CAN**
+
+## 12.9 Open CAN
+
 Turn on the CAN analyzer, connect the controller, and debug.
-**12.10 Close CAN**
 
-```
+## 12.10 Close CAN
+
 Shutting down the CAN analyzer
-```
-**13 Data copy:**
-Batch view and adjustment of controller
-data and CAN bus data for Hxx and above:
 
-**13.1 Get controller data:**
+# 13 Data copy
 
-```
-1 ）Batch Download Parameters button on the right: Opens the Batch Download
-```
-```
-Parameters window. Click "Get controller data".
-2 ）The CAN protocol format parameters within the controller can be displayed in the
+Batch view and adjustment of controller data and CAN bus data for Hxx and above:
+
+## 13.1 Get controller data
+
+1. Batch Download Parameters button on the right: Opens the Batch Download Parameters window. Click "Get controller data".
+2. The CAN protocol format parameters within the controller can be displayed in the
 dialog box.
-3 ）Tap the Cancel button to return to the main menu.
-4 ）Save your own controller parameter file by clicking on the main icon in the upper left
-corner and selecting Save as heb file.
-```
-**13.2 Download heb data.**
-1 )Connect the controller, open the host computer, click the main icon in the
+3. Tap the Cancel button to return to the main menu.
+4. Save your own controller parameter file by clicking on the main icon in the upper left corner and selecting Save as heb file.
 
+## 13.2 Download heb data
 
-upper left corner, select Open a "heb" file (e.g. GX72400_13_A.heb), and the 🎧 dialog
-box will pop up automatically.
-2 )Tap "Data Download to Controller", you can see the matching number progress
-bar gradually full frame, the controller will prompt the alarm sound, tap "Controller
-Write and Reset", the controller data according to the new data to work.
+1. Connect the controller, open the host computer, click the main icon in the upper left corner, select Open a "heb" file (e.g. GX72400_13_A.heb), and the 🎧 dialog box will pop up automatically.
+2. Tap "Data Download to Controller", you can see the matching number progress bar gradually full frame, the controller will prompt the alarm sound, tap "Controller Write and Reset", the controller data according to the new data to work.
+3. Tap Cancel to exit the 🎧 dialog box.
 
-```
-3 ）Tap Cancel to exit the 🎧 dialog box.
-```
+## 13.3 CAN protocol data
 
-**13.3 CAN protocol data:
-13.3.1 CAN control
-13. 3. 1. 1 Data format:**
+### 13.3.1 CAN control
+
+#### 13.3.1.1 Data format
+
+CAN data segment information byte location map:
 
 ```
-1 ）CAN data segment information byte location map:
-```
-**Example of sending sequence:
-BYTE:1, 2, 3, 4, 5, 6, 7, 8
-bit:7 6 5 4 3 2 1 0, 15 14 13 12 11 10 9 8, ..., 63 62 61 60 59 58 57 56.**
-
-Data format: INTEL/MOTOROLA two optional, according to the protocol requirements to
-
-choose.
-
-```
-2 ）INTEL format: small end mode.
-```
-```
-Physical conversion example:
-RPM=4000RPM,physical signal value=precision*signal logic
-value+bias,precision=0.25,bias=0;then hexadecimal is
-0x3E80(16000d),message BYTE1=80H,BYTE2=3EH
-```
-```
-3 ）MOTOROLA Format: Big End Mode:
-```
-```
-Physical conversion example:
-RPM=4000RPM,physical signal value=precision*signal logic
-value+bias,precision=0.25,bias=0;then hexadecimal is
-0x3E80(16000d),message BYTE1=3EH,BYTE2=80H
-```
-```
-Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
-Byte1 7 6 5 4 3 2 1 0
-Byte2 15 14 13 12 11 10 9 8
+Bits   7  6  5  4  3  2  1  0
+---------------------------------------------
+Byte1  7  6  5  4  3  2  1  0
+Byte2 15 14 13 12 11 10  9  8
 Byte3 23 22 21 20 19 18 17 16
 Byte4 31 30 29 28 27 26 25 24
 Byte5 39 38 37 36 35 34 33 32
@@ -1610,385 +1599,264 @@ Byte6 47 46 45 44 43 42 41 40
 Byte7 55 54 53 52 51 50 49 48
 Byte8 63 62 61 60 59 58 57 56
 ```
+
+Example of sending sequence:  
+BYTE:1, 2, 3, 4, 5, 6, 7, 8  
+bit:7 6 5 4 3 2 1 0, 15 14 13 12 11 10 9 8, ..., 63 62 61 60 59 58 57 56.
+
+Data format: INTEL/MOTOROLA two optional, according to the protocol requirements to choose.
+
+INTEL format: small end mode.
+
 ```
-Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
+Bit     7   6   5   4   3   2   1   0
+-------------------------------------
 Byte1 The The The The The The The LSB
 Byte2 MSB The The The The The The The
-Byte3 - - - - - - - -
-Byte4 - - - - - - - -
+Byte3   -   -   -   -   -   -   -   -
+Byte4   -   -   -   -   -   -   -   -
 Byte5 The The The The The The The LSB
-Byte6 - - - - MSB The The The
-Byte7 - - - - - - - -
-Byte8 - - - - - - - -
-```
-```
-Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
-Byte1 MSB The The The The The The The
-Byte2 The The The The The The The LSB
-Byte3 - - - - - - - -
-Byte4 - - - - - - - -
-Byte5 - - - - MSB The The The
-Byte6 The The The The The The The LSB
-Byte7 - - - - - - - -
-Byte8 - - - - - - - -
+Byte6   -   -   -   - MSB The The The
+Byte7   -   -   -   -   -   -   -   -
+Byte8   -   -   -   -   -   -   -   -
 ```
 
-**13. 3. 1. 2 Receive frame type:**
+Physical conversion example:
+RPM=4000RPM, physical signal value=precision*signal logic
+value+bias, precision=0.25, bias=0; then hexadecimal is
+0x3E80(16000d), message BYTE1=80H,BYTE2=3EH
+
+MOTOROLA Format: Big End Mode:
+
+```
+Bit     7   6   5   4   3   2   1   0
+-------------------------------------
+Byte1 MSB The The The The The The The
+Byte2 The The The The The The The LSB
+Byte3   -   -   -   -   -   -   -   -
+Byte4   -   -   -   -   -   -   -   -
+Byte5   -   -   -   - MSB The The The
+Byte6 The The The The The The The LSB
+Byte7   -   -   -   -   -   -   -   -
+Byte8   -   -   -   -   -   -   -   -
+```
+
+Physical conversion example:
+RPM=4000RPM,physical signal value=precision*signal logic
+value+bias,precision=0.25,bias=0;then hexadecimal is
+0x3E80(16000d),message BYTE1=3EH,BYTE2=80H
+
+#### 13.3.1.2 Receive frame type
+
 Selectable standard frame, extended frame
-**13. 3. 1. 3 Send frame type:**
+
+#### 13.3.1.3 Send frame type
+
 Selectable standard frame, extended frame
-**13. 3. 1. 4 SOP_ID,SOP unit, SOP high byte position, SOP low byte position:**
-BMS Maximum Allowable Discharge
-Current Value, 2 bytes representation.
-SOP_ID: ID number of the SOP
-instruction.
-SOP unit: Generally set to 0.1A, or 0.25A or 1A. SOP high
-byte position (0~7 corresponds to BYTE1-BYTE8)
-SOP Low byte position (0~7 corresponds to BYTE1-BYTE8)
-SOP value = (value of SOP high byte position * 256 + value of SOP low byte position) * SOP
-unit (A).
-**13. 3. 1. 5 SOC_ID,SOC Location.**
+
+#### 13.3.1.4 SOP_ID,SOP unit, SOP high byte position, SOP low byte position
+
+* BMS Maximum Allowable Discharge Current Value, 2 bytes representation.
+* SOP_ID: ID number of the SOP instruction.
+* SOP unit: Generally set to 0.1A, or 0.25A or 1A. SOP high byte position (0~7 corresponds to BYTE1-BYTE8)
+* SOP Low byte position (0~7 corresponds to BYTE1-BYTE8)
+* SOP value = (value of SOP high byte position * 256 + value of SOP low byte position) * SOP unit (A).
+
+#### 13.3.1.5 SOC_ID,SOC Location
+
 The current power percentage value of BMS,
 full power=100, no power=0. SOC_ID: ID
 number of SOC command.
 SOC Position: 0~7 corresponds to BYTE1-BYTE8.
-**13. 3. 1. 6 Charge ID, Charge Byte Position, Charge BIT Position.**
+
+#### 13.3.1.6 Charge ID, Charge Byte Position, Charge BIT Position
+
 Charge ID: ID number of the charge command.
 When both the byte position and the BIT position are
 0, stopping occurs as long as there is an ID number.
 When the position is not 0, it stops when the
 position is set to 1.
-**13. 3. 1. 7 Edge Support ID, Edge Support Byte Position, Edge Support BIT Position**
+
+#### 13.3.1.7 Edge Support ID, Edge Support Byte Position, Edge Support B Position
+
 Edge Support ID: The ID number of the edge support command.
-Set to 1 when the side supports are up to disallow traveling, and set to 0 when the side
-supports are closed to allow traveling.
-**In the case of a dual battery system, this ID is the charging anti-running ID of the
-second battery, the contents of which are the same as in 12.3.1.6.
-13. 3. 1. 8 3-Speed ID, 3-Speed Byte Position, 3-Speed BIT Position**
+Set to 1 when the side supports are up to disallow traveling, and set to 0 when the side supports are closed to allow traveling.
+**In the case of a dual battery system, this ID is the charging anti-running ID of the second battery, the contents of which are the same as in 12.3.1.6.
+
+#### 13.3.1.8 3-Speed ID, 3-Speed Byte Position, 3-Speed BIT Position
+
 3-Speed ID: ID number of the 3-speed command.
-The three speeds total 2 positions, 0 for 1st gear speed, 1 for 2nd gear speed, 2 for
-3rd gear speed, and 3 for 4th gear/boost speed. The low position of the three speeds
-is in the specified BIT position and the high position is in the BIT+1 position.
-**13. 3. 1. 9 Gear ID, Gear Byte Position, Gear BIT Position**
+The three speeds total 2 positions, 0 for 1st gear speed, 1 for 2nd gear speed, 2 for 3rd gear speed, and 3 for 4th gear/boost speed. The low position of the three speeds is in the specified BIT position and the high position is in the BIT+1 position.
+
+#### 13.3.1.9 Gear ID, Gear Byte Position, Gear BIT Positio
+
 Gear ID: ID number of the gear command. Note that the gear control is used and the
 reverse is fast.
-The gears have a total of 2 positions, 0 for N, 1 for forward and 2 for reverse. The
-low position of the gear is in the specified BIT position, and the high position is in
-the BIT+1 position.
-**13. 3. 1. 10 Control ID, control type, control byte position.**
+The gears have a total of 2 positions, 0 for N, 1 for forward and 2 for reverse. The low position of the gear is in the specified BIT position, and the high position is in the BIT+1 position.
+
+#### 13.3.1.10 Control ID, control type, control byte position
+
 Control ID: The ID number
 of the control command.
+
 Control Type:
-sports
-event
 
-### == 1 == 0
-
-```
-BIT0 +1: Unmanned display +0 Other items shown
-BIT1 +2: Serial number +0 Error log
-```
-
-BIT2 +4: Separate display for
-low/high speed
-
-```
-+0 Normal 3-speed display
-```
-BIT3 +8: Display of laps +0 Display total mileage
-BIT6~BIT4 0=+0: unmanned 9 1=+16: ZN/YJ Calculation of SOC based on
-BMS residual battery capacity
-special
-control
-
-```
-3=+48: Unmanned 59 2 = +32: total mileage handshake
-```
-```
-6=+96: Dual battery
-system
-```
-```
-4=+64: Feedback on demand
-```
-```
-7=+112: Dual battery
-systems -
-```
-### 5=+80: TCS-ID
-
-### TCSID
-
-BIT7 =+128 Display current
-mileage
-
-```
-Display of remaining mileage
-```
+|sports event|==1|==0|
+|---|---|---|
+| BIT0 | +1: Unmanned display | +0 Other items shown
+| BIT1 | +2: Serial number | +0 Error log
+| BIT2 | +4: Separate display for low/high speed | +0 Normal 3-speed display
+| BIT3 | +8: Display of laps | +0 Display total mileage
+| BIT6~BIT4 Special Control | 0=+0: unmanned 9  <br /> 3=+48: Unmanned 59 <br />6=+96: Dual battery system <br /> 7=+112: Dual battery systems - TCSID| 1=+16: ZN/YJ Calculation of SOC based on BMS residual battery capacity<br />2 = +32: total mileage handshake<br />4=+64: Feedback on demand<br />5=+80: TCS-ID
+| BIT7 | =+128 Display current mileage | Display of remaining mileage
 
 On-demand commands: 12, 13, 14, 15 correspond to Send ID2, Send ID3, Send ID4, Send
 ID5 respectively.
 **Under the dual power system, this control ID is the SOPID of the second
 battery, the content is the same as 12.3.1.4, and the SOC ID of the second
 BMS is the same as this ID.
-13. 3. 1. 11 OBD_ID**
-OBD ID number, standard frame is 7DF.
-**13.3.2 CAN Transmit ID**
+
+#### 13.3.1.11 OBD_ID
+
+OBD ID number, standard frame is 0x7DF.
+
+### 13.3.2 CAN Transmit ID
+
 The controller has set up 6 ID numbers to send data.
 Send ID0 Timing~Send ID5 Timing is the timing count in 10ms, 0 means
 10ms, 1 means 20ms, 2 means 30ms...,199 means 2000ms.
 Send ID2 timer ~ Send ID5 timer must be >=4 i.e. 50ms. less than 4, it will be
 sent on demand according to the command received from CAN.
-**13.3.3 CAN Rule Description:**
+
+### 13.3.3 CAN Rule Description
+
 The CAN send content consists of 21 data, 17 status and 14 alarm messages. Each
 content includes the following definitions:
-**13. 3. 3. 1 Length:**
+
+#### 13.3.3.1 Length
+
 It refers to the number of BITs required for the data. For example, speed,
-current and voltage are usually 16 bits, gear position is 2 bits and alarm status is
-usually 1 bit.
-**13. 3. 3. 2 placement**
-For the position of the LSB of this data in the CAN frame, see the "CAN Data Segment
-Information Byte Position Diagram" above.
-**13. 3. 3. 3 gain (electronics)**
+current and voltage are usually 16 bits, gear position is 2 bits and alarm status is usually 1 bit.
+
+#### 13.3.3.2 placement
+
+For the position of the LSB of this data in the CAN frame, see the "CAN Data Segment Information Byte Position Diagram" above.
+
+#### 13.3.3.3 gain (electronics)
+
 The coefficients * are required for this data. Default gain = 1
-1 ）Customer code, serial number, hardware version, software version: gain=1
-2 ）Current voltage unit 0.1V, gain = 1
-3 ）Current current unit 0.1A, gain = 1
-4 ）Current phase current unit 0.1A, gain = 1
-5 ）Throttle opening, gain = 1
-6 ）Throttle voltage unit 0.01V, gain = 1
-7 ）Current torque unit = 0.1Nm, gain = 1
-8 ）Current speed, gain = 1
-9 ）Current RPM unit = 1RPM, gain = 1
-10 ） Total distance traveled 16 digits higher, unit=0.1Km, gain=1
-11 ） Total distance traveled 16 bits lower, unit=0.1Km, gain=1
-12 ） Current mileage unit = 0.1Km, gain = 1
-13 ） Controller temperature in °, gain=1, bias=40
-14 ） Motor temperature in °, gain=1, bias=40
-15 ） Battery level in %, gain=1
-16 ） Status, Alarm: Gain = 1
+
+1. Customer code, serial number, hardware version, software version: gain=1
+2. Current voltage unit 0.1V, gain = 1
+3. Current current unit 0.1A, gain = 1
+4. Current phase current unit 0.1A, gain = 1
+5. Throttle opening, gain = 1
+6. Throttle voltage unit 0.01V, gain = 1
+7. Current torque unit = 0.1Nm, gain = 1
+8. Current speed, gain = 1
+9. Current RPM unit = 1RPM, gain = 1
+10.  Total distance traveled 16 digits higher, unit=0.1Km, gain=1
+11.  Total distance traveled 16 bits lower, unit=0.1Km, gain=1
+12.  Current mileage unit = 0.1Km, gain = 1
+13.  Controller temperature in °, gain=1, bias=40
+14.  Motor temperature in °, gain=1, bias=40
+15.  Battery level in %, gain=1
+16.  Status, Alarm: Gain = 1
 
 
-### 13. 3. 3. 4 ID
+#### 13.3.3.4 ID
 
-Serial number of this data transmission ID (0~5, corresponding to CAN transmission
-ID0~CAN transmission ID5)
-**13. 3. 3. 5 active symbol**
-Valid: This data is reported to the CAN bus in the specified
-BIT,BYTE position. Invalid: This data is not reported
-on the CAN bus.
-**13. 3. 3. 6 bias voltage**
+Serial number of this data transmission ID (0~5, corresponding to CAN transmission ID0~CAN transmission ID5)
+
+#### 13.3.3.5 active symbol
+
+Valid: This data is reported to the CAN bus in the specified BIT,BYTE position. Invalid: This data is not reported on the CAN bus.
+
+#### 13.3.3.6 bias voltage
+
 Temperature bias 40, other default bias = 0:
-1 ）Controller temperature in °, gain=1, bias=40
-2 ）Motor temperature in °, gain=1, bias=40
 
-**13.3.4 CAN Data**
+1. Controller temperature in °, gain=1, bias=40
+2. Motor temperature in °, gain=1, bias=40
 
-```
+## 13.3.4 CAN Data
+
 There are a total of 21 data items that the user can choose to report or not report:
-```
-**13.3.5 CAN status:**
 
-```
+| sports event | Element | Size |
+|---|---|---|
+| 1 | client code | 2 letters
+| 2 | Sequence number 0 | 16-bit digital
+| 3 | Sequence number 1 | 16-bit digital
+| 4 | Serial Number/Error Code | 16-bit: according to the control word
+| 5 | hardware version | 8-bit
+| 6 | Software version 0 | 8-bit
+| 7 | Software Version 1 | 8-bit
+| 8 | input voltage | 16-bit
+| 9 | amps | 16-bit
+| 10 | phase current | 16-bit
+| 11 | Throttle opening/control data | 8/16-bit, driverless project display control data
+| 12 | Throttle voltage/control command | 16-bit, driverless project display control commands
+| 13 | torsion | 16-bit
+| 14 | current velocity | 16-bit
+| 15 | current speed | 16-bit
+| 16 | Total mileage/laps High 16 digits | 16-bit: according to the control word
+| 17 | Total mileage/laps Low 16 digits | 16-bit: according to the control word
+| 18 | Current Mileage / Remaining Mileage | 16-bit: according to the control word
+| 19 | Controller temperature | 8-bit
+| 20 | Motor temperature | 8-bit
+| 21 | current level | 8-bit
+
+## 13.3.5 CAN status:
+
 There are a total of 17 statuses that the user can choose to report or not report:
-```
-```
-sports
-event
-```
-```
-element Default value
-```
-```
-1 client code 2 letters
-2 Sequence number 0 16-bit digital
-3 Sequence number 1 16-bit digital
-4 Serial Number/Error
-Code
-```
-```
-16-bit: according to the control word
-```
-```
-5 hardware version 8-bit
-6 Software version 0 8-bit
-7 Software Version 1 8-bit
-8 input voltage 16-bit
-9 amps 16-bit
-10 phase current 16-bit
-11 Throttle
-opening/control data
-```
-```
-8/16-bit, driverless project display control data
-```
-```
-12 Throttle voltage/control
-command
-```
-```
-16-bit, driverless project display control
-commands
-13 torsion 16-bit
-14 current velocity 16-bit
-15 current speed 16-bit
-16 Total mileage/laps
-High 16 digits
-```
-```
-16-bit: according to the control word
-```
-```
-17 Total mileage/laps Low
-16 digits
-```
-```
-16-bit: according to the control word
-```
-```
-18 Current Mileage /
-Remaining Mileage
-```
-```
-16-bit: according to the control word
-```
-```
-19 Controller temperature 8-bit
-20 Motor temperature 8-bit
-21 current level 8-bit
-```
-```
-sports
-event
-```
-```
-element Default value
-```
-```
-1 gear level (i.e. first
-gear, second gear)
-```
-```
-2 bits
-SEC3=1: P send 0, reverse send 1, neutral send 2,
-forward send 3 SEC3=2: reverse send 3, neutral send
-2, forward send 1
-SEC3 = Other: neutral = 0, forward = 1, reverse = 2.
-2 Three speed status 3 digits: Low/high speed status
-according to the control word [ZN
-gear display, SEC1=1 high speed low
-speed reverse display SEC1=2: 123
-backward, BST,P gear display
-SEC1=3:Neutral 0, gear display = 1, 2, 3
-```
 
-**13.3.6 CAN Alarm**
+| sports event | Element | Size, Notes |
+|---|---|---|
+| 1 | gear level (i.e. first gear, second gear) | 2 bits <br /> SEC3=1: P send 0, reverse send 1, neutral send 2, forward send 3 SEC3=2: reverse send 3, neutral send 2, forward send 1 <br /> SEC3 = Other: neutral = 0, forward = 1, reverse = 2.
+| 2 | Three speed status | 3 digits: Low/high speed status according to the control word (ZN) gear display, <br />SEC1=1 high speed low speed reverse display SEC1=2: 123 backward, BST,P gear display <br />SEC1=3:Neutral 0, gear display = 1, 2, 3 <br /> SEC1=4:Neutral 0, Reverse 5, Gear display 2,3,4 (H62) <br /> SEC1=5:Neutral 0, Reverse A, Gear 1,2,3 <br /> SEC1=6:Neutral 0x20,Reverse 0x80,Forward 0,1,2 <br /> SEC1=7:Neutral 0,Reverse 3,Medium 0,Low 1,High 2 <br /> SEC1=other: gear display=0,1,2
+| 3 | brake condition | 1 bit
+| 4 | cruise state | 1 bit
+| 5 | pedestal state | 1 bit
+| 6 | edge support sth. | 1 bit
+| 7 | speed limit | 1 bit
+| 8 | restoration status | 1 bit
+| 9 | Backward state/motor direction | 1 bit, unmanned program showing motor direction
+| 10 | Boost status/direction of rotation |  1 digit, unmanned program display turning direction
+| 11 | Push Status/Master Relay |  1 digit, unmanned program displays main relay status
+| 12 | Parking P-gear status | 1 bit
+| 13 | state of charge | 1 bit
+| 14 | READY status | 1 bit, no alarm in gear can turn normally when light, turn off after turning. (CAN58 special: remains on after rotation)
+| 15 | ECO state | 1 bit
+| 16 | ABS status | 1 bit
+| 17 | BOOST status | 1 bit
 
-```
+## 13.3.6 CAN Alarm
+
 A total of 14 alarms, user can choose to report or not to report:
-```
-```
-SEC1=4:Neutral 0, Reverse 5, Gear display 2,3,4 (H62)
-SEC1=5:Neutral 0, Reverse A, Gear 1,2,3
-SEC1=6:Neutral 0x20,Reverse 0x80,Forward 0,1,2
-SEC1=7:Neutral 0,Reverse 3,Medium 0,Low 1,High
-2
-SEC1=other: gear display=0,1,2
-3 brake condition 1 position
-4 cruise state 1 position
-5 pedestal state 1 position
-6 edge support sth. 1 position
-7 speed limit 1 position
-8 restoration status 1 position
-9 Backward
-state/motor
-direction
-```
-```
-1 position, unmanned program showing motor
-direction
-```
-```
-10 Boost
-status/direction of
-rotation
-```
-```
-1 digit, unmanned program display turning direction
-```
-```
-11 Push Status/Master
-Relay
-```
-```
-1 digit, unmanned program displays main relay status
-```
-```
-12 Parking P-gear
-status
-```
-```
-1 position
-```
-```
-13 state of charge 1 position
-14 READY status 1 position, no alarm in gear can turn normally when
-light, turn off after turning.
-(CAN58 special: remains on after rotation)
-15 ECO state 1 position
-16 ABS status 1 position
-17 BOOST status 1 position
-```
-```
-sports
-event
-```
-```
-element Default value
-```
-```
-1 Motor Hall Failure 1 position
-2 throttle failure 1 position
-3 brake condition 1 position
-4 MOS Failure 1 position
-5 phase line short circuit
-fault
-```
-```
-1 position
-```
-```
-6 Phase line missing fault 1 position
-7 Controller over-
-temperature alarm
-```
-```
-1 position
-```
-```
-8 Motor over-temperature
-alarm
-```
-```
-1 position
-```
-```
-9 overcurrent alarm 1 position
-10 overpressure alarm 1 position
-11 undervoltage alarm 1 position
-12 blocking and alerting 1 position
-13 anti-theft alarm 1 position
-14 Controller Alarms 1 position
-```
 
-**14 Controller Model Description**
+| sports event | Element | Size|
+|---|---|---|
+| 1 | Motor Hall Failure | 1 bit
+| 2 | throttle failure | 1 bit
+| 3 | brake condition | 1 bit
+| 4 | MOS Failure | 1 bit
+| 5 | phase line short circuit fault | 1 bit
+| 6 | Phase line missing fault | 1 bit
+| 7 | Controller over- temperature alarm | 1 bit
+| 8 | Motor over-temperature alarm | 1 bit
+| 9 | overcurrent alarm | 1 bit
+| 10 | overpressure alarm | 1 bit
+| 11 | undervoltage alarm | 1 bit
+| 12 | blocking and alerting | 1 bit
+| 13 | anti-theft alarm | 1 bit
+| 14 | Controller Alarms | 1 bit
 
-```
+# 14 Controller Model Description
+
 Controller Model 1: ND 72 530 B _ 1 3_ A R H 68
-```
-```
 Controller Model 2: YQ 72V 270A B _ 1 3_ A R H 68
-```
+
 Controller Customer
 Code (AA-ZZ)
 
