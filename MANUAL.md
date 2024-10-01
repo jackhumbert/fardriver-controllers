@@ -100,8 +100,7 @@ There are many kinds of software programs, so I won't give you any more examples
 | +2048 | Isolated version of the program |
 | +4096 | 120M high speed version of the program |
 
-There are also a variety of specific programs that are required by the user, which are
-not reflected in the designation.
+There are also a variety of specific programs that are required by the user, which are not reflected in the designation.
 
 ### 2.1.2 Temperature Sensor:
 
@@ -116,102 +115,69 @@ not reflected in the designation.
 | NTC-10K | √ | × |
 | NTC-100K | √ | × |
 
-
 ### 2.1.3 Phase Shift
 
-The angular position of the motor is a key characteristic, which is usually
-indicated by the motor manufacturer. Most of the hub motors on the market
-are 30°, 210° and 90°, but there are some special motors. Note that the motor
-factory labeling method is different from the far drive logo, if you are not sure
-about the angle, you can find this value through self-learning methods.
-Generally, the error of phase shift between two operations is not more than 2°,
-which proves that there is no problem in the operation method and the phase
-shift is not a problem.
+The angular position of the motor is a key characteristic, which is usually indicated by the motor manufacturer. Most of the hub motors on the market are 30°, 210° and 90°, but there are some special motors. Note that the motor factory labeling method is different from the far drive logo, if you are not sure about the angle, you can find this value through self-learning methods.
+
+Generally, the error of phase shift between two operations is not more than 2°, which proves that there is no problem in the operation method and the phase shift is not a problem.
 
 #### 2.1.3.1 Passed 11.3 Upper computer initiated self-learning.
 
-By clicking on the upper unit self-learning button, 2 short and one long sound
-will be heard inside the controller to indicate that self-learning has been initiated.
-In addition, when you click on the upper computer to cancel the self-learning
-button, the sound disappears, i.e., the self-learning is canceled.
+By clicking on the upper unit self-learning button, 2 short and one long sound will be heard inside the controller to indicate that self-learning has been initiated.
+
+In addition, when you click on the upper computer to cancel the self-learning button, the sound disappears, i.e., the self-learning is canceled.
 
 #### 2.1.3.2 A method of initiating phase-shift self-learning by squeezing the brakes only, without a computer:
 
-This method is applicable to all controllers with brake line function installed,
-ND series, CN series, BN series controllers with software version 783 or above.
-Version A01 or above requires that the turn knob be pinched and turned on
-before powering up, do not let go, and do the following.
+This method is applicable to all controllers with brake line function installed, ND series, CN series, BN series controllers with software version 783 or above. Version A01 or above requires that the turn knob be pinched and turned on before powering up, do not let go, and do the following.
 
 1. Keep the brake connected, the controller is off and the motor is stationary.
 2. Turn the handle to the end, boot, this time the controller alarm, the motor does not turn.
 3. Enter self-study, Morse code 8 bits: 11000000.
 1="Long squeeze brake 0.5 sec~2 sec", 0="Short squeeze brake less than 0.5 sec"
-When you hear 2 short and 1 long, you are in self-learning mode. If you
-don't hear it, consider that you have made a mistake and try to re-enter the
-Morse code.
+
+When you hear 2 short and 1 long, you are in self-learning mode. If you don't hear it, consider that you have made a mistake and try to re-enter the Morse code.
 
 #### 2.1.3.3 Self-learning process
 
-After entering the self-learning state, with the wheels overhead and the
-throttle in the bottom, the motor should turn at this time, if it doesn't,
-the hall wires may have been swapped, or the motor wires may have been
-swapped. At this time just need to swap the big blue and green wires, it will
-turn up.
+After entering the self-learning state, with the wheels overhead and the throttle in the bottom, the motor should turn at this time, if it doesn't, the hall wires may have been swapped, or the motor wires may have been swapped. At this time just need to swap the big blue and green wires, it will turn up.
 
-After turning up the speed will be close to the motor fixed speed, then it
-will automatically adjust the phase shift to fit the motor, followed by the
-motor will be reversed and fit the motor, after the automatic completion, the
-motor stops. You can release the throttle. Finish the self-learning.
+After turning up the speed will be close to the motor fixed speed, then it will automatically adjust the phase shift to fit the motor, followed by the motor will be reversed and fit the motor, after the automatic completion, the motor stops. You can release the throttle. Finish the self-learning.
+
 Self-learning good motors will remain quiet.
 
 #### 2.1.3.4 Morse code changes the direction of the motor
 
-After the self-learning is completed, if you find that the normal startup
-motor is reversed, then you can modify the motor direction through the host
-computer, you can also change the motor direction through the Morse code:
-Morse code 8 bits: 11110000. if you find that the motor is reversed after the
-motor self-learning, you can correct the direction of the motor through this
-instruction.
+After the self-learning is completed, if you find that the normal startup motor is reversed, then you can modify the motor direction through the host computer, you can also change the motor direction through the Morse code:
+
+Morse code 8 bits: 11110000. if you find that the motor is reversed after the motor self-learning, you can correct the direction of the motor through this instruction.
 
 #### 2.1.3.5 Morse code to change the speed limit:
 
-The Morse code can be changed through the host computer to set 6 digits to
-release the speed, no restriction when 000000, restriction when any other code: it
-is necessary to operate the Morse code every time the power is turned on in
-order to release the speed limit.
+The Morse code can be changed through the host computer to set 6 digits to release the speed, no restriction when 000000, restriction when any other code: it is necessary to operate the Morse code every time the power is turned on in order to release the speed limit.
 
-Setting the 7-digit Morse code is the speed limit, which also operates on the
-last 6 digits, and the speed limit is converted once: if it was a speed limit state,
-it becomes a non-limit state, and vice versa. This conversion is saved in the
-controller, and it will be switched to this state when the controller is turned on
-in the future.
+Setting the 7-digit Morse code is the speed limit, which also operates on the last 6 digits, and the speed limit is converted once: if it was a speed limit state, it becomes a non-limit state, and vice versa. This conversion is saved in the controller, and it will be switched to this state when the controller is turned on in the future.
 
 ### 2.1.4 Pole Pairs
 
-Default 4 for Hall motors No need to change. The pole pair
-setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16~30, Encoder: 3-8
-pairs of poles display the actual rotation speed, above 10 pairs of poles
-display the rotation speed according to 4 pairs of poles. To modify the
-number of pole pairs, you have to save the points to make it effective.
+Default 4 for Hall motors No need to change. The pole pair setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16~30, Encoder: 3-8 pairs of poles display the actual rotation speed, above 10 pairs of poles display the rotation speed according to 4 pairs of poles. To modify the number of pole pairs, you have to save the points to make it effective.
 
 ### 2.1.5 Motor direction
 
-Specifies the motor direction when advancing 0: motor right setting, 1: motor left setting.
+Specifies the motor direction when advancing 
+
+* 0: motor right setting
+* 1: motor left setting
+
 Effective only after reset is saved.
 
 ### 2.1.6 Rated Speed
 
-The speed of the motor at the rated voltage, referred to as the
-rated speed, is often referred to as the constant speed in the electric motorcycle
-industry. This fixed speed determines the highest motor speed. Generally
-speaking, a common controller can drive the motor to the maximum speed near
-the fixed speed under the rated voltage. The controller will recognize the rated
-speed at the current voltage during self-learning.
+The speed of the motor at the rated voltage, referred to as the rated speed, is often referred to as the constant speed in the electric motorcycle industry. This fixed speed determines the highest motor speed. Generally speaking, a common controller can drive the motor to the maximum speed near the fixed speed under the rated voltage. The controller will recognize the rated speed at the current voltage during self-learning.
 
 ### 2.1.7 Rated Voltage
 
-The maximum number of strings of batteries for the NJ Far Drive Controller for different
-voltages is as follows:
+The maximum number of strings of batteries for the NJ Far Drive Controller for different voltages is as follows:
 
 | Voltage | Lead-acid | Lithium Ion | Lithium Iron Phosphate |
 |---|---|---|---|
@@ -225,9 +191,7 @@ voltages is as follows:
 
 🎧 Factory Settings 72 Series=72V,75 Series=75V,84 Series=84V,96 Series=96V, Series=108V
 
-Note that the rated voltage affects the power display, the setting can not be
-higher than 🎧factory voltage, after setting the parameters, you have to tap save
-again, valid after reset.
+Note that the rated voltage affects the power display, the setting can not be higher than 🎧factory voltage, after setting the parameters, you have to tap save again, valid after reset.
 
 ### 2.1.8 Rated power
 
@@ -238,33 +202,21 @@ The rated power of the motor, please set it according to the actual condition of
 Limits the maximum motor speed. In the EV market, the maximum speed is usually not limited, but the maximum speed is limited by the current limiting parameter at the back. After the speed exceeds the fixed speed, it automatically enters the weak magnetization state. The more the speed exceeds the fixed speed, the greater the depth of weak magnetization.
 
 Depth of weak magnetization: `(Maximum speed - Fixed speed) / Fixed speed * 100%`. Generally, hub motors can be weakly magnetized up to 50%.
-Some hub motors can have a weak magnetic depth of more than 100%. Therefore,
-we stipulate that the weak magnetic depth of surface-mounted motors should not
-exceed 50%, while the weak magnetic depth of embedded motors should not
-exceed 150%.
+
+Some hub motors can have a weak magnetic depth of more than 100%. Therefore, we stipulate that the weak magnetic depth of surface-mounted motors should not exceed 50%, while the weak magnetic depth of embedded motors should not exceed 150%.
 
 ### 2.1.10 Maximum phase current
 
-Maximum value of phase line current of the operating motor. Determines the motor
-output 🎧 maximum torque at standstill to rated speed.
+Maximum value of phase line current of the operating motor. Determines the motor output 🎧 maximum torque at standstill to rated speed.
 
-The maximum phase current has a maximum limit on the controller hardware,
-and the set value is not allowed to exceed 🎧🎧 factory setting. Failure to do so
-will result in a much higher probability of the controller burning out.
-Different types of motors will exhibit different output 🎧 torque for the same
-maximum phase current setting. The torque version of the motor has a high output
-🎧 torque, the balanced version has a slightly lower output 🎧 torque, and the
-speed version of the motor has the smallest output 🎧 torque. The motor with low
-fixed speed has a high loss 🎧 torque and the motor with high fixed speed has a low
-loss 🎧 torque.
+The maximum phase current has a maximum limit on the controller hardware, and the set value is not allowed to exceed 🎧🎧 factory setting. Failure to do so will result in a much higher probability of the controller burning out.
+
+Different types of motors will exhibit different output 🎧 torque for the same maximum phase current setting. The torque version of the motor has a high output 🎧 torque, the balanced version has a slightly lower output 🎧 torque, and the speed version of the motor has the smallest output 🎧 torque. The motor with low fixed speed has a high loss 🎧 torque and the motor with high fixed speed has a low loss 🎧 torque.
 
 ### 2.1.11 Maximum line current
 
-Controller operating battery bus current max. Determines the motor input 🎧
-maximum power value. Controller max input power = battery voltage * max
-line current.
-This current is limited to the maximum customer line current. This value
-determines the maximum output 🎧 power and thus the maximum speed.
+Controller operating battery bus current max. Determines the motor input 🎧 maximum power value. Controller max input power = battery voltage * max line current.
+This current is limited to the maximum customer line current. This value determines the maximum output 🎧 power and thus the maximum speed.
 
 ### 2.1.12 Back up the RPM:
 
@@ -272,8 +224,7 @@ Maximum RPM for backward gearing.
 
 ### 2.1.13 Swap phase wires
 
-The default is 0. If the big blue and green wires are exchanged, it will be 1. Note that
-this parameter is not correct and will cause the motor not to rotate.
+The default is 0. If the big blue and green wires are exchanged, it will be 1. Note that this parameter is not correct and will cause the motor not to rotate.
 
 This parameter is valid after reset and is automatically modified by the Hxx version self-
 learning.
@@ -285,39 +236,33 @@ to overcurrent
 
 ### 2.1.15 Weak magnetic response
 
-0~6, none means no weak magnetization. Default weak magnetic response 0
-Speed Expansion: Pushing the motor speed to a higher speed than the fixed speed is
-called speed expansion.
+0~6, none means no weak magnetization. Default weak magnetic response 0 Speed Expansion: Pushing the motor speed to a higher speed than the fixed speed is called speed expansion.
 
 1. Increase the working voltage, the higher the voltage, the higher the motor speed.
 2. Do not increase the working voltage, through the weak magnetization, increase the speed of the motor.
 
-Without changing the battery voltage, the motor speed is increased directly by controlling
-the current limiting parameter.
+Without changing the battery voltage, the motor speed is increased directly by controlling the current limiting parameter.
 
 ## 2.2 Acceleration and deceleration characteristics
 
-### 2.2.1 Accelerated sensitivity
+### 2.2.1 Acceleration sensitivity
 
-Acceleration speed,8~224, the higher the number, the faster the throttle response.
-An electric car is usually a gas pedal, while an electric motorcycle is a gas turn knob or
-center control.
-While an electric car should have a moderate response to the gas pedal, the
-requirements of an electric motorcycle are different; some customers require it
-to be light, slow, and steady, while others require it to be responsive and ready at
-the touch of a button.
-Acceleration sensitivity refers to how fast or slow the throttle response is. This
-parameter ranges from 16 to 224. The larger the number, the more sensitive the
-throttle acceleration.
-16 is already slow, and a setting of 32 is generally appropriate for electric vehicles, rarely
-exceeding 64.
-For electric motorcycle, besides setting at 32, many users prefer fast response, so
-setting at 64, 128. track race even set at 224.
+Acceleration speed, 8~224, the higher the number, the faster the throttle response.
+
+An electric car is usually a gas pedal, while an electric motorcycle is a gas turn knob or center control.
+
+While an electric car should have a moderate response to the gas pedal, the requirements of an electric motorcycle are different; some customers require it to be light, slow, and steady, while others require it to be responsive and ready at the touch of a button.
+
+Acceleration sensitivity refers to how fast or slow the throttle response is. This parameter ranges from 16 to 224. The larger the number, the more sensitive the throttle acceleration. 16 is already slow, and a setting of 32 is generally appropriate for electric vehicles, rarely exceeding 64.
+
+For electric motorcycle, besides setting at 32, many users prefer fast response, so setting at 64, 128. track race even set at 224.
 
 ### 2.2.2 Deceleration sensitivity
 
 Deceleration speed: 16~224, the higher the number the shorter the return throttle lag.
-2.2.3 Motor position:
+
+### 2.2.3 Motor position
+
 Non-set value, display of motor angle
 
 ### 2.2.4 Back on the gas
@@ -326,47 +271,31 @@ Default 0
 
 ### 2.2.5 Throttle Response
 
-There are three configurations of throttle characteristics for different user
-preferences: linear, sport, and economy.
+There are three configurations of throttle characteristics for different user preferences: linear, sport, and economy.
 
 ### 2.2.6 Economic acceleration parameters
 
 Default 8
 
 ### 2.3 Throttle Threshold
-throttles on the market are uneven, and the voltage value will vary from throttle to
-throttle or gas pedal to gas pedal.
 
-| | idle voltage | high voltage |
+throttles on the market are uneven, and the voltage value will vary from throttle to throttle or gas pedal to gas pedal.
+
+| | Idle voltage | High voltage |
 |---|---|---|
 | Electric Motorcycle | 0.8V-0.9V | 4.1-4.3V |
-| center throttle | 0.8V-0.9V | 4.5-4.95V |
-| 12V Gas pedal | 0.0V-0.2V | 4.6-4.8V |
+| Central control handle | 0.8V-0.9V | 4.5-4.95V |
+| 12V Accelerator pedal | 0.0V-0.2V | 4.6-4.8V |
 
 ### 2.3.1 Low Threshold
 
-We set the low throttle threshold based on the idle voltage. Considering the
-fluctuation of the throttle voltage, setting the low throttle threshold should
-generally be 0.2-0.3V higher than the idle voltage, in order to ensure that the
-motor is working in the idle state when stopping.
-For example, the low throttle threshold for an electric motorcycle throttle
-would be set to 1.1V, while the low throttle threshold for a 12V gas pedal would
-be set to 0.5V.
+We set the low throttle threshold based on the idle voltage. Considering the fluctuation of the throttle voltage, setting the low throttle threshold should generally be 0.2-0.3V higher than the idle voltage, in order to ensure that the motor is working in the idle state when stopping. For example, the low throttle threshold for an electric motorcycle throttle would be set to 1.1V, while the low throttle threshold for a 12V gas pedal would be set to 0.5V.
 
 ### 2.3.2 High Threshold
 
-We set the high throttle threshold based on the full bar voltage. In order to make the
-controller capable of delivering 🎧full power in the full bar state
-rate, we need to get the setting below the full handle voltage. But here we have to
-be careful not to set it too low. In order to automatically detect whether there is
-any damage to the electronic throttle, we set a value 0.6V higher than the high
-throttle threshold as the alarm limit, once exceeded, it is considered that the
-throttle is damaged, and the controller immediately stops the power loss 🎧 to
-avoid the vehicle from flying, to avoid causing a flying safety accident.
-So when we set a high throttle threshold, for example, 4 .1-4.3V for an electric
-motorcycle throttle full handle, we would set the
-3.9V as the high throttle threshold. For a 12V gas pedal we would set the high throttle
-threshold at 4.3V.
+We set the high throttle threshold based on the full bar voltage. In order to make the controller capable of delivering 🎧full power in the full bar state rate, we need to get the setting below the full handle voltage. But here we have to be careful not to set it too low. In order to automatically detect whether there is any damage to the electronic throttle, we set a value 0.6V higher than the high throttle threshold as the alarm limit, once exceeded, it is considered that the throttle is damaged, and the controller immediately stops the power loss 🎧 to avoid the vehicle from flying, to avoid causing a flying safety accident.
+
+So when we set a high throttle threshold, for example, 4 .1-4.3V for an electric motorcycle throttle full handle, we would set the 3.9V as the high throttle threshold. For a 12V gas pedal we would set the high throttle threshold at 4.3V.
 
 The 742 and above versions add a throttle self-learning function. When turning to
 the bottom during self-learning, the controller automatically recognizes the
@@ -387,20 +316,12 @@ throttle high threshold based on this voltage.
 
 ## 3.1 Motor current limiting protection factor
 
-Conversion of 500RPM,1000RPM,.......8500RPM,9000RPM in current limiting.
-These RPMs are the RPMs for the number of pairs of poles calibrated inside
-the parameter. The corresponding parameter is also the parameter at that
-speed. For motors with an actual number of pole pairs greater than or
-equal to 16, a conversion is required.
+Conversion of 500RPM,1000RPM,.......8500RPM,9000RPM in current limiting. These RPMs are the RPMs for the number of pairs of poles calibrated inside the parameter. The corresponding parameter is also the parameter at that speed. For motors with an actual number of pole pairs greater than or equal to 16, a conversion is required.
 
 Typical hub motors have 16, 20, 24, 28, 30 pole pairs.
-A typical mid-mount motor has 3, 4, 5, 7, 8, 14 pole
-pairs.
+A typical mid-mount motor has 3, 4, 5, 7, 8, 14 pole pairs.
 
-If the number of pole pairs = 4 in the parameter, the motor speed = the speed
-on the host computer * 4 / the actual number of pole pairs of the motor. For
-example, if the pole pair number of the hub motor is 16
-in that case
+If the number of pole pairs = 4 in the parameter, the motor speed = the speed on the host computer * 4 / the actual number of pole pairs of the motor. For example, if the pole pair number of the hub motor is 16 in that case.
 
 The actual speed of a 16-pole hub motor at 500RPM is 125RPM.  
 The actual speed of a 16-pole hub motor for 1000RPM is 250RPM.  
@@ -412,47 +333,24 @@ The actual speed of a 16-pole hub motor at 6500RPM is 1625RPM.
 The actual speed of a 16-pole hub motor at 8000RPM is 2000RPM.  
 
 
-Weak magnetism limitation: gradual increase of current limiting parameters
-The current limiting value is set from a safe value, gradually increasing the
-speed, making sure that the weak magnetism cannot be excessive. Once the idling
+Weak magnetism limitation: gradual increase of current limiting parameters. 
 
+The setting of the current limit value starts from the safe value and gradually increases the speed. It is necessary to ensure that the weak magnetic field is not excessive. Once the idling speed is found to be unstable or even MOE or OVER protection is triggered, it means that the speed is too high and the weak magnetic field is excessive. The parameters should be changed back.
 
-speed is found to be unstable or even 🎧 l i n e MOE or OVER protection, it
-indicates that the speed is too high, the weak magnetism is excessive, the
-parameters should be changed back.
-The current limit value we set should be considered according to the actual
-demand. For a motor with a fixed speed of 1000RPM, the depth of weak
-magnetization is considered to be 50%. The maximum speed is also considered to
-be 1500RPM, and it is hoped that the motor will not operate above 1625RPM.
-Therefore, the current limit value is set at 30% for 6000RPM and less than 5% for
-6500RPM and above.
+The current limit value we set should be considered according to the actual demand. For a motor with a fixed speed of 1000RPM, the depth of weak magnetization is considered to be 50%. The maximum speed is also considered to be 1500RPM, and it is hoped that the motor will not operate above 1625RPM. Therefore, the current limit value is set at 30% for 6000RPM and less than 5% for 6500RPM and above.
 
+This ensures that the motor is only 50% weakly magnetized when idling. This ensures that the motor is only 50% weak when idling, and that it will not be too weakly magnetized, causing the motor to jitter or even burn out.
 
-This ensures that the motor is only 50% weakly magnetized when idling. This ensures that
-the motor is only 50% weak when idling, and that it will not be too weakly magnetized,
-causing the motor to jitter or even burn out.
-In many motors, the depth of weak magnetization can reach 100%, and 1000RPM
-motors can operate at high speeds of 2000RPM. For this type of motor, the current
-limiting factor can be expanded in order to maximize performance. The current
-limiting parameter can be set above the normal value of 70 for 8000RPM, 30 for
-8500, and below 5 for 9000RPM.
+In many motors, the depth of weak magnetization can reach 100%, and 1000RPM motors can operate at high speeds of 2000RPM. For this type of motor, the current limiting factor can be expanded in order to maximize performance. The current limiting parameter can be set above the normal value of 70 for 8000RPM, 30 for 8500, and below 5 for 9000RPM.
 
 ## 3.2 Speed Control Rating
 
 Speed Control Levels: Default 4 levels: BOOST, HIGH, MEDIUM, LOW.
 
-1. BOOST file: Bst is displayed on the mobile APP/computer, it is valid when the BOOST
-function is on and the BOOST time is set by the 4.3 Parameter control, BOOST operates at 🎧 factory customer maximum line
-current, maximum phase current, and current limiting factor limits.
-2. HIGH SPEED: Displayed on mobile APP/computer D. High speed is subject
-to maximum line current, maximum phase current, current limiting factor
-and maximum speed limiting conditions.
-3. Medium speed: The DM is displayed on the mobile APP/computer. medium
-speed is limited by the medium speed line current ratio, medium speed phase
-current ratio, and by the medium speed RPM.
-4. LOW SPEED: DL is displayed on the mobile APP/computer. low speed is
-limited by low-speed line current ratio, low-speed phase current ratio, and by
-low-speed RPM.
+1. BOOST file: Bst is displayed on the mobile APP/computer, it is valid when the BOOST function is on and the BOOST time is set by the 4.3 Parameter control, BOOST operates at 🎧 factory customer maximum line current, maximum phase current, and current limiting factor limits.
+2. HIGH SPEED: Displayed on mobile APP/computer D. High speed is subject to maximum line current, maximum phase current, current limiting factor and maximum speed limiting conditions.
+3. Medium speed: The DM is displayed on the mobile APP/computer. medium speed is limited by the medium speed line current ratio, medium speed phase current ratio, and by the medium speed RPM.
+4. LOW SPEED: DL is displayed on the mobile APP/computer. low speed is limited by low-speed line current ratio, low-speed phase current ratio, and by low-speed RPM.
 
 ### 3.2.1 Low-speed gear parameters
 
@@ -460,31 +358,30 @@ Low-speed line current scaling, low-speed phase current scaling, low-speed speed
 
 ### 3.2.2 Parameters of medium-speed gear
 
-Medium-speed line current scaling, medium-speed phase current scaling, medium-
-speed speeds
+Medium-speed line current scaling, medium-speed phase current scaling, medium-speed speeds
 
 ### 3.2.3 LDVOL
 
-200-900, default 900.
-Matching of idling noise in the high-speed section and balance between power and
-power saving at the highest speed.
+200-900, default 900
+
+Matching of idling noise in high speed section and balance between power and power saving at the highest speed
 
 ### 3.2.4 LQVOL
 
-1 ）Intermediate Throttle Voltage (mV, VQH+4 Intermediate Throttle Enable, 0 ~ 4000 ).
-2 ）Limiting current, ( 0 to 4000 in 1/4A)
+1. Intermediate throttle voltage (mV, VQH+4, intermediate throttle enabled, 0~4000).
+2. Speed ​​limit current, (0~4000, unit 1/4A)
 
 ### 3.2.5 FAIF
 
-||||
-|---|---|---|
-| 0~513 | 0 |Starting Resonance Characteristic Matching Option 1. Note that when the vehicle motor is performing well, VQH+64 = six times the speed Hall detection energy. Further reduces resonance noise. |
-|| 16~63 | Starting Resonance Characteristic Matching Option 2 |
-|| 64~256 | General Vehicle Motor Hall Characteristics |
-|| 384,512 | Select 384/512 when the jumping car AB15 is prone to reporting errors. |
-|| 513 | The AB15 alarm is ignored in the case of CN controller absolute encoders. Other controllers: easy to use when AB15 reports an error. |
-| +1024 | | Fixed Bluetooth password is product number related |
-|| | (Do not use other options) |
+|||
+|---|---|
+| 0 | Starting Resonance Characteristic Matching Option 1. Note that when the vehicle motor is performing well, VQH+64 = six times the speed Hall detection energy. Further reduces resonance noise. |
+| 16~63 | Starting Resonance Characteristic Matching Option 2 |
+| 64~256 | General Vehicle Motor Hall Characteristics |
+| 384,512 | Select 384/512 when the jumping car AB15 is prone to reporting errors. |
+| 513 | The AB15 alarm is ignored in the case of CN controller absolute encoders. Other controllers: easy to use when AB15 reports an error. |
+| +1024 | Fixed Bluetooth password is product number related |
+| | (Do not use other options) |
 
 
 ### 3.2.6 L2, L4: reserved
@@ -505,40 +402,26 @@ Note that to use the e-brake function, you must enable this function by selectin
 
 ### 4.1.1 Stop the reflux
 
-Brake current for e-brake. Default 2A, change to 5A-20A as needed when you
-need e-brake strength, for the large capacity battery of 4-wheeler, its back-
-charging current is allowed to be bigger, it can be set to 20A-60A.
+Brake current for e-brake. Default 2A, change to 5A-20A as needed when you need e-brake strength, for the large capacity battery of 4-wheeler, its back-charging current is allowed to be bigger, it can be set to 20A-60A.
 
 ### 4.1.2 Maximum return flow:
 
-Peak braking current of e-brake: default 4A, when you need strong braking,
-you can set it to 10A-40A, for 4-wheeler, you can consider 40A-80A.
+Peak braking current of e-brake: default 4A, when you need strong braking, you can set it to 10A-40A, for 4-wheeler, you can consider 40A-80A.
 
-### 4.1.3 Back to the throttle brake point
+### 4.1.3 Throttle return brake point
 
-Default 0. The faster you go back on the throttle, the lighter
-the braking effort. Slower the speed, lighter the brake force. 1:
-The brake force is maximum when you return to the throttle.
-Above this RPM, the rotary handle is halfway back to a constant speed with no
-acceleration or deceleration. For example, 4000 means 0-
-The higher the 4000 rpm speed, the closer it is to the half throttle value.
-Above 4000 rpm, the middle throttle value is a constant speed, not
-accelerating or decelerating. Turn the handle above the center value to
-accelerate, below the center value, decelerate, turn the handle back more, the
-more powerful brakes.
+Default is 0, the faster the throttle return speed, the smaller the braking force. Slow speed, light braking force. 
+
+* 1: The braking force is the greatest when the throttle is returned. 
+
+Above this speed, turning the handlebar back halfway is a constant speed without acceleration or deceleration. For example, 4000 means that the higher the speed from 0 to 4000, the closer it is to half the throttle value. The middle throttle value above 4000 is a constant speed without acceleration or deceleration. When the handlebar is higher than the middle value, it accelerates, and when it is lower than the middle value, it decelerates. The more you turn the handlebar back, the stronger the brakes.
 
 ## 4.2 Negative current coefficient
 
-The scale factor that controls the reverse charge current is controlled at
-500rpm, 1000rpm,...,9000rpm. The maximum value of the coefficient is 0
-and the minimum value is -100. The closer to -100, the more negative
-the current.
+The scale factor that controls the reverse charge current is controlled at 500rpm, 1000rpm,...,9000rpm. The maximum value of the coefficient is 0 and the minimum value is -100. The closer to -100, the more negative the current.
 
-For ordinary two-wheeled vehicles, for the controller about 400A, negative current
-factor -10%~-30% is enough. Other controllers should be adjusted according to the
-situation. For the sake of driving safety, you can start from -10% to debug, if you
-think it is not enough, then change it to -15%, -20%, don't set it to -50%~-100% all
-of a sudden, as this kind of operation is easy to bring the danger of braking sharply.
+For ordinary two-wheeled vehicles, for the controller about 400A, negative current factor -10%~-30% is enough. Other controllers should be adjusted according to the situation. For the sake of driving safety, you can start from -10% to debug, if you think it is not enough, then change it to -15%, -20%, don't set it to -50%~-100% all of a sudden, as this kind of operation is easy to bring the danger of braking sharply.
+
 Older versions of the controller do not come with a negative current factor.
 
 # 5 Functionality
@@ -551,32 +434,19 @@ Older versions of the controller do not come with a negative current factor.
 * 5.1.2 Cruise: select the cruise function button input foot, selection of invalid will not enable this function
 * 5.1.3 P-Phase: Select the P-Phase function button input pin, selecting **normally closed** will not enable this function.
 * 5.1.4 Forward: select the forward gear function line input pin, the selection is invalid will not enable this function
-* 5.1.5 Backward: Select the input foot of the backward gear function line, invalid selection will not enable this function
+* 5.1.5 Backward: Select the input pin of the backward gear function line, invalid selection will not enable this function
 * 5.1.6 High-speed: select the high-speed gear function line/button input pin, the selection is invalid will not enable this function
 * 5.1.7 Low speed: select the low speed gear function line input pin, the selection is invalid will not enable this function
 * 5.1.8 Charging: select the charging protection function line input pin, the selection is invalid will not enable this function
-* 5.1.9 Anti-theft: select the anti-theft function line input foot, the selection is invalid will not enable this function
-* 5.1.10 Seat Bucket: Select the seat bucket function line input foot, when seated,
-disengage the P gear and drive normally, otherwise it can not be driven. If push
-function is enabled, push assist will be activated when no passenger is seated.
-Selecting normally closed will recognize the bucket signal and push function
-according to the VCU instruction. Invalid selection will not enable this function.
-* 5.1.11 Speed Limit: Select the speed limit function line input pin, invalid selection will not
-enable this function
-* 5.1.12 Voltage switching: select the rated voltage switching function line
-input foot, selection of invalid will not enable this function voltage
-switching foot = PIN8 when the national standard speed limit for
-the voltage foot switching, speed foot special definition
-* 5.1.13 One Touch Repair: Select the One Touch Repair function line input pin, an
-invalid selection will not enable this function. Note that when selecting to
-turn on the Park function, the One Touch Repair pin serves as the switch
-for this function.
-Note that the other pins are generally not selected to be normally
-closed, except for the P-pin which may be selected to be normally
-closed, otherwise it will affect the use of the function. The optional pin
-definitions are described here
+* 5.1.9 Anti-theft: select the anti-theft function line input pin, the selection is invalid will not enable this function
+* 5.1.10 Seat bucket: Select the seat bucket function line input pin. When someone is sitting, release the P gear and drive normally, otherwise it cannot drive. If the push function is enabled, the push assist is activated when no one is sitting. If normally closed is selected, the seat bucket signal and push function are recognized according to the VCU command. If invalid is selected, this function will not be enabled.
+* 5.1.11 Speed Limit: Select the speed limit function line input pin, invalid selection will not enable this function
+* 5.1.12 Voltage switching: select the rated voltage switching function line input pin, selection of invalid will not enable this function voltage switching pin = PIN8 when the national standard speed limit for the voltage pin switching, speed pin special definition
+* 5.1.13 One Touch Repair: Select the One Touch Repair function line input pin, an invalid selection will not enable this function. Note that when selecting to turn on the Park function, the One Touch Repair pin serves as the switch for this function.
 
-| Options | 6/12 Tube NS Series | Universal Hall Connection for older controller | 18G+ 485 Control | YJCAN | YJBMQ CAN | Older encoder interfaces | note|
+Note that the other pins are generally not selected to be normally closed, except for the P-pin which may be selected to be normally closed, otherwise it will affect the use of the function. The optional pin definitions are described here
+
+| Options | 6/12 Tube NS Series | Universal Hall Connection for older controller | 18G+ 485 | YJCAN | YJBMQ CAN | Old encoder interfaces | Note |
 |---|---|---|---|---|---|---|---|
 | PIN2 | 2 | - | - | - | - | |
 | PIN3 | 3 | 7 | 24 | 3 | 3 | 3 | |
@@ -705,29 +575,33 @@ seconds, maximum 131 seconds;
 
 ## 6.1 Instrumentation
 
-The controller is equipped with three signaling pins, of which
-12-tube controllers and NS series controllers: 13-pin RXD, 18-pin ALARM/SPD, 9-pin SPA
-Older controllers: 3-pin RXD, 9-pin SPD, 10-pin SPA, H-series controllers are labeled with
-characters A~G in the extension code.
+The controller has 3 signal output pins.
+For  12-tube controller and NS series controller: 
+* 13-pin RXD
+* 18-pin ALARM/SPD
+* 9-pin SPA 
+
+Old version controller: 
+* 3-pin RXD
+* 9-pin SPD
+* 10-pin SPA
+
+The extension code of H series controller will be marked with characters A~G.
 
 * 6.1.1 Speed Pulse
 
-    This value, 1-31, affects the pulse speed input 🎧 and the One-Wire Speed display.
-The higher the number, the higher the meter display speed.
+    This value, 1-31, affects the pulse speed input 🎧 and the One-Wire Speed display. The higher the number, the higher the meter display speed.
 
 * 6.1.2 Velocity pulse base
 
-    The calibration base for the speed pulse meter. Changing this value
-only affects the speed display of the speed pulse meter. Hub default
-40459, Center default 26043
+    The calibration base for the speed pulse meter. Changing this value only affects the speed display of the speed pulse meter. Hub default 40459, Center default 26043
 
 * 6.1.3 Speedometer way
 
     Pulse/Analog/Isolated Pulse
 
 * 6.1.4 Analog speedometer
-    The phase line meter voltage indicates the coefficient used by the meter for speed,
-and adjusting this coefficient changes the displayed speed.
+    The phase line meter voltage indicates the coefficient used by the meter for speed, and adjusting this coefficient changes the displayed speed.
 
 * 6.1.5 CAN
 
@@ -743,11 +617,7 @@ version) switch from serial port to CAN analyzer debugging
 
 ## 6.2 One Line Parameter
 
-One line through the display pay attention to the pin not to be wrong: 12 tubes
-below the general choice of 18 pins one line through, individual driver sharing
-configuration with 13 pins one line through the NS series of 18 tubes and
-above the same as the 12 tubes. 18 tubes above the old version of the
-controller is generally 9 pins one line through.
+When displaying the one-line communication, please be careful not to use the wrong pins.: For devices with less than 12 tubes, the 18-pin one-line connection is generally used. For configurations shared by individual drivers, the 13-pin one-line connection is used. NS series controllers with more than 18 tubes are the same as 12 tubes. Old version controllers with more than 18 tubes generally use 9-pin one-wire.
 
 ### 6.2.1 Step length
 
@@ -924,6 +794,8 @@ All parameters can be modified.
 | Position anti-theft location | 8 | 0 | 8 |
 | Current factor | 64 | 64 | 64 |
 | Byte Options | 3 | 3 | 3 |
+
+#### Byte Options
 
 | Byte Options | 0 | 1 | 2 | 3 |
 |---|---|---|---|---|
@@ -1102,11 +974,11 @@ reduction, less than or equal to 5% adopts turtle speed home.
 
 ## 7.2 temperature protection
 
-### 7.2.1 Motor temperature protection, recovery:
+### 7.2.1 Motor temperature protection, recovery
 
 Internal settings
 
-### 7.2.2 Controller temperature protection, recovery:
+### 7.2.2 Controller temperature protection, recovery
 
 Internal settings
 
@@ -1116,11 +988,11 @@ coefficient
 
 ## 7.3 Functional protection
 
-### 7.3.1 Lost throttle alarm:
+### 7.3.1 Lost throttle alarm
 
 Valid/invalid
 
-### 7.3.2 Throttle plug protection:
+### 7.3.2 Throttle plug protection
 
 1 means that the throttle plugging and unplugging will cause a bailout to prevent flying cars caused by charged plugging and unplugging, 0 means no protection.
 
@@ -1142,9 +1014,10 @@ Default 0.1 seconds, maximum 132 seconds; note that 0~131 seconds will cancel th
 
 ## 7.4 Battery Protection
 
-### 7.4.1 Power factor:**
+### 7.4.1 Power factor
 
 **Calibrates the parameters displayed in the 0 capacity display.**
+
 The controller itself can estimate the battery charge, and by adjusting the 0 charge factor and the full charge factor you can get a more accurate display of the charge. When the battery is full, adjust the full charge factor so that the displayed capacity is exactly 100%. When the battery is dead, adjust the 0 capacity factor so that the displayed capacity matches the power level. For example, when there is 10% battery power left, adjust the 0 capacity factor so that the display will be exactly 10%.
 
 ### 7.4.2 Full power factor
@@ -1178,7 +1051,7 @@ Turtle current limiting factor default 53, Turtle current = User 🎧 Factory Ma
 | 0 | one-stop-shop | Obtaining the SOC of a battery through a one-line pass-through |
 | 1 | serial port (computing) | Get the SOC of the battery through the serial port |
 | 2 | CAN | Obtaining the SOC of the battery via CAN |
-| 3 | li-ion battery | Simulation of SOC by Li-ion Ternary Battery Characterization Calculation |
+| 3 | Li-Ion | Simulation of SOC by Li-ion Ternary Battery Characterization Calculation |
 | 4 | lead acid | Simulation of SOC by lead-acid battery characterization
 | 5 | Lithium iron (H72) | Simulation of SOC by LiFePO4 battery characterization calculation |
 
@@ -1191,16 +1064,16 @@ Displays the current battery level.
 
 Base value: 0~255, default 8
 
-||Functionality|||
-|---|---|---|---|
-| +256 | Measurement of second throttle/brake voltage | un- | Detecting electric door lock voltage |
-| +512 | PD Protocol | un- | OP Protocol |
-|+1024 | Protocol 2 | un- | OP Protocol |
-|+1536 | Protocol 3 | un- | OP Protocol |
-|+2048 | Protocol 4 | un- | OP Protocol |
-|+2560 | Protocol 5 | un- | OP Protocol |
-|+3072 | Protocol 6 | un- | OP Protocol |
-|+3584 | Protocol 7 | un- | OP Protocol |
+|add value|with|without|
+|---|---|---|
+| +256 | Measurement of second throttle/brake voltage | Detecting electric door lock voltage |
+| +512 | PD Protocol | OP Protocol |
+|+1024 | Protocol 2 | OP Protocol |
+|+1536 | Protocol 3 | OP Protocol |
+|+2048 | Protocol 4 | OP Protocol |
+|+2560 | Protocol 5 | OP Protocol |
+|+3072 | Protocol 6 | OP Protocol |
+|+3584 | Protocol 7 | OP Protocol |
 |+4096 | 8x PID, normal users, should not be more. Change or the controller will be easily damaged | Current sensor type >=2, Not supported |
 |+8192 | 2x PID | Current sensor type >=2, Not supported |
 |+12288| 4x PID | Current sensor type >=2, Not supported |
@@ -1216,17 +1089,24 @@ Base value: 0~255, default 8
 Motor body characteristic AN value, parameter range 0~16.
 Standard tab motors AN=0. Standard IPM motors AN=16.
 This parameter must be set in accordance with the characteristics of the motor. For hub motors, surface-mounted center motors, the AN is less than 8. For embedded center motors, the AN value is not less than 8.
+
 For encoder center motors with remote drive and automotive permanent magnet synchronous motors, AN=16 is used.
+
 All hub motors on the market are surface-mounted motors, and the AN value is usually set to 0, not exceeding 4. Incorrectly set AN values can lead to lower starting efficiency.
 Even 🎧 present MOE/OVER protection.
 
 ## 8.2 LM
 
 Motor acceleration matching parameter, this value is used to adjust the smoothness of the motor running on the whole car. The default setting is 22 for cars and 18 for electric motorcycles, and some low-power tricycles are more suitable below 10.
+
 However, some individual motor types are poorly matched to the vehicle, and the resonance judder is noticeable in the low and mid-speed segments at the start.
+
 Adjusting the LM value will improve the situation.
+
 Start from 22, if the low-speed section of the acceleration jitter, then reduce the LM, from 16, 14, 12, 11, 8, 5 began to test the effect of the middle of those numbers will also play a role, generally consider that rather larger, try not to be too small. Too small will not be able to control the current, causing MOE/OVER protection, or even burn control. So when the jitter disappears after the LM value is the best parameter, do not adjust smaller.
+
 Some motors and vehicles are very smooth at LM=22, but changing it to a smaller size will bring jerks instead, so be careful not to adjust this parameter if you have no problems at LM=22.
+
 Or if you find that the jitter resonance 🎧 is present after changing the LM value from 22 to 16 , 14 , o erven 5 , then it has nothing to do with this parameter. Even 5 has little effect, it means that it has nothing to do with this parameter, then it must be changed back to the maximum value, such as 22, instead of keeping a random number in the controller.
 
 ## 8.3 PID parameters: StartKI,MidKI,MaxKI / StartKP,MidKP,MaxKP
