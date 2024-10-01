@@ -4,8 +4,7 @@
 
 # 1 PC upper computer software interface
 
-When the serial port and CAN analyzer are not connected, the following screen is
-displayed:
+When the serial port and CAN analyzer are not connected, the following screen is displayed:
 
 ![image](/images/1.jpg)
 
@@ -21,8 +20,7 @@ Once connected to the controller, the data is uploaded from the controller to th
 parameters, a statistics page to view the dynamic characteristics of the
 controller work in real time, a status table to view the controller work
 status in real time, you can also click "Collect" to view the 2048 groups of
-samples after the first refueling door of the running data, without turning off
-the power, it has been saved in the controller. For example, 0. 1 second
+samples after the first refueling door of the running data, without turning off the power, it has been saved in the controller. For example, 0. 1 second
 sampling**
 
 **For one set of data, the controller can record 205 seconds of data to analyze the vehicle's driving characteristics.**
@@ -48,7 +46,7 @@ the position sensor:
 4. Absolute encoder version
 5. Rotary encoder version
 
-| Serial number | Options | Controller Hardware |  Extended Code | Releases |
+| Serial number | Options | Controller Hardware |  Extension Code | Version |
 |---|---|---|---|---|
 | 0 | 120° Hall | Hall Version Controller | | H,R,I |
 | 1 | Conventional incremental encoders | Encoder Version Controller | | H,R,I |
@@ -67,7 +65,7 @@ the position sensor:
 
 Modify the sensor, point to save to be effective. optional for Hxx and above version support. Older versions are not optional.
 
-| Hardware Version | Clarification |
+| Hardware Version | Description |
 |---|---|
 | 7 | Controller version from some years ago, single function, relatively solidified |
 | G | Earlier versions of the controller, single-function and relatively solidified |
@@ -84,9 +82,10 @@ Modify the sensor, point to save to be effective. optional for Hxx and above ver
 | M | 2024 New version, general purpose, 30P, rich in parameters. |
 | N | 2024 new version, universal, dual band, 30P, rich parameters. |
 
-There are many kinds of software programs, so I won't give you any more examples: special codes can be seen 🎧 whether they are special programs or not:
+There are many types of software programs, so I won’t list them all.
+Special codes can tell whether it is a special program:
 
-| Nicknames | Hidden meaning |
+| Code | Meaning |
 |---|---|
 | 0 - 7 | Hall Vector Starting Velocity |
 | + 8 | 8x PID |
@@ -100,7 +99,7 @@ There are many kinds of software programs, so I won't give you any more examples
 | +2048 | Isolated version of the program |
 | +4096 | 120M high speed version of the program |
 
-There are also a variety of specific programs that are required by the user, which are not reflected in the designation.
+There are also various specific programs with special user requirements that are not reflected in the code.
 
 ### 2.1.2 Temperature Sensor:
 
@@ -1728,35 +1727,18 @@ A total of 14 alarms, user can choose to report or not to report:
 Controller Model 1: ND 72 530 B _ 1 3_ A R H 68
 Controller Model 2: YQ 72V 270A B _ 1 3_ A R H 68
 
-Controller Customer
-Code (AA-ZZ)
-
-Controller rated
-voltage (V)
-
-Maximum phase
-current of controller
-(A)
-Controller type (B for encoder version,
-otherwise Hall version)
-
-Controller current sensor type
-(1-9)
-
-Controller application
-type (0-9)
-
-Controller Function
-Code (0-9,A-Z)
-
-Controller extension
-code (*,0-9,A-Z)
-
-Controller hardware
-version (0-9,A-Z)
-
-Controller software
-version (00-99)
+Controller customer code (AA-ZZ)
+Controller rated voltage (V)
+Controller maximum phase current (A)
+Controller type (B for encoder version, otherwise Hall version)
+_
+Controller current sensor type (1-9)
+Controller application type (0-9)
+_
+Controller function code (0-9,A-Z)
+Controller extension code (*,0-9,A-Z)
+Controller hardware version (0-9,A-Z)
+Controller software version (00-99)
 
 Controller Customer
 Code (AA-ZZ)
