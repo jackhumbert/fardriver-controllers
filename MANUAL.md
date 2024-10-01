@@ -88,7 +88,7 @@ There are many kinds of software programs, so I won't give you any more examples
 
 | Nicknames | Hidden meaning |
 |---|---|
-| 0 ~ 7 | Hall Vector Starting Velocity |
+| 0 - 7 | Hall Vector Starting Velocity |
 | + 8 | 8x PID |
 | + 16 | deep weak magnetic field program |
 | + 32 | Brake Inspection |
@@ -134,7 +134,7 @@ This method is applicable to all controllers with brake line function installed,
 1. Keep the brake connected, the controller is off and the motor is stationary.
 2. Turn the handle to the end, boot, this time the controller alarm, the motor does not turn.
 3. Enter self-study, Morse code 8 bits: 11000000.
-1="Long squeeze brake 0.5 sec~2 sec", 0="Short squeeze brake less than 0.5 sec"
+1="Long squeeze brake 0.5 sec-2 sec", 0="Short squeeze brake less than 0.5 sec"
 
 When you hear 2 short and 1 long, you are in self-learning mode. If you don't hear it, consider that you have made a mistake and try to re-enter the Morse code.
 
@@ -160,7 +160,7 @@ Setting the 7-digit Morse code is the speed limit, which also operates on the la
 
 ### 2.1.4 Pole Pairs
 
-Default 4 for Hall motors No need to change. The pole pair setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16~30, Encoder: 3-8 pairs of poles display the actual rotation speed, above 10 pairs of poles display the rotation speed according to 4 pairs of poles. To modify the number of pole pairs, you have to save the points to make it effective.
+Default 4 for Hall motors No need to change. The pole pair setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16-30, Encoder: 3-8 pairs of poles display the actual rotation speed, above 10 pairs of poles display the rotation speed according to 4 pairs of poles. To modify the number of pole pairs, you have to save the points to make it effective.
 
 ### 2.1.5 Motor direction
 
@@ -236,7 +236,7 @@ to overcurrent
 
 ### 2.1.15 Weak magnetic response
 
-0~6, none means no weak magnetization. Default weak magnetic response 0 Speed Expansion: Pushing the motor speed to a higher speed than the fixed speed is called speed expansion.
+0-6, none means no weak magnetization. Default weak magnetic response 0 Speed Expansion: Pushing the motor speed to a higher speed than the fixed speed is called speed expansion.
 
 1. Increase the working voltage, the higher the voltage, the higher the motor speed.
 2. Do not increase the working voltage, through the weak magnetization, increase the speed of the motor.
@@ -247,7 +247,7 @@ Without changing the battery voltage, the motor speed is increased directly by c
 
 ### 2.2.1 Acceleration sensitivity
 
-Acceleration speed, 8~224, the higher the number, the faster the throttle response.
+Acceleration speed, 8-224, the higher the number, the faster the throttle response.
 
 An electric car is usually a gas pedal, while an electric motorcycle is a gas turn knob or center control.
 
@@ -259,7 +259,7 @@ For electric motorcycle, besides setting at 32, many users prefer fast response,
 
 ### 2.2.2 Deceleration sensitivity
 
-Deceleration speed: 16~224, the higher the number the shorter the return throttle lag.
+Deceleration speed: 16-224, the higher the number the shorter the return throttle lag.
 
 ### 2.2.3 Motor position
 
@@ -368,16 +368,16 @@ Matching of idling noise in high speed section and balance between power and pow
 
 ### 3.2.4 LQVOL
 
-1. Intermediate throttle voltage (mV, VQH+4, intermediate throttle enabled, 0~4000).
-2. Speed ​​limit current, (0~4000, unit 1/4A)
+1. Intermediate throttle voltage (mV, VQH+4, intermediate throttle enabled, 0-4000).
+2. Speed ​​limit current, (0-4000, unit 1/4A)
 
 ### 3.2.5 FAIF
 
 |||
 |---|---|
 | 0 | Starting Resonance Characteristic Matching Option 1. Note that when the vehicle motor is performing well, VQH+64 = six times the speed Hall detection energy. Further reduces resonance noise. |
-| 16~63 | Starting Resonance Characteristic Matching Option 2 |
-| 64~256 | General Vehicle Motor Hall Characteristics |
+| 16-63 | Starting Resonance Characteristic Matching Option 2 |
+| 64-256 | General Vehicle Motor Hall Characteristics |
 | 384,512 | Select 384/512 when the jumping car AB15 is prone to reporting errors. |
 | 513 | The AB15 alarm is ignored in the case of CN controller absolute encoders. Other controllers: easy to use when AB15 reports an error. |
 | +1024 | Fixed Bluetooth password is product number related |
@@ -396,7 +396,7 @@ For the throttle back brake function, during the ride, the throttle back goes in
 For the e-brake function, when braking, the whole vehicle gives 🎧 brake signal to
 the controller, and the controller detects the brake signal and then enters the e-brake state.
 Note that to use the e-brake function, you must enable this function by selecting
-**e-brake or return throttle brake** in the **follow** item. And set the return current. Note that the maximum return current is generally 25%~50% larger than the stop return current when setting the parameter.
+**e-brake or return throttle brake** in the **follow** item. And set the return current. Note that the maximum return current is generally 25%-50% larger than the stop return current when setting the parameter.
 
 ## 4.1 Brake current limitation
 
@@ -420,7 +420,7 @@ Above this speed, turning the handlebar back halfway is a constant speed without
 
 The scale factor that controls the reverse charge current is controlled at 500rpm, 1000rpm,...,9000rpm. The maximum value of the coefficient is 0 and the minimum value is -100. The closer to -100, the more negative the current.
 
-For ordinary two-wheeled vehicles, for the controller about 400A, negative current factor -10%~-30% is enough. Other controllers should be adjusted according to the situation. For the sake of driving safety, you can start from -10% to debug, if you think it is not enough, then change it to -15%, -20%, don't set it to -50%~-100% all of a sudden, as this kind of operation is easy to bring the danger of braking sharply.
+For ordinary two-wheeled vehicles, for the controller about 400A, negative current factor -10%--30% is enough. Other controllers should be adjusted according to the situation. For the sake of driving safety, you can start from -10% to debug, if you think it is not enough, then change it to -15%, -20%, don't set it to -50%--100% all of a sudden, as this kind of operation is easy to bring the danger of braking sharply.
 
 Older versions of the controller do not come with a negative current factor.
 
@@ -553,7 +553,7 @@ Invalid: the hill-stay function and the steep hill descent function are invalid.
 ### 5.2.9 Steep slopes slow down
 
 * None: Steep hill descents are not enabled.
-* 1~7: The smaller the number the slower the steeper the descent response, the larger
+* 1-7: The smaller the number the slower the steeper the descent response, the larger
 the number the faster the descent response.
 Parking effect: Steep hill descent will be more backward but smooth with small
 numbers, less backward but too big forward with big numbers.
@@ -586,7 +586,7 @@ Old version controller:
 * 9-pin SPD
 * 10-pin SPA
 
-The extension code of H series controller will be marked with characters A~G.
+The extension code of H series controller will be marked with characters A-G.
 
 * 6.1.1 Speed Pulse
 
@@ -637,11 +637,11 @@ Default 0: not 0 when customized
 
 ### 6.2.5 Special Frames
 
-#### 0~1 Not connected by a single thread  
+#### 0-1 Not connected by a single thread  
 
 0. Speed pulse, (display adjustment: the larger the
 speed pulse base, the slower the display speed)
-500~65530, V39 and earlier versions are 5000~65530)
+500-65530, V39 and earlier versions are 5000-65530)
 1. READY Lamp: (READY status is Loss🎧High, otherwise Loss🎧Low)
 2. Fan control: (Temperature below 40° is output 🎧 high, above 40° is
 output 🎧 low)
@@ -653,7 +653,7 @@ output 🎧 low)
     Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1,SEC0-
     SEC7 Invalid
 
-#### 16~31 General One Line 2
+#### 16-31 General One Line 2
 
 Different meters, DATA6/DATA9/DATA10 need to send 🎧
 different content, refer to the communication protocol to select
@@ -674,10 +674,10 @@ general one line pass = 21
 | DATA1 | (97) 0x61 | (66) 0x42 | (2) 0x02 | (1) 0x01 | (18) 0x12 | (0) 0x00 | (149) 0x95 |
 
 Recommended step length is 0.9ms, recommended interval
-length is 144ms, some need 216ms to be normal, SEC0~SEC7
+length is 144ms, some need 216ms to be normal, SEC0-SEC7
 all 0 by default.
 
-#### 32~40 No one-line pass, built-in Bluetooth
+#### 32-40 No one-line pass, built-in Bluetooth
 
 Special Frames: 
 * 32 TBIT
@@ -695,7 +695,7 @@ another.
 Same, commonly used for the first set
 of parameters
 
-#### 48~223
+#### 48-223
 
 Encryption One-Touch, Internal SEC
 Different meters, DATA6/DATA9/DATA10 need to send 🎧
@@ -732,7 +732,7 @@ DATA0-DATA1,SEC0-SEC7 are invalid.
 SQH Hold Invalid at SQH=255 (Protocol Specific Requirements-H43
 Edition)**
 
-#### 224~239 Encryption One-Touch, External SEC
+#### 224-239 Encryption One-Touch, External SEC
 
 * DATA6: **Byte option** = 3 to 🎧0, otherwise to
 🎧current value. **DATA9 option** : **refer to
@@ -748,7 +748,7 @@ interval time is 144ms, some need 216ms to be normal.
 PULSE,SQH,DATA0-DATA1,SEC0-SEC7 can be modified.**
 
 
-#### 240~255 Special Frames
+#### 240-255 Special Frames
 
 * 241: ATN15 bytes (PULSE,SQH,DATA0-DATA1,SEC0-SEC7 invalid)
 * 242: No. 30 One-Way, P gear at DATA4
@@ -860,9 +860,9 @@ HEAD Default 8, use other value for customization.
 
 ### 6.2.8 DATA1
 
-HEAD2, default 97, when using SEC0~SEC7=0
+HEAD2, default 97, when using SEC0-SEC7=0
 
-### 6.2.9 SEC0~SEC7
+### 6.2.9 SEC0-SEC7
 
 Default 0, custom = not 0
 
@@ -884,11 +884,11 @@ Default 0, custom = not 0
 
 ### 6.2.12 Turning handle position
 
-One line through the inside of the rotary control display bit (0~3, default 3 ), if not set to 8
+One line through the inside of the rotary control display bit (0-3, default 3 ), if not set to 8
 
 ### 6.2.13 anti-theft location
 
-Burglar indicator display bit (0~3, default 8 ), if not set to 8
+Burglar indicator display bit (0-3, default 8 ), if not set to 8
 
 ### 6.2.14 current factor
 
@@ -908,10 +908,10 @@ Most of the One-Wire default 21, byte option = 3 can basically show the speed, s
 4. If it does not pass then parameter other parameter groups. See the table that follows for details.
 5. If all parameter groups are invalid, go to 3.2.
 6. If special frame 16 does not respond, change to 16,32,48,64,80,96,112,128,144,160,176,192,208.
-7. In general, try the above special frames to find the correct one line pass, for details of the voltage and power display is not correct, then a small range of special frame modification to meet the requirements: for example, to find 48 speed can be displayed normally, but the voltage and power or current display is not correct, then you can try to modify the special frame between 48 ~ 63 to correct the number. For example, if you find 160 speed can be displayed normally, but the voltage or current display is not correct, then you can try to modify the numbers between 160~175 in the special frame to correct the problem. If the display of P-position is inaccurate, you can modify the position of P-position to meet the display requirement.
+7. In general, try the above special frames to find the correct one line pass, for details of the voltage and power display is not correct, then a small range of special frame modification to meet the requirements: for example, to find 48 speed can be displayed normally, but the voltage and power or current display is not correct, then you can try to modify the special frame between 48 - 63 to correct the number. For example, if you find 160 speed can be displayed normally, but the voltage or current display is not correct, then you can try to modify the numbers between 160-175 in the special frame to correct the problem. If the display of P-position is inaccurate, you can modify the position of P-position to meet the display requirement.
 8. If the above operations do not display the One-Wire communication correctly, try steps 3.1-3.3 again with a step size of 0.5ms.
 9. For none of the above operations can you display a one-line pass. Consider special frames 247 or 248.
-10. If none of the above works, then you need to contact the remote driver to analyze the specific 224 or other special frames from 240~255.
+10. If none of the above works, then you need to contact the remote driver to analyze the specific 224 or other special frames from 240-255.
 
 ## 6.3 Tire Ratio
 
@@ -1010,7 +1010,7 @@ The unit is 0.1 second, and a setting of 50 is 5 seconds.
 
 ### 7.3.6 Parking time
 
-Default 0.1 seconds, maximum 132 seconds; note that 0~131 seconds will cancel the parking when the time comes, while setting 132 seconds will park for a long time until the controller or the motor is over-temperature before and will cancel the parking.
+Default 0.1 seconds, maximum 132 seconds; note that 0-131 seconds will cancel the parking when the time comes, while setting 132 seconds will park for a long time until the controller or the motor is over-temperature before and will cancel the parking.
 
 ## 7.4 Battery Protection
 
@@ -1062,7 +1062,7 @@ Displays the current battery level.
 
 ### 7.5.3 Battery Internal Resistance
 
-Base value: 0~255, default 8
+Base value: 0-255, default 8
 
 |add value|with|without|
 |---|---|---|
@@ -1086,7 +1086,7 @@ Base value: 0~255, default 8
 
 ## 8.1 AN
 
-Motor body characteristic AN value, parameter range 0~16.
+Motor body characteristic AN value, parameter range 0-16.
 Standard tab motors AN=0. Standard IPM motors AN=16.
 This parameter must be set in accordance with the characteristics of the motor. For hub motors, surface-mounted center motors, the AN is less than 8. For embedded center motors, the AN value is not less than 8.
 
@@ -1138,7 +1138,7 @@ Note that some small power motor PID parameters exceed the debugging range of th
 
 ## 8.4 Speed SKI,SKP
 
-SKI min. 1, max. 18, heavy car KI=18, light car KI=2, default KI=9, SKP5~20, default 10
+SKI min. 1, max. 18, heavy car KI=18, light car KI=2, default KI=9, SKP5-20, default 10
 
 ## 8.5 MOE
 
@@ -1178,7 +1178,7 @@ The default ratio is 64, the setting 64 is 1:1, 128 is 2:1, 32 is 0.5:1.
 
 ## 10.2 Forward and reverse speed ratios
 
-A parameter required for forward and reverse gear shifting systems. 0~255
+A parameter required for forward and reverse gear shifting systems. 0-255
 
 |add value|with|without|
 |---|---|---|
@@ -1198,11 +1198,11 @@ For example, a 72V system with the voltage selection pin connected low becomes a
 
 ## 10.4 torque coefficient
 
-Range 256~16384, default 8192
+Range 256-16384, default 8192
 
 ## 10.5 Weak magnetic current coefficient
 
-Range 48~80, default 64
+Range 48-80, default 64
 
 ## 10.6 Backward acceleration factor
 
@@ -1210,7 +1210,7 @@ Backward Maximum Acceleration Factor Default 32, Maximum 224
 
 ## 10.7 Alarm Delay
 
-Burglar alarm generates alarm recovery delay time setting, default 500ms Select a multiple of 100. The use of digits:1~9 means that the brakes do not respond within 100RPM~900RPM. 0 means that the brakes respond.
+Burglar alarm generates alarm recovery delay time setting, default 500ms Select a multiple of 100. The use of digits: 1-9 means that the brakes do not respond within 100RPM-900RPM. 0 means that the brakes respond.
 
 | Tens digits (H59) | One Line Display | When the READY lamp turns | One Line Electronic Brake Status (H60) |
 |---|----|---|---|
@@ -1300,7 +1300,7 @@ airport)
 
 ## 10.14 Slow down the RPM
 
-Steep gradient speed threshold, default 320, can be set 256~1024 to implement the speed adjustment also use this parameter.
+Steep gradient speed threshold, default 320, can be set 256-1024 to implement the speed adjustment also use this parameter.
 
 ## 10.15 Retardation factor
 
@@ -1538,8 +1538,8 @@ Selectable standard frame, extended frame
 
 * BMS Maximum Allowable Discharge Current Value, 2 bytes representation.
 * SOP_ID: ID number of the SOP instruction.
-* SOP unit: Generally set to 0.1A, or 0.25A or 1A. SOP high byte position (0~7 corresponds to BYTE1-BYTE8)
-* SOP Low byte position (0~7 corresponds to BYTE1-BYTE8)
+* SOP unit: Generally set to 0.1A, or 0.25A or 1A. SOP high byte position (0-7 corresponds to BYTE1-BYTE8)
+* SOP Low byte position (0-7 corresponds to BYTE1-BYTE8)
 * SOP value = (value of SOP high byte position * 256 + value of SOP low byte position) * SOP unit (A).
 
 #### 13.3.1.5 SOC_ID,SOC Location
@@ -1547,7 +1547,7 @@ Selectable standard frame, extended frame
 The current power percentage value of BMS,
 full power=100, no power=0. SOC_ID: ID
 number of SOC command.
-SOC Position: 0~7 corresponds to BYTE1-BYTE8.
+SOC Position: 0-7 corresponds to BYTE1-BYTE8.
 
 #### 13.3.1.6 Charge ID, Charge Byte Position, Charge BIT Position
 
@@ -1587,7 +1587,7 @@ Control Type:
 | BIT1 | +2: Serial number | +0 Error log
 | BIT2 | +4: Separate display for low/high speed | +0 Normal 3-speed display
 | BIT3 | +8: Display of laps | +0 Display total mileage
-| BIT6~BIT4 Special Control | 0=+0: unmanned 9  <br /> 3=+48: Unmanned 59 <br />6=+96: Dual battery system <br /> 7=+112: Dual battery systems - TCSID| 1=+16: ZN/YJ Calculation of SOC based on BMS residual battery capacity<br />2 = +32: total mileage handshake<br />4=+64: Feedback on demand<br />5=+80: TCS-ID
+| BIT6-BIT4 Special Control | 0=+0: unmanned 9  <br /> 3=+48: Unmanned 59 <br />6=+96: Dual battery system <br /> 7=+112: Dual battery systems - TCSID| 1=+16: ZN/YJ Calculation of SOC based on BMS residual battery capacity<br />2 = +32: total mileage handshake<br />4=+64: Feedback on demand<br />5=+80: TCS-ID
 | BIT7 | =+128 Display current mileage | Display of remaining mileage
 
 On-demand commands: 12, 13, 14, 15 correspond to Send ID2, Send ID3, Send ID4, Send
@@ -1603,9 +1603,9 @@ OBD ID number, standard frame is 0x7DF.
 ### 13.3.2 CAN Transmit ID
 
 The controller has set up 6 ID numbers to send data.
-Send ID0 Timing~Send ID5 Timing is the timing count in 10ms, 0 means
+Send ID0 Timing-Send ID5 Timing is the timing count in 10ms, 0 means
 10ms, 1 means 20ms, 2 means 30ms...,199 means 2000ms.
-Send ID2 timer ~ Send ID5 timer must be >=4 i.e. 50ms. less than 4, it will be
+Send ID2 timer - Send ID5 timer must be >=4 i.e. 50ms. less than 4, it will be
 sent on demand according to the command received from CAN.
 
 ### 13.3.3 CAN Rule Description
@@ -1646,7 +1646,7 @@ The coefficients * are required for this data. Default gain = 1
 
 #### 13.3.3.4 ID
 
-Serial number of this data transmission ID (0~5, corresponding to CAN transmission ID0~CAN transmission ID5)
+Serial number of this data transmission ID (0-5, corresponding to CAN transmission ID0-CAN transmission ID5)
 
 #### 13.3.3.5 active symbol
 
@@ -1750,22 +1750,22 @@ Controller type (B for encoder version,
 otherwise Hall version)
 
 Controller current sensor type
-(1~9)
+(1-9)
 
 Controller application
-type (0~9)
+type (0-9)
 
 Controller Function
-Code (0~9,A~Z)
+Code (0-9,A-Z)
 
 Controller extension
-code (*,0~9,A-Z)
+code (*,0-9,A-Z)
 
 Controller hardware
-version (0-9,A~Z)
+version (0-9,A-Z)
 
 Controller software
-version (00~99)
+version (00-99)
 
 Controller Customer
 Code (AA-ZZ)
