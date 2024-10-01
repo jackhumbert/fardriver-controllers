@@ -1049,7 +1049,7 @@ Turtle current limiting factor default 53, Turtle current = User 🎧 Factory Ma
 |Option | element | clarification |
 |---|---|---|
 | 0 | one-stop-shop | Obtaining the SOC of a battery through a one-line pass-through |
-| 1 | serial port (computing) | Get the SOC of the battery through the serial port |
+| 1 | serial port | Get the SOC of the battery through the serial port |
 | 2 | CAN | Obtaining the SOC of the battery via CAN |
 | 3 | Li-Ion | Simulation of SOC by Li-ion Ternary Battery Characterization Calculation |
 | 4 | lead acid | Simulation of SOC by lead-acid battery characterization
@@ -1229,24 +1229,24 @@ Burglar alarm generates alarm recovery delay time setting, default 500ms Select 
 
 Setting the relay delay closing time after system power on: ms as unit, default 1ms, set to 1000ms if needed. Note: The new version of H44 controller has been changed to all function bits:
 
-| placement | sports event | Functional Description|
+| Bit | Function | Description|
 |---|---|---|
-| BIT0 | side support enabled (computing) | 0:disable side support function, 1:enable side support function, default 1
-| BIT1 | take up residence in a toilet | 0:disable seat cushion function, 1:enable seat cushion function, default 1
-| BIT2 | P-Phase Enable | 0:Disable P-pitch function, 1:Enable P-pitch function, default 1
-| BIT3 | Automatic return to P | 0:disable auto return to P function, 1:enable auto return to P function, default 0
-| BIT4 | cruise control | 0:Disable cruise function, 1:Enable cruise function, default 1
-| BIT5 | EABS Enable | 0:disable EABS function, 1:enable EABS function, default 1
-| BIT6 | go live (with a program) | 0:disable the help push function, 1:enable the help push function, default 1, start When push is used, P gear is automatically canceled to enter push mode.
-| BIT7 | anti-theft | 0:no forced anti-theft, 1:forced to enter anti-theft, default 0
-| BIT8 | speeding alarm | 0:disable speeding alarm function, 1:enable speeding alarm function, default 0
-| BIT9 | Brakes don't release parking | 0: braking will release parking, 1: braking will not release parking, default 0
-| BIT10 | gear level memory | 0: Gear memory off 1: Gear memory active Default 1
-| BIT11 | | Default 1
-| BIT12 | | Default 1
-| BIT13 | | Default 0
-| BIT14 | fallback (computing) | 0:disable backward function, 1:enable backward function, default 1
-| BIT15 | relay time delay | 0: no relay delay, 1: delay 1 sec, default 0
+| 0 | Side stand | 0:disable side side function, 1:enable side side function, default 1
+| 1 | Seat switch | 0:disable seat cushion function, 1:enable seat cushion function, default 1
+| 2 | P Position | 0:Disable P position function, 1:Enable P position function, default 1
+| 3 | Automatic return to P | 0:disable auto return to P function, 1:enable auto return to P function, default 0
+| 4 | Cruise Control | 0:Disable cruise function, 1:Enable cruise function, default 1
+| 5 | EABS | 0:disable EABS function, 1:enable EABS function, default 1
+| 6 | Power-assist pushing | 0:disable the help push function, 1:enable the help push function, default 1, when pushing is enabled, the P gear will be automatically cancelled and the push mode will be entered
+| 7 | Forced Anti-theft | 0:no forced anti-theft, 1:forced to enter anti-theft, default 0
+| 8 | speeding alarm | 0:disable speeding alarm function, 1:enable speeding alarm function, default 0
+| 9 | Automatic parking brake release | 0: Braking will release the parking brake, 1: Braking does not release the parking brake, default is 0
+| 10 | Gear Memory | 0: Gear memory off 1: Gear memory active Default 1
+| 11 | | Default 1
+| 12 | | Default 1
+| 13 | | Default 0
+| 14 | Reverse | 0:disable reverse function, 1:enable reverse function, default 1
+| 15 | Relay Time Delay | 0: no relay delay, 1: delay 1 sec, default 0
 
 `Relay delay = BIT15*2^15 + BIT14*2^14 + .... +BIT1*2^1+BIT0`
 
@@ -1254,57 +1254,58 @@ Setting the relay delay closing time after system power on: ms as unit, default 
 
 Default 512
 
-## 10.10 Follow the RPM:
+## 10.10 Follow speed
 
-Default 0, some customers need to back off within 100 revolutions, then set 100
+The default value is 0. Some customers need to exit the follow-up within 100 turns, so they set it to 100.
 
 ## 10.11 Current theft prevention
 
-Default 0, anti-theft provide greater resistance difficult to push, do not consume battery. When it is 1, the anti-theft lock motor will lock the motor can not rotate, consume battery.
+The default is 0, which provides a large resistance to the anti-theft and is difficult to push, and does not consume batteries. When it is 1, the anti-theft lock motor will be locked and the motor cannot rotate, consuming batteries.
 
 ## 10.12 Anti-theft pulse
 
 * Default 0:  The anti-theft signal is a level signal, pulling down the anti-theft.
 * 1 (overspeed alarm == 0): Anti-theft signal is a 1mS pulse signal, if there is a pulse, it is anti-theft.
 * 1 (overspeed alarm == 1): Pulse is GB data, low level is anti-theft.
-* 2:  Power on speed limit, pulse signal 8 to release speed limit
+* 2: Power on speed limit, pulse signal 8 to release speed limit
 
 * Temperature 70:
 
-Controller Temperature Protection 70 Algorithm:
+Controller temperature protection 70 algorithm:
 
-* 0 indicates 50° start-up control for maximum time to protect battery, controller, and motor life and extend driving range.
-* 1 Indicates that 70° starts the start-up control, and battery, controller, and motor temperatures are considered in a compromise between mileage and performance.
-* 3 Indicates 80° start-up control, performance is prioritized, but mileage is shortest and rapid acceleration is most likely to cause over-temperature protection.
+* 0 means starting control at 50°, protecting the life of the battery, controller, and motor for the longest time and extending the mileage.
+* 1 means start control starts at 70°, and the temperature of the battery, controller, and motor is considered as a compromise between mileage and performance.
+* 3 means start control starts at 80°, giving priority to performance, but the mileage is the shortest and rapid acceleration is most likely to cause over-temperature protection.
 
 ## 10.13 Reverse time
 
-Time to initiate jog and park in reverse, 2-48, default 36. odd: excessive gear lash, park flex. h78
+The time for starting the slow descent and parking when reversing, 2-48, default 36.
 
-Even: low gear lash, parking normalized H78
+* Odd number: Too much gear clearance, flexible parking. H78
+* Even number: Small gear clearance, normal parking H78
 
 |add value| with | without |
 |---|---|---|
 | +64 | JL National Standard Status <br />Maximum speed ratio for SEC5=48V<br />Maximum speed ratio for SEC6=60V<br /> Maximum speed ratio for SEC7 = 72V | common state |
 | +128 | Solve for P under 2 | Solve for P under 1
 | +256 | Low-medium speed to high medium speed | Default low to medium speed 
-| +512 | no audible alert | There's an audible alert.
+| +512 | No sound prompt | With sound prompt
 | +1024 | reserved | |
-| +2048 | Masking the buzzer sound | Buzzer Enable
-| +4096 | Turn on the setback buzzer beep | Masked backward buzzer beeps
-| +8192 | Prohibition of Motor Angle Sensor Repair | Allows motor angle sensor repair
-| +16384 | Allows brake failure repair | Prohibition of Brake Failure Repair
-| +32768 | Reverse One-Liner | direct line of sight (e.g. to the
-airport)
-
+| +2048 | Silence Buzzer | Enable Buzzer
+| +4096 | Enable the back-up buzzer tone | Disable the back-up buzzer tone
+| +8192 | Disable motor angle sensor repair | Allows motor angle sensor repair
+| +16384 | Allow brake fault repair | Disable brake fault repair
+| +32768 | Reverse One-Line | Forward One-Line
 
 ## 10.14 Slow down the RPM
 
 Steep gradient speed threshold, default 320, can be set 256-1024 to implement the speed adjustment also use this parameter.
 
-## 10.15 Retardation factor
+## 10.15 Slow-down coefficient
 
-Default 2, can be set 1-7, the larger the number, the slower the descent speed, note that the number is too large, the gear clearance will shake. The smaller the number, the faster the descent speed.
+Default is 2, can be set from 1 to 7. The larger the number, the slower the slow-down speed. Note that if the number is too large, the gear gap will be large and the vibration will occur.
+
+The smaller the number, the faster the slow-down speed.
 
 ## 10.16 0 Speed switching
 
@@ -1329,11 +1330,11 @@ Extension code = "X": Protocol control in RS485 state, default connection to RS4
 
 Manufacturer's set value, no user alteration allowed.
 
-||serial port (computing)|clarification|
+||serial port|clarification|
 |---|---|---|
-| 1 | unshared | RXD Specialized for user serial port debugging and upgrading SPD pin is used to output 🎧speed pulse, one line pass Signal.
-| 2 | uplink sharing | Legacy Controller, YJCAN Interface Board
-| 3 | driver sharing | 12 Tube and NS Series.
+| 1 | Not shared | RXD is used for user serial port debugging and upgrading. SPD pin is used to output speed pulse and one-line signal.
+| 2 | Pull-up to share | Old controller, YJCAN Interface Board
+| 3 | Drive sharing | 12 Tube and NS Series.
 | 4 | RS485 | Dedicated controller. 485 interface
 
 ## 10.20 Self-learning throttle
@@ -1351,7 +1352,7 @@ Base Default Value 18432, Base Wide Range Value = 25856, Normally the default va
 |add value|functionality|default|
 |---|---|---|
 | +1 | Activate idle clutch function (H67) | No clutch function activated
-| +2 | When voltage pin = PIN8:^ (H^72) <br />PIN14 Pin Ground Soft Start, PIN8 Ground <br />60V, Suspended 48/72V Automatic Voltage Switching | Voltage pin = PIN8: PIN8,PIN14 Dual line selector push down
+| +2 | When voltage pin = PIN8: (H72) <br />PIN14 grounded Soft Start, PIN8 ground 60V, Suspended 48/72V Automatic Voltage Switching | Voltage pin = PIN8: PIN8,PIN14 Dual line selector push down
 | +4 | Reverse Neutral for Ignition Switch (H72) | Normal reverse neutral function
 | +8 | Knob to adjust maximum bus bar (H72) | normal mode
 | +16 | One-touch repair foot switching half current (H72) | no switching
@@ -1363,7 +1364,6 @@ Base Default Value 18432, Base Wide Range Value = 25856, Normally the default va
 
 Base Default Value 24320, Base Wide Range Value = 31744, Normally the default value is maintained.
 
-
 |add value|functionality|default|
 |---|---|---|
 | +1 | Tap forward and back (H67) | Switch forward and backward 
@@ -1374,7 +1374,6 @@ Base Default Value 24320, Base Wide Range Value = 31744, Normally the default va
 | +32 | Cruise speed unlimited, pushing acceleration Degree controllable (H72) | Cruise limited to 3/4 max RPM, pushing the slowest
 | +64 | Six-fold speed Hall detection (H72) | Single Speed Hall Detection |
 |+128 | New MTPA Vector (H73) | Conventional MTPA Vector |
-
 
 # 11 Calibrate
 
@@ -1401,33 +1400,25 @@ Displays the number of controller parameter modifications
 
 Only the code is upgraded, no parameters are changed.
 
-## 12.3 Brush
+## 12.3 Flash
 
-Upgrade the code while resetting to the parameters that come with the
-program. Note that the HXX version brushes the data clear but not with
-customer data, you also need to use the HEB file to download the data inside the
-controller.
+Upgrade the code and reset to the parameters provided by the program. Note that after flashing the HXX version, the data is cleared but the customer data is not included. You also need to use the HEB file to download the data to the controller.
 
-## 12.4 Manipulate
+## 12.4 Operation
 
-### Self-learning
-
-* Initiating self-learning
-* Canceling self-learning
-* Save: Save the data to the controller internal, the next reset start using the new data work. 
+* Self-learning: Start self-learning
+* Cancel self-learning
+* Save: Save data to the controller, and the new data will be used when it is reset and started next time.
 
 ## 12.5 Product number
 
-Controller Internal Product Number: The controller's unique number, used for product registration and password retrieval.
+Internal product number of the controller: unique number of the controller, used for product registration and password retrieval.
 
 ## 12.6 Area, type of control: reserved
 
 ## 12.7 Log in
 
-The generated version of the software can be set with a 30-digit password, allowing the controller to modify parameters only if the password is entered.
-Ordinary models do not have a password, some models of controllers according to the
-requirements of the 🎧 factory set 30-digit password, set the password
-The user can only view the parameters and status after the code. Click Login and enter the correct 30-digit password to modify the parameters.
+The generated version software can set a 30-digit password, so that the controller can only modify parameters when the password is entered. Ordinary controllers do not have passwords. Some controllers are factory-set with a 30-digit password as required. After the password is set, the user can only view the parameters and status. Click Login and enter the correct 30-digit password before modifying the parameters.
 
 ## 12.8 Recovery 🎧 Factory
 
