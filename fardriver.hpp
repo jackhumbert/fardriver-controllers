@@ -594,9 +594,9 @@ struct Addr82 {
     uint8_t CANConfig : 6; // 0x86
     uint8_t unk86b : 2;
 
-    uint8_t Version0; // HardVer
-    uint8_t Version1; // SoftVer0
-    uint8_t SoftVer; // SoftVer1
+    char HardwareVersion; // Version0
+    char SoftwareVersionMajor; // Version1
+    uint8_t SoftwareVersionMinor;
 } addr82;
 
 // 0x88
