@@ -37,8 +37,7 @@ sampling**
 
 ### 2.1.1 Position sensor
 
-The controller is divided into 4 types of hardware depending on
-the position sensor:
+The controller is divided into 4 types of hardware according to different position sensors:
 
 1. Hall Edition
 2. Incremental encoder version
@@ -63,7 +62,7 @@ the position sensor:
 | 16 | 60° Hall | Hall Version Controller | | H,R,I |
 | 2 - 15 | 2-15 Corresponding rotation to pole number | Rotary Controller |  | X, U | 
 
-Modify the sensor, point to save to be effective. optional for Hxx and above version support. Older versions are not optional.
+Modify the sensor and click Save to make it effective. Hxx and above versions support this option. Old versions cannot select this option.
 
 | Hardware Version | Description |
 |---|---|
@@ -83,6 +82,7 @@ Modify the sensor, point to save to be effective. optional for Hxx and above ver
 | N | 2024 new version, universal, dual band, 30P, rich parameters. |
 
 There are many types of software programs, so I won’t list them all.
+
 Special codes can tell whether it is a special program:
 
 | Code | Meaning |
@@ -132,8 +132,7 @@ This method is applicable to all controllers with brake line function installed,
 
 1. Keep the brake connected, the controller is off and the motor is stationary.
 2. Turn the handle to the end, boot, this time the controller alarm, the motor does not turn.
-3. Enter self-study, Morse code 8 bits: 11000000.
-1="Long squeeze brake 0.5 sec-2 sec", 0="Short squeeze brake less than 0.5 sec"
+3. Enter self-study, Morse code 8 bits: 11000000. 1="Long squeeze brake 0.5 sec-2 sec", 0="Short squeeze brake less than 0.5 sec"
 
 When you hear 2 short and 1 long, you are in self-learning mode. If you don't hear it, consider that you have made a mistake and try to re-enter the Morse code.
 
@@ -214,24 +213,21 @@ Different types of motors will exhibit different output 🎧 torque for the same
 
 ### 2.1.11 Maximum line current
 
-Controller operating battery bus current max. Determines the motor input 🎧 maximum power value. Controller max input power = battery voltage * max line current.
-This current is limited to the maximum customer line current. This value determines the maximum output 🎧 power and thus the maximum speed.
+The maximum value of the controller's working battery bus current. Determines the maximum power output of the motor. Controller maximum input power = battery voltage * maximum line current. This current is limited to the customer's maximum line current. This value determines the maximum output power, and thus the maximum speed.
 
-### 2.1.12 Back up the RPM:
+### 2.1.12 Reverse Speed
 
-Maximum RPM for backward gearing.
+Maximum RPM for reverse.
 
 ### 2.1.13 Swap phase wires
 
-The default is 0. If the big blue and green wires are exchanged, it will be 1. Note that this parameter is not correct and will cause the motor not to rotate.
+Default is 0, if the blue and green lines are swapped, it is 1. Note that if this parameter is incorrect, the motor will not rotate.
 
-This parameter is valid after reset and is automatically modified by the Hxx version self-
-learning.
+This parameter is valid after reset and is automatically modified by the Hxx version self-learning.
 
 ### 2.1.14 Weak magnetic properties
 
-General fast, high speed jitter big change to medium, generally do not use slow, easy
-to overcurrent
+General fast, high speed jitter big change to medium, generally do not use slow, easy to overcurrent
 
 ### 2.1.15 Weak magnetic response
 
@@ -264,13 +260,13 @@ Deceleration speed: 16-224, the higher the number the shorter the return throttl
 
 Non-set value, display of motor angle
 
-### 2.2.4 Back on the gas
+### 2.2.4 Throttle Return
 
 Default 0
 
 ### 2.2.5 Throttle Response
 
-There are three configurations of throttle characteristics for different user preferences: linear, sport, and economy.
+According to different user preferences, the throttle characteristics have three configurations: linear, sporty, and economical.
 
 ### 2.2.6 Economic acceleration parameters
 
@@ -278,7 +274,7 @@ Default 8
 
 ### 2.3 Throttle Threshold
 
-throttles on the market are uneven, and the voltage value will vary from throttle to throttle or gas pedal to gas pedal.
+Throttles on the market are uneven, and the voltage value will vary from throttle to throttle or gas pedal to gas pedal.
 
 | | Idle voltage | High voltage |
 |---|---|---|
@@ -296,10 +292,7 @@ We set the high throttle threshold based on the full bar voltage. In order to ma
 
 So when we set a high throttle threshold, for example, 4 .1-4.3V for an electric motorcycle throttle full handle, we would set the 3.9V as the high throttle threshold. For a 12V gas pedal we would set the high throttle threshold at 4.3V.
 
-The 742 and above versions add a throttle self-learning function. When turning to
-the bottom during self-learning, the controller automatically recognizes the
-maximum voltage of the throttle signal from the throttle/pedal and generates a
-throttle high threshold based on this voltage.
+The 742 and above versions add a throttle self-learning function. When turning to the bottom during self-learning, the controller automatically recognizes the maximum voltage of the throttle signal from the throttle/pedal and generates a throttle high threshold based on this voltage.
 
 ## 2.4 Product Model
 
@@ -315,22 +308,26 @@ throttle high threshold based on this voltage.
 
 ## 3.1 Motor current limiting protection factor
 
-Conversion of 500RPM,1000RPM,.......8500RPM,9000RPM in current limiting. These RPMs are the RPMs for the number of pairs of poles calibrated inside the parameter. The corresponding parameter is also the parameter at that speed. For motors with an actual number of pole pairs greater than or equal to 16, a conversion is required.
+Conversion of 500RPM, 1000RPM,...8500RPM, and 9000RPM in current limit.
 
-Typical hub motors have 16, 20, 24, 28, 30 pole pairs.
-A typical mid-mount motor has 3, 4, 5, 7, 8, 14 pole pairs.
+These speeds are based on the number of poles calibrated in the parameters. For motors with an actual pole pair number greater than or equal to 16, a conversion is required. 
 
-If the number of pole pairs = 4 in the parameter, the motor speed = the speed on the host computer * 4 / the actual number of pole pairs of the motor. For example, if the pole pair number of the hub motor is 16 in that case.
+Usually the pole pair number of the hub motor is 16, 20, 24, 28, 30 pole pairs.
 
-The actual speed of a 16-pole hub motor at 500RPM is 125RPM.  
-The actual speed of a 16-pole hub motor for 1000RPM is 250RPM.  
-The actual speed of a 4000RPM 16-pole hub motor is 1000RPM.  
-The actual speed of a 16-pole hub motor at 5000RPM is 1250RPM.  
-The actual speed of a 16-pole hub motor at 5500RPM is 1375RPM.  
-The actual speed of a 6000RPM 16-pole hub motor is 1500RPM.  
-The actual speed of a 16-pole hub motor at 6500RPM is 1625RPM.  
-The actual speed of a 16-pole hub motor at 8000RPM is 2000RPM.  
+And usually the mid-mounted motor is 3, 4, 5, 7, 8, 14 pole pairs.
 
+If the number of pole pairs = 4 in the parameter, the motor speed = the speed on the host computer * 4 / the actual number of pole pairs of the motor. For example, if the pole pair number of the hub motor is 16:
+
+|Listed RPM|Actual RPM|
+|---|---|
+| 500RPM | 125RPM |
+| 1000RPM | 250RPM |
+| 4000RPM | 1000RPM |
+| 5000RPM | 1250RPM |
+| 5500RPM | 1375RPM |
+| 6000RPM | 1500RPM |
+| 6500RPM | 1625RPM |
+| 8000RPM | 2000RPM |
 
 Weak magnetism limitation: gradual increase of current limiting parameters. 
 
@@ -387,7 +384,7 @@ Matching of idling noise in high speed section and balance between power and pow
 
 ### 3.2.7 Speed Limit RPM: The RPM used for Morse code speed limiting.
 
-# 4 Energy Regen
+# 4 Energy Regeneration
 
 ![image](/images/9.jpg)
 
