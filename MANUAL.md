@@ -2,6 +2,10 @@
 
 ## 2023 08 08
 
+## Editor notes:
+
+* 12-tube refers to the number of transistors in the controller - I don't think this is labeled anywhere on the device (at least on mine)
+
 # 1 PC upper computer software interface
 
 When the serial port and CAN analyzer are not connected, the following screen is displayed:
@@ -418,7 +422,7 @@ For ordinary two-wheeled vehicles, for the controller about 400A, negative curre
 
 Older versions of the controller do not come with a negative current factor.
 
-# 5 Functionality
+# 5 Functions
 
 ![image](/images/10.jpg)
 
@@ -1029,7 +1033,7 @@ Base value: 0-255, default 8
 
 |add value|with|without|
 |---|---|---|
-| +256 | Measurement of second throttle/brake voltage | Detecting electric door lock voltage |
+| +256 | Measurement of second throttle/brake voltage | Detect the electric door lock voltage |
 | +512 | PD Protocol | OP Protocol |
 |+1024 | Protocol 2 | OP Protocol |
 |+1536 | Protocol 3 | OP Protocol |
@@ -1037,44 +1041,45 @@ Base value: 0-255, default 8
 |+2560 | Protocol 5 | OP Protocol |
 |+3072 | Protocol 6 | OP Protocol |
 |+3584 | Protocol 7 | OP Protocol |
-|+4096 | 8x PID, normal users, should not be more. Change or the controller will be easily damaged | Current sensor type >=2, Not supported |
-|+8192 | 2x PID | Current sensor type >=2, Not supported |
-|+12288| 4x PID | Current sensor type >=2, Not supported |
+|+4096 | 8x PID, ordinary users should not change it, otherwise it is easy to damage the controller | Current sensor type >=2 is not supported |
+|+8192 | 2x PID | Current sensor type >=2 is not supported |
+|+12288| 4x PID | Current sensor type >=2 is not supported |
 
 `Base value = 16053/16759 Allowed to turn on special weak magnetism (deep weak magnetism)`
 
-# 8 PID control
+# 8 PID Control
 
 ![image](/images/14.jpg)
 
 ## 8.1 AN
 
-Motor body characteristic AN value, parameter range 0-16.
-Standard tab motors AN=0. Standard IPM motors AN=16.
-This parameter must be set in accordance with the characteristics of the motor. For hub motors, surface-mounted center motors, the AN is less than 8. For embedded center motors, the AN value is not less than 8.
+Motor body characteristics AN value, parameter range 0-16.
 
-For encoder center motors with remote drive and automotive permanent magnet synchronous motors, AN=16 is used.
+Standard surface mount motor AN=0. Standard IPM motor AN=16.
 
-All hub motors on the market are surface-mounted motors, and the AN value is usually set to 0, not exceeding 4. Incorrectly set AN values can lead to lower starting efficiency.
-Even 🎧 present MOE/OVER protection.
+This parameter setting must be consistent with the motor characteristics. The AN value of the embedded mid-mounted motor is not less than 8. Encoder mid-mounted motors matched with remote drives and automotive permanent magnet synchronous motors all adopt AN=16.
+
+All hub motors on the market are surface mount motors, and the AN value is generally set to 0 and not exceed 4. If the AN value is set incorrectly, the starting efficiency will be low.
+There is even MOE/OVER protection.
 
 ## 8.2 LM
 
-Motor acceleration matching parameter, this value is used to adjust the smoothness of the motor running on the whole car. The default setting is 22 for cars and 18 for electric motorcycles, and some low-power tricycles are more suitable below 10.
+Vehicle motor acceleration matching parameter. This value is used to adjust the smoothness of the motor running on the vehicle.
 
-However, some individual motor types are poorly matched to the vehicle, and the resonance judder is noticeable in the low and mid-speed segments at the start.
+The default setting for cars is 22, and the default setting for electric motorcycles is 18. For some small-power tricycles, 10 or less is more suitable.
 
-Adjusting the LM value will improve the situation.
+However, some motor types are poorly matched with the whole vehicle, and obvious resonance vibrations can be felt at the low-speed and medium-speed stages of the start. Adjusting the LM value will improve it.
 
-Start from 22, if the low-speed section of the acceleration jitter, then reduce the LM, from 16, 14, 12, 11, 8, 5 began to test the effect of the middle of those numbers will also play a role, generally consider that rather larger, try not to be too small. Too small will not be able to control the current, causing MOE/OVER protection, or even burn control. So when the jitter disappears after the LM value is the best parameter, do not adjust smaller.
+Start with 22. If the acceleration vibrations occur at low speeds, reduce the LM and test the effect from 16, 14, 12, 11, 8, and 5. The numbers in the middle will also work. Generally, it is better to be larger and try not to be too small. Too small will not be able to control the current, causing MOE/OVER protection, or even burning the control. Therefore, the LM value after the vibration disappears is the best parameter, and do not adjust it down.
 
-Some motors and vehicles are very smooth at LM=22, but changing it to a smaller size will bring jerks instead, so be careful not to adjust this parameter if you have no problems at LM=22.
+Some motors and vehicles are very smooth when LM=22, but will cause jitter when it is reduced. Therefore, if there is no problem when LM=22, do not adjust this parameter.
 
-Or if you find that the jitter resonance 🎧 is present after changing the LM value from 22 to 16 , 14 , o erven 5 , then it has nothing to do with this parameter. Even 5 has little effect, it means that it has nothing to do with this parameter, then it must be changed back to the maximum value, such as 22, instead of keeping a random number in the controller.
+Or if jitter resonance occurs, and the LM value is reduced from 22 to 16, 14, . . . or even 5, it does not have much effect, which means it is not related to this parameter. At this time, you must change it back to the maximum value, such as 22, instead of keeping a random number in the controller.
 
 ## 8.3 PID parameters: StartKI,MidKI,MaxKI / StartKP,MidKP,MaxKP
 
 Default parameters StartKI=4,MidKI=8,MaxKI=12 / StartKP=40,MidKP=80,MaxKP=120.
+
 The higher the motor power, the higher the voltage, the smaller the PID, the PID parameters can not be filled in casually, otherwise it will lead to abnormal operation or even burn control. The following are the commonly used PID setting parameters. There are 9 sets of parameters in total, choose one of them to match the motor vehicle and modify it under the guidance of professionals.
 
 | StartKI | MidKI | MaxKI | StartKP | MidKP | MaxKP | Note |
@@ -1096,10 +1101,11 @@ The higher the motor power, the higher the voltage, the smaller the PID, the PID
 | 10 | 15 | 22 | 100 | 150 | 220 |
 | 16 | 16 | 24 | 160 | 160 | 240 | Small power motors
 
-Note that improperly set PID parameters can cause the system to work improperly, or even 🎧now MOE/OVER/PHASE faults, etc., and the difference is too large to cause burn-in, so pay special attention to it.
-Note that some small power motor PID parameters exceed the debugging range of the controller, in this case, please contact the remote drive to solve the problem.
+Note that improper PID parameter settings will cause the system to work abnormally, and even MOE/OVER/PHASE failures, etc. Too large a difference will cause burnout, so pay special attention.
 
-## 8.4 Speed SKI,SKP
+Note that the PID parameters of some small-power motors exceed the controller debugging range. In this case please contact YuanDrive to solve the problem.
+
+## 8.4 Speed SKI, SKP
 
 SKI min. 1, max. 18, heavy car KI=18, light car KI=2, default KI=9, SKP5-20, default 10
 
@@ -1133,7 +1139,7 @@ Hxx version valid
 * 9.5 Customer Maximum Line Current: Maximum line current of BOOST
 * 9.6 Customer Maximum Phase Current: Maximum phase current of BOOST
 
-# 10 🎧 Factory
+# 10 Factory 2
 
 ## 10.1 Front and rear gear ratios
 
@@ -1687,50 +1693,17 @@ A total of 14 alarms, user can choose to report or not to report:
 
 # 14 Controller Model Description
 
-Controller Model 1: ND 72 530 B _ 1 3_ A R H 68
-Controller Model 2: YQ 72V 270A B _ 1 3_ A R H 68
+Example: ND72530B_13_ARH68
 
-Controller customer code (AA-ZZ)
-Controller rated voltage (V)
-Controller maximum phase current (A)
-Controller type (B for encoder version, otherwise Hall version)
-_
-Controller current sensor type (1-9)
-Controller application type (0-9)
-_
-Controller function code (0-9,A-Z)
-Controller extension code (*,0-9,A-Z)
-Controller hardware version (0-9,A-Z)
-Controller software version (00-99)
-
-Controller Customer
-Code (AA-ZZ)
-
-Rated voltage of
-controller (V)
-
-Maximum bus current
-of controller (A)
-
-Controller type (B for encoder
-version)
-
-Controller current sensor
-type (1-9)
-
-Controller
-application type (0-
-9)
-Controller Function
-Code (0-9,A-Z)
-
-Controller Extension
-Code (*,0-9,A-Z)
-
-Controller Hardware
-Version (0-9,A-Z)
-
-Controller software
-version (00-99)
-
-
+* Customer code (AA-ZZ): `ND`
+* Rated voltage (V): `72`
+* Maximum phase current (A): `530`
+* Type (B for encoder version, otherwise Hall version): `B`
+* `_`
+* Current sensor type (1-9): `1`
+* Application type (0-9): `3`
+* `_`
+* Function code (0-9, A-Z): `A`
+* Extension code (*, 0-9, A-Z): `R`
+* Hardware version (0-9, A-Z): `H`
+* Software version (00-99): `68`
