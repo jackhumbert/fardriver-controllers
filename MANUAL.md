@@ -1,4 +1,4 @@
-# Parameter Description of Remote Drive Controller
+# Fardriver Controller Parameter Description
 
 ## 2023 08 08
 
@@ -6,11 +6,11 @@
 
 * 12-tube refers to the number of transistors in the controller - I don't think this is labeled anywhere on the device (at least on mine)
 
-# 1 PC upper computer software interface
+# 1 PC Software Interface
 
 When the serial port and CAN analyzer are not connected, the following screen is displayed:
 
-![image](/images/1.jpg)
+![image](/images/0.jpg)
 
 When you connect the serial port or turn on CAN, the following screen is displayed:
 
@@ -863,7 +863,7 @@ Default 64, 640=0.1A,320=0.2A 128=0.5A,64=1A,32=2A,
 
 ### 6.2.15 Byte Options
 
-0, 1, 2, 3: contact remote drive to adjust parameters
+0, 1, 2, 3: contact Fardriver to adjust parameters
 
 ### 6.2.16 one-stop debugging
 
@@ -878,7 +878,7 @@ Most of the One-Wire default 21, byte option = 3 can basically show the speed, s
 7. In general, try the above special frames to find the correct one line pass, for details of the voltage and power display is not correct, then a small range of special frame modification to meet the requirements: for example, to find 48 speed can be displayed normally, but the voltage and power or current display is not correct, then you can try to modify the special frame between 48 - 63 to correct the number. For example, if you find 160 speed can be displayed normally, but the voltage or current display is not correct, then you can try to modify the numbers between 160-175 in the special frame to correct the problem. If the display of P-position is inaccurate, you can modify the position of P-position to meet the display requirement.
 8. If the above operations do not display the One-Wire communication correctly, try steps 3.1-3.3 again with a step size of 0.5ms.
 9. For none of the above operations can you display a one-line pass. Consider special frames 247 or 248.
-10. If none of the above works, then you need to contact the remote driver to analyze the specific 224 or other special frames from 240-255.
+10. If none of the above works, then you need to contact the Fardriver to analyze the specific 224 or other special frames from 240-255.
 
 ## 6.3 Tire Ratio
 
