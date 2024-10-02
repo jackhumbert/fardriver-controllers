@@ -366,7 +366,16 @@ ASSERT_SIZE(addr18, 12);
 
 // 0x1E
 struct Addr1E {
-    uint16_t FwReRatio;
+    uint8_t FwReRatio;
+    uint8_t ReverseSideStandSignal : 1;
+    uint8_t AllowSmallCurrentSwitching : 1;
+    uint8_t NeutralAntiSkidParking : 1;
+    uint8_t RecordMileage : 1;
+    uint8_t LowerMagneticBrake : 1; // Extension code Y
+    uint8_t DownhillReverseOvervoltageCutoff : 1;
+    uint8_t ShieldedGearSpeedLimit2 : 1;
+    uint8_t PD1Input : 1;
+
     uint16_t LowVolProtect; // / 10
     // local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
     char CustomCode[2];
@@ -793,16 +802,48 @@ struct AddrBE {
     uint8_t AccCoeff : 4; 
 
     uint16_t BstTime; // / 500, seconds
+    
     uint16_t BstRelease; // / 500, seconds
+    
     uint16_t ParkTime; // / 500, seconds
-    uint16_t InverseTime;
+
+    uint8_t ReverseTime : 6; // InverseTime
+    uint8_t JLNationalStandardStatus : 1;
+    uint8_t Press2ForP : 1;
+    uint8_t LowMediumToHighSpeed : 1;
+    uint8_t NoSoundPrompt : 1;
+    uint8_t Reserved : 1;
+    uint8_t SilenceBuzzer : 1;
+    uint8_t EnableBackupBuzzer : 1;
+    uint8_t DisableMotorAngleSensorRepair : 1;
+    uint8_t AllowBrakeFaultRepair : 1;
+    uint8_t ReverseOneLine : 1;
+
     uint16_t TorqueCoff;
 } addrBE;
 
 // 0xC4
 struct AddrC4 {
-    uint16_t LearnVolLow; // LearnVol
-    uint16_t LearnVolHigh; // LearnVoh
+    uint8_t IdleClutchFunction : 1; // H67
+    uint8_t AutomaticVoltageSwitching : 1; // H72
+    uint8_t ReverseNeutralForIgnition : 1; // H72
+    uint8_t KnobToAdjustMaximumBusBar : 1; // H72
+    uint8_t OneTouchRepairSwitching : 1; // H72
+    uint8_t SqueezeBrake2xForPark : 1; // H72
+    uint8_t SqueezeBrakeToReleasePark : 1; // H72
+    uint8_t SingleCellNoBoost : 1; // H72
+    uint8_t LearnVolLow; // LearnVol, VQL
+
+    uint8_t TapForwardAndBack : 1; // H67
+    uint8_t DualThrottleVoltage : 1; // H72
+    uint8_t CenterThrottleNeutral : 1; // H74
+    uint8_t EnableOneClickRepair : 1; // H72
+    uint8_t EnhancedInpuSignalFiltering : 1; // H72
+    uint8_t UnlimitedCruiseSpeed : 1; // H72
+    uint8_t HallDetectionX6 : 1; // H72
+    uint8_t NewMTPAVector : 1; // H72
+    uint8_t LearnVolHigh; // LearnVoh, VQH
+
     uint16_t SlowDownRpm; // ParkDiff
     uint16_t StartIs; // IsInStart
     uint16_t ThrottleInsert; // & 0x20 TCS

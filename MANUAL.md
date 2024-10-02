@@ -1438,8 +1438,7 @@ Batch view and adjustment of controller data and CAN bus data for Hxx and above:
 ## 13.1 Get controller data
 
 1. Batch Download Parameters button on the right: Opens the Batch Download Parameters window. Click "Get controller data".
-2. The CAN protocol format parameters within the controller can be displayed in the
-dialog box.
+2. The CAN protocol format parameters within the controller can be displayed in the dialog box.
 3. Tap the Cancel button to return to the main menu.
 4. Save your own controller parameter file by clicking on the main icon in the upper left corner and selecting Save as heb file.
 
