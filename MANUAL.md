@@ -367,8 +367,8 @@ Matching of idling noise in high speed section and balance between power and pow
 
 ### 3.2.4 LQVOL
 
-1. Intermediate throttle voltage (mV, VQH+4, intermediate throttle enabled, 0-4000).
-2. Speed ​​limit current, (0-4000, unit 1/4A)
+1) Middle throttle voltage (mV, VQH+4, middle throttle enabled, 0~4000).
+2) Speed ​​limit current, (0~4000, unit 1/4A)
 
 ### 3.2.5 FAIF
 
@@ -387,33 +387,31 @@ Matching of idling noise in high speed section and balance between power and pow
 
 ### 3.2.7 Speed Limit RPM: The RPM used for Morse code speed limiting.
 
-#### 4 Energy Return
+# 4 Energy Regen
 
 ![image](/images/9.jpg)
 
-For the throttle back brake function, during the ride, the throttle back goes into the e-brake state.
-For the e-brake function, when braking, the whole vehicle gives 🎧 brake signal to
-the controller, and the controller detects the brake signal and then enters the e-brake state.
-Note that to use the e-brake function, you must enable this function by selecting
-**e-brake or return throttle brake** in the **follow** item. And set the return current. Note that the maximum return current is generally 25%-50% larger than the stop return current when setting the parameter.
+For the throttle return brake function, during riding, the electronic brake state will be entered after the throttle is returned.
+
+For the electronic brake function, when braking, the whole vehicle sends a brake signal to the controller, and the controller enters the electronic brake state after detecting the brake signal.
+
+Note that when using the electronic brake function, you must select electronic brake or throttle return brake in the follow item to enable this function. And set the return current. Note that when setting parameters, the maximum return current is generally 25%~50% larger than the stop return current.
 
 ## 4.1 Brake current limitation
 
-### 4.1.1 Stop the reflux
+### 4.1.1 Brake current
 
 Brake current for e-brake. Default 2A, change to 5A-20A as needed when you need e-brake strength, for the large capacity battery of 4-wheeler, its back-charging current is allowed to be bigger, it can be set to 20A-60A.
 
-### 4.1.2 Maximum return flow:
+### 4.1.2 Maximum brake current:
 
-Peak braking current of e-brake: default 4A, when you need strong braking, you can set it to 10A-40A, for 4-wheeler, you can consider 40A-80A.
+Peak braking current of electronic brake: 4A by default, can be set to 10A-40A when strong braking is required, and 40A-80A can be considered for four-wheel vehicles.
 
 ### 4.1.3 Throttle return brake point
 
 Default is 0, the faster the throttle return speed, the smaller the braking force. Slow speed, light braking force. 
 
-* 1: The braking force is the greatest when the throttle is returned. 
-
-Above this speed, turning the handlebar back halfway is a constant speed without acceleration or deceleration. For example, 4000 means that the higher the speed from 0 to 4000, the closer it is to half the throttle value. The middle throttle value above 4000 is a constant speed without acceleration or deceleration. When the handlebar is higher than the middle value, it accelerates, and when it is lower than the middle value, it decelerates. The more you turn the handlebar back, the stronger the brakes.
+1: The braking force is the greatest when the throttle is returned. Above this speed, turning the handlebar back halfway is a constant speed without acceleration or deceleration. For example, 4000 means that the higher the speed from 0 to 4000, the closer it is to half the throttle value. The middle throttle value above 4000 is a constant speed without acceleration or deceleration. When the handlebar is higher than the middle value, it accelerates, and when it is lower than the middle value, it decelerates. The more you turn the handlebar back, the stronger the brakes.
 
 ## 4.2 Negative current coefficient
 
@@ -479,14 +477,13 @@ Note that the other pins are generally not selected to be normally closed, excep
 14.  CAN Gear: CAN controlled gear, default low speed gears
 15.  null
 
-### 5.2.2 Long press to back up
+### 5.2.2 Long press to reverse
 
-When valid, you must long press the back button to toggle to backward. Invalid by
-default, toggles backward according to the backward line.
+When valid, you must long press the reverse button to toggle to backward. Invalid by default, toggles backward according to the backward line.
 
 ### 5.2.3 Gearing
 
-| gear level (i.e. first gear, high gear etc) | clarification |
+| Gear | Description |
 |---|---|
 | 0-Default Neutral | Startup defaults to N, FW ground = forward, RE ground = reverse. |
 | 1-Default forward | Startup default forward gear, RE ground = reverse, can have P gear (same as N) |
@@ -497,65 +494,43 @@ default, toggles backward according to the backward line.
 
 ### 5.2.4 Brakes
 
-Brake function: you can travel when you don't squeeze the brake, and disconnect the
-throttle when you squeeze the brake.
-FLOATING: Pinch brake with high brake wire connected to 12V or battery
-voltage. Or the low brake leg is connected to battery ground. Note that the
-brake line signals are not isolated. When the brakes are not pinched, both
-wires should be floating.
-Floatation disconnection: When the brake is pinched, both high brake and low
-brake wires are floating. When the brake is not pinched, the high brake wire is
-connected to 12V or battery voltage, or the low brake foot is connected to
-battery ground, note that the brake wire signal is not isolated.
-P+Floating: In addition to the function of floating, release the P-
-gear state at the same time when squeezing the brake. P+Float
-Power-off: In addition to the float power-off function, squeeze the
-brake to release the P gear at the same time. Invalid:
-Default float traveler.
+* Brake function: you can travel when you don't squeeze the brake, and disconnect the throttle when you squeeze the brake.
+* FLOATING: Pinch brake with high brake wire connected to 12V or battery voltage. Or the low brake leg is connected to battery ground. Note that the brake line signals are not isolated. When the brakes are not pinched, both wires should be floating.
+* Floatation disconnection: When the brake is pinched, both high brake and low brake wires are floating. When the brake is not pinched, the high brake wire is connected to 12V or battery voltage, or the low brake foot is connected to battery ground, note that the brake wire signal is not isolated.
+* P+Floating: In addition to the function of floating, release the P-gear state at the same time when squeezing the brake. P+Float
+* Power-off: In addition to the float power-off function, squeeze the brake to release the P gear at the same time. Invalid: Default float traveler.
 
 ### 5.2.5 PC13
 
-Parameters of the old controller: float travel, float disconnect, float cruise, ground
-cruise, invalid.
+Parameters of the old controller: float travel, float disconnect, float cruise, ground cruise, invalid.
 
-**H series controller parameters: Normal response and track response.
+H series controller parameters: Normal response and track response.
 
 ### 5.2.6 Morse Code
 
-1. The Morse code can be changed through the host computer to set 6 digits to
-release the speed, no restriction when 000000, restriction when any other code:
-it is necessary to operate the Morse code every time the power is turned on in 
-order to release the speed limit.
+1. The Morse code can be changed through the host computer to set 6 digits to release the speed, no restriction when 000000, restriction when any other code: it is necessary to operate the Morse code every time the power is turned on in order to release the speed limit.
 
-2. Setting the 7-digit Morse code is the speed limit switch, which also operates
-the last 6 digits, and the speed limit will be changed once: if it was a speed limit
-state, it will be changed to a non-speed limit state, and vice versa. This switch
-is saved inside the controller, and it will be switched to this state when the
-controller is turned on in the future.
+2. Setting the 7-digit Morse code is the speed limit switch, which also operates the last 6 digits, and the speed limit will be changed once: if it was a speed limit state, it will be changed to a non-speed limit state, and vice versa. This switch is saved inside the controller, and it will be switched to this state when the controller is turned on in the future.
 
-### 5.2.7 Resident Slope
+### 5.2.7 Incline braking
 
-Gear shift in hill: When in forward or reverse, letting go of the gas pedal will
-stop the hill, neutral will not stop the hill, and the function of steep hill descent
-is invalid. P gear hill stopping: hill stopping in P gear, in other states,
-according to the steep hill descent parameter setting whether to enable the
-steep hill descent function or not.
-Invalid: the hill-stay function and the steep hill descent function are invalid.
+Shift into gear and hold on an incline: When moving forward or backward, releasing the accelerator will cause the car to hold on a slope. In neutral, the car will not hold, and the steep slope descent function is invalid. Hold the hill in P gear: Hold the hill in P gear. In other states, the steep slope descent function is enabled according to the steep slope descent parameter setting.
+
+Invalid: The hold hill function and steep slope descent function are invalid.
 
 ### 5.2.8 Follow
 
-1. Follow: motor enabled for certain idle speed
-2. Invalid: shielded follow and e-brake
-3. E-brake: activates the e-brake when you squeeze the brake.
-4. Return Throttle Brake: activates the electronic brake when returning to the throttle
+* Follow: The motor starts at a certain idle speed
+* Invalid: Block follow and electronic brake
+* Electronic brake: Start the electronic brake when you squeeze the brake.
+* Throttle brake: Start the electronic brake when you release the throttle
 
-### 5.2.9 Steep slopes slow down
+### 5.2.9 Hill Descent Control
 
-* None: Steep hill descents are not enabled.
-* 1-7: The smaller the number the slower the steeper the descent response, the larger
-the number the faster the descent response.
-Parking effect: Steep hill descent will be more backward but smooth with small
-numbers, less backward but too big forward with big numbers.
+* None: Hill Descent Control is not enabled.
+* 1~7: The smaller the number, the slower the hill descent control response, and the larger the number, the faster the hill descent control response.
+
+Parking effect: A small hill descent control number will cause more back movement but be stable, while a large number will cause less back movement but too much forward movement.
 
 ## 5.3 BOOST
 
@@ -563,19 +538,18 @@ numbers, less backward but too big forward with big numbers.
 
 Duration after BOOST startup defaults to 45 seconds, maximum 131 seconds;
 
-### 5.3.2 BOOST interval
+### 5.3.2 BOOST Cooldown
 
-The amount of time it takes to start BOOST again after BOOST has finished, default 90
-seconds, maximum 131 seconds;
+The amount of time it takes to start BOOST again after BOOST has finished, default 90 seconds, maximum 131 seconds;
 
-# 6 meter (i.e. measuring instrument)
+# 6 Instruments
 
 ![image](/images/11.jpg)
 
 ## 6.1 Instrumentation
 
 The controller has 3 signal output pins.
-For  12-tube controller and NS series controller: 
+For 12-tube controller and NS series controller: 
 * 13-pin RXD
 * 18-pin ALARM/SPD
 * 9-pin SPA 
@@ -587,32 +561,33 @@ Old version controller:
 
 The extension code of H series controller will be marked with characters A-G.
 
-* 6.1.1 Speed Pulse
+###  6.1.1 Speed Pulse
 
-    This value, 1-31, affects the pulse speed input 🎧 and the One-Wire Speed display. The higher the number, the higher the meter display speed.
+This value, 1-31, affects the pulse speed input 🎧 and the One-Wire Speed display. The higher the number, the higher the meter display speed.
 
-* 6.1.2 Velocity pulse base
+### 6.1.2 Velocity pulse base
 
-    The calibration base for the speed pulse meter. Changing this value only affects the speed display of the speed pulse meter. Hub default 40459, Center default 26043
+The calibration base for the speed pulse meter. Changing this value only affects the speed display of the speed pulse meter. Hub default 40459, Center default 26043
 
-* 6.1.3 Speedometer way
+### 6.1.3 Speedometer way
 
-    Pulse/Analog/Isolated Pulse
+Pulse/Analog/Isolated Pulse
 
-* 6.1.4 Analog speedometer
-    The phase line meter voltage indicates the coefficient used by the meter for speed, and adjusting this coefficient changes the displayed speed.
+### 6.1.4 Analog speedometer
 
-* 6.1.5 CAN
+The phase line meter voltage indicates the coefficient used by the meter for speed, and adjusting this coefficient changes the displayed speed.
 
-    Command number, default 60 for Hxx version, previous
-versions have different command numbers depending on the
-protocol CAN=59: support for unmanned systems, special
-CAN configuration parameter is required CAN=48: (H80
-version) switch from serial port to CAN analyzer debugging
+### 6.1.5 CAN
 
-* 6.1.6 CAN detection delay
+Command number, Hxx version defaults to 60, previous versions have different command numbers according to different protocols
 
-    Default 150ms Individual customer request 1900ms
+CAN=59: supports unmanned driving system, requires special CAN configuration parameters
+
+CAN=48: (H80 version) switch from serial port to CAN analyzer debugging
+
+### 6.1.6 CAN detection delay
+
+Default 150ms Individual customer request 1900ms
 
 ## 6.2 One Line Parameter
 
@@ -638,31 +613,24 @@ Default 0: not 0 when customized
 
 #### 0-1 Not connected by a single thread  
 
-0. Speed pulse, (display adjustment: the larger the
-speed pulse base, the slower the display speed)
-500-65530, V39 and earlier versions are 5000-65530)
+0. Speed pulse, (display adjustment: the larger the speed pulse base, the slower the display speed) 500-65530, V39 and earlier versions are 5000-65530)
 1. READY Lamp: (READY status is Loss🎧High, otherwise Loss🎧Low)
-2. Fan control: (Temperature below 40° is output 🎧 high, above 40° is
-output 🎧 low)
+2. Fan control: (Temperature below 40° is output 🎧 high, above 40° is output 🎧 low)
 3. Special Serial Command BF_ZHULI
 4. Special serial port command ZHULI assists pulse detection (PIN3)
 5. Special Serial Command KM5
 6. Special serial port command UK1
-7. Special serial port commands
-    Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1,SEC0-
-    SEC7 Invalid
+7. Special serial port commands Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1 SEC0-SEC7 Invalid
 
 #### 16-31 General One Line 2
 
-Different meters, DATA6/DATA9/DATA10 need to send 🎧
-different content, refer to the communication protocol to select
-the first content:
+Different meters, DATA6/DATA9/DATA10 need to send 🎧 different content, refer to the communication protocol to select the first content:
 * DATA6: Byte Option = 3 to output 🎧 0, otherwise to output 🎧
 current value. Refer to the following table
-* DATA9 option: refer to the DATA9/DATA10
-option table below DATA10 option : refer to
-the DATA9/DATA10 option table below
+* DATA9 option: refer to the DATA9/DATA10 option table below DATA10 option : refer to the DATA9/DATA10 option table below
+
 `Special frame = 16 + DATA9 option + DATA10 option`
+
 general one line pass = 21
 
 | parameter group | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
@@ -829,19 +797,18 @@ All parameters can be modified.
 * 14: Byte 2 = 0X0E (H40 added)
 * 15: Byte 2 = 1/8 switching (H40 increase)
 
-#### Position of side supports
+#### Side Stand Position
 * 0-3: BIT position of byte 2
 * 7: BIT7 of byte 3
 * 8: Not shown.
 
-#### Turning handle position
+#### Grip position
 * 0-3: BIT position of byte 2
 * 8: Not shown.
 
-#### anti-theft location
+#### Anti-Theft location
 * 0-3: BIT position of byte 2
 * 8: Not shown.
-
 
 ### 6.2.6 SPA Transmission 🎧 Signal Description
 
@@ -875,21 +842,21 @@ Default 0, custom = not 0
 * 14: P file in byte 2 = 0X0E (V40 added)
 * 15: P-phase switching at byte 2=1/8 (V40 increase)
 
-### 6.2.11 Position of side supports
+### 6.2.11 Side Stand Position
 
 * 0-3: BIT position of side support at byte 2
 * 7: BIT7 in byte 3 of side support
 * 8: Side support in not showing.
 
-### 6.2.12 Turning handle position
+### 6.2.12 Grip Position
 
 One line through the inside of the rotary control display bit (0-3, default 3 ), if not set to 8
 
-### 6.2.13 anti-theft location
+### 6.2.13 Anti-Theft Position
 
 Burglar indicator display bit (0-3, default 8 ), if not set to 8
 
-### 6.2.14 current factor
+### 6.2.14 Current Factor
 
 Default 64, 640=0.1A,320=0.2A 128=0.5A,64=1A,32=2A,
 
@@ -936,11 +903,11 @@ Hall version of hub motor with pole pairs = 20, calculated for 4 pairs of poles 
 
 Total miles traveled by the controller.
 
-# 7 safeguard
+# 7 Protection
 
 ![image](/images/13.jpg)
 
-## 7.1 voltage protection
+## 7.1 Voltage Protection
 
 ### 7.1.1 Overvoltage protection, recovery
 
@@ -971,7 +938,7 @@ reduction, less than or equal to 5% adopts turtle speed home.
 * SOP value: Limit power according to the maximum allowable line current SOP value received by the BMS/CAN bus.
 * Other:
 
-## 7.2 temperature protection
+## 7.2 Temperature Protection
 
 ### 7.2.1 Motor temperature protection, recovery
 
@@ -981,7 +948,7 @@ Internal settings
 
 Internal settings
 
-### 7.2.3 temperature
+### 7.2.3 Temperature
 
 coefficient
 
