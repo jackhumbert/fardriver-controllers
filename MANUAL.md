@@ -14,11 +14,11 @@ When the serial port and CAN analyzer are not connected, the following screen is
 
 When you connect the serial port or turn on CAN, the following screen is displayed:
 
-![image](/images/2.jpg)
+![image](/images/1.jpg)
 
 Once connected to the controller, the data is uploaded from the controller to the host computer page:
 
-![image](/images/3.jpg)
+![image](/images/2.jpg)
 
 **The view contains a dashboard page to dynamically view the working
 parameters, a statistics page to view the dynamic characteristics of the
@@ -29,7 +29,7 @@ sampling**
 
 **For one set of data, the controller can record 205 seconds of data to analyze the vehicle's driving characteristics.**
 
-![image](/images/4.jpg)
+![image](/images/3.jpg)
 ![image](/images/5.jpg)
 ![image](/images/6.jpg)
 
