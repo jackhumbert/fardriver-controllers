@@ -191,6 +191,9 @@ struct Addr00 {
     int16_t LineCoeff;
     int16_t PhaseCCoeff;
     int16_t SaveNum;
+    // maybe?
+    // uint8_t SaveNum
+    // uint8_t unk;
 } addr00;
 
 #ifndef _010EDITOR
@@ -505,17 +508,17 @@ ASSERT_SIZE(addr63, 12);
 
 // 0x69
 struct Addr69 {
-    // uint16_t BstXhBcp;
+    // 0x69 uint16_t BstXhBcp;
     PIN PausePin : 4; // PPin, park? NC disables this feature
     PIN SideStandPin : 4; // BCPin
     PIN CruisePin : 4; // XHPin
     PIN BoostPin : 4; // Boost Pin
-    // uint16_t FrWeSdhSdl;
+    // 0x6A uint16_t FrWeSdhSdl;
     PIN LowSpeedPin : 4; // SDLPin
     PIN HighSpeedPin : 4; // SDHPin
     PIN ReversePin : 4; // REPin
     PIN ForwardPin : 4; // FWPin
-    // uint16_t ChgFdSeatVol;
+    // 0x6B uint16_t ChgFdSeatVol;
     PIN SwitchVolPin : 4; // Switch Voltage Pin
     PIN SeatPin : 4; // ZuotongPin
     PIN AntiTheftPin : 4; // FDPin, "Steel" Pin
@@ -562,7 +565,7 @@ struct Addr7C {
     uint8_t unk7Cb : 1;
     uint8_t QuickDown : 3;
 
-    // 3 config_word1
+    // 3 7D config_word1
     // SpeedMeterConfig has a weird configuration that looks at the 3 variables & computes them to an enum
     // * 0 Pulse none
     // * 1 Analog: 1 & 3
@@ -576,13 +579,13 @@ struct Addr7C {
     uint8_t MOE : 1;
     uint8_t SpeedMeterConfig3 : 1; // Analog
 
-    // 4-7
+    // 4-7 7D, 7E
     uint32_t TotalTime; // minutes, infoc0, wktime
 
-    // 8-11
+    // 8-11, 7F, 80
     uint32_t infoc1;
 
-    // 12-13
+    // 12-13 81
     uint16_t DistanceMSB; // this << 16 / 10, km
 } addr7C;
 
@@ -693,13 +696,22 @@ struct Addr9A {
 
 // 0xA0
 struct AddrA0 {
+    // setting A0 to 0x3C79 does something special
     uint8_t unkA0; // 0x88 usually?
     uint8_t SysCmd;
     // 01 non-following status
-    // 02 self-learning/balance status
-    // 03 self-learning/balance status
-    // 05 non-ISOLATE_
+    // 02 self-learning/balance status - 0xAA
+    // 03 self-learning/balance status - 0x55
+    // 04 ??
+    // 05 ?? non-ISOLATE_? reset maybe? or bootloader enter
     // 06 gather data
+    // 07 ?? sets one variable
+    // 08 ?? copies flashmem somehow
+    // 09 resets Pins
+    // 0A resets Pins (differently)
+    // 0B resets Ratio*, nratio* (off), FreeThrottle, BackCurr
+    // 0C resets Ratio*, nratio* (on), etc
+    // 0D resets Ratio*, nratio* (off), etc
     // 0F ISOLATE_
     char ModelName[10]; 
 } addrA0;
@@ -819,7 +831,7 @@ struct AddrBE {
     uint8_t AllowBrakeFaultRepair : 1;
     uint8_t ReverseOneLine : 1;
 
-    uint16_t TorqueCoff;
+    uint16_t TorqueCoff; // C3
 } addrBE;
 
 // 0xC4
@@ -853,6 +865,7 @@ struct AddrC4 {
 
 // 0xCA
 struct AddrCA {
+    // can be set to 0x55, 0xAA in firmware
     uint8_t AngleLearn;
     PIN SpeedLimitPin : 4;
     PIN RepairPin : 4; // OneKeyPin
@@ -1099,6 +1112,7 @@ struct AddrE2 {
     uint8_t compPhoneOK : 1; // 1
 
     // 3 function state?
+    // all but passOK can be set, apparently
     uint8_t phaseA_active : 1;
     uint8_t phaseB_active : 1;
     uint8_t phaseC_active : 1;
@@ -1151,11 +1165,11 @@ GETSET(MeasureSpeed, uint16_t, addrE2);
 
 // 0xE8
 struct AddrE8 {
-    // 2-3
+    // 2-3 E8
     int16_t deci_volts; 
-    // 4-5
+    // 4-5 E9
     int16_t per_mille; // * 3.3 * 1.5 / 4096.0
-    // 6-7
+    // 6-7 EA
     int16_t lineCurrent; // / 4   
     // 8-9
     int16_t unk3;

@@ -125,24 +125,27 @@ CRCs are computed differently than the other messages
 
 Some valid `command` values I've seen - children to each list item are `sub_command` values:
 
+* `0x01` ??
+* `0x02` ?? sets some variable
 * `0x03`
 * `0x04` balance, BMS, shutdown
     * `0x02` system shutdown, non-following status
     * `0x6F` related to starting/stopping balance and MOS charging/discharging
 * `0x05` sent after updating date & time
     * `0x01 0x5F 0x5F` may get CAN params
+* `0x06` ??
 * `0x07` starts the gathering of data and returns 300 frames of recent data logging?
-* `0x08`
+* `0x08` Starts USART3 (21/22) maybe? with 19200 baud, with other stuff
 * `0x09` sets the CAN number
-* `0x0A`
+* `0x0A` gets name? `AT+NAME=CONTROLDM` + something - 02 does same, sets some variable
 * `0x0B`
-* `0x0C`
+* `0x0C` ??
 * `0x0D`
-* `0x0E`
+* `0x0E` ??
 * `0x0F`
-* `0x10`
+* `0x10` gets controller TUUID? `AT+TUUID=FFEC` + something - 04, 0C, 06, 0E do the same
 * `0x11` may be used to update params
-* `0x12` updates params
+* `0x12` updates params with 0x14 something
 * `0x13` interacts with the login/binding system, can set password, phone number
     * `0x07` seems to be related to the login/status update system, any values seem to start status updates for a little while
     * `0x08` seems to be sent on serial connection close
@@ -157,7 +160,7 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
 ### ND84530
 
 Pin | Color        | FD Name | Description
-----------------------------------------------------------------------------
+---|---|---|---|
 1   | Orange       | KEY     | Ignition for Anti-theft
 2   | Pink         | 60VC    | Anti-theft power (+72V)
 3   | Red          | RXD     | Serial RX (3.3V)
