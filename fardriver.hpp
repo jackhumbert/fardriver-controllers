@@ -913,7 +913,7 @@ struct AddrD0 {
     uint8_t Data0;
     uint8_t Data1;
 
-    // 4, 0xD1
+    // 4, 0xD1, PositionDetect
     uint8_t BMQHALL;
     uint8_t AVGPower; // * 4, Wh/km, DataVoltage1
 
