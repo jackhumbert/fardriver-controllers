@@ -675,7 +675,7 @@ of parameters
 
 #### 48-223
 
-Encryption One-Touch, Internal SEC
+Encryption One-stop, Internal SEC
 Different meters, DATA6/DATA9/DATA10 need to send 🎧
 different content, refer to the communication protocol to select
 the first content:
@@ -710,7 +710,7 @@ DATA0-DATA1,SEC0-SEC7 are invalid.
 SQH Hold Invalid at SQH=255 (Protocol Specific Requirements-H43
 Edition)**
 
-#### 224-239 Encryption One-Touch, External SEC
+#### 224-239 Encryption One-stop, External SEC
 
 * DATA6: **Byte option** = 3 to 🎧0, otherwise to
 🎧current value. **DATA9 option** : **refer to
@@ -720,32 +720,30 @@ below
 
 `Special frame** = 224 + DATA9 option + DATA10 option`
 
-**For professional use, all parameters can be modified:
-The recommended step size is 0.9ms, the recommended
-interval time is 144ms, some need 216ms to be normal.
-PULSE,SQH,DATA0-DATA1,SEC0-SEC7 can be modified.**
+For professional use, all parameters can be modified:
 
+The recommended step size is 0.9ms, the recommended interval time is 144ms, some need 216ms to be normal.
+
+PULSE,SQH,DATA0-DATA1,SEC0-SEC7 can be modified.
 
 #### 240-255 Special Frames
 
 * 241: ATN15 bytes (PULSE,SQH,DATA0-DATA1,SEC0-SEC7 invalid)
-* 242: No. 30 One-Way, P gear at DATA4
-* 243: First line pass: 0x52,0x51
-* 244: F2 one line through, SEC0 = 0 said F0, other numbers said F2
+* 242: Line 30 One-line, P gear at DATA4
+* 243: One-line: 0x52,0x51
+* 244: F2 One-line, SEC0 = 0 means F0, other numbers mean F2
 * 245: warning lamps synchronized to lose 🎧.
-* 246: Must be specially framed when using the 485 interface = 246
-Convenient PC 485 connection
-* 247: 15 Byte One-Wire Pass, SQH Hold Invalid with SQH=255
-(Protocol Specific Requirements - Version H43)
-* 248: 13 Bytes One-Wire, SQH Hold Invalid with SQH=255
-(Protocol Specific Requirements - Version H43)
+* 246: When using the 485 interface, a special frame = 246 must be used to facilitate the computer 485 connection.
+* 247: 15-byte One-line, SQH remains invalid when SQH=255 (specific protocol requirements-H43
+version)
+* 248: 13-bytes One-Line, SQH remains invalid when SQH=255 (specific protocol requirements-H43
+version)
 * 249: NOSQH.
-* 250: YJ one-wire-through, SEC0=255 allows pin 24 to select pulse/one-
-wire-through
-* 251: PD0 detects a line through.
-* 252: PA15 Detecting One Line
-* 253: DY First Line.
-* 254: Without Bluetooth 485
+* 250: YJ One-line, SEC0=255 allows pin 24 to select pulse/one-line pass
+* 251: PD0 detects One-line
+* 252: PA15 detects One-line
+* 253: DY One-line
+* 254: 485 Without Bluetooth
 
 All parameters can be modified.
 
@@ -821,15 +819,12 @@ All parameters can be modified.
 * 0-3: BIT position of byte 2
 * 8: Not shown.
 
-### 6.2.6 SPA Transmission 🎧 Signal Description
+### 6.2.6 SPA Output Signal Description
 
-1. Special Frames <16 Transmission 🎧 Analog Voltage
-2. Special frame >=16, OBD is valid. For OBD warning light indication
-3. Special Frames >= 16, OBD Invalid, New Country Marked speeding alerts are effective. Lose 🎧 high voltage when speeding
-4. Special Frames >= 16,OBD Invalid, New Country Invalid speeding alerts.  When there is an alarm, lose 🎧 alarm
-pulse. Without alarm, output 🎧voltage at P-
-pitch
-
+1. Special Frames < 16: Output analog voltage
+2. Special frame >= 16, OBD is valid: Used for OBD alarm light indication
+3. Special Frames >= 16, OBD is invalid, new national standard speeding reminder is valid:  Output high voltage when overspeeding
+4. Special Frames >= 16, OBD is invalid, new national standard speeding reminder is invalid: When there is an alarm, the alarm pulse is output. When there is no alarm, the output voltage in P gear
 
 ### 6.2.7 DATA0
 
