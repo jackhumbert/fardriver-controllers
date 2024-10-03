@@ -922,7 +922,7 @@ When the battery voltage approaches the undervoltage protection point, the contr
 |---|---|---|---|---|---|---|
 | Undervoltage Point | 42V | 52.5V | 63V | 73.5V | 84V | 94.5V |
 
-### 7.1.3 Undervoltage mode
+### 7.1.3 Undervoltage mode (LowVol Way)
 
 * +2V: Power reduction starts when the voltage reaches 2V above the undervoltage point.
 * +4V: Power reduction starts when the voltage reaches 4V above the undervoltage point.
