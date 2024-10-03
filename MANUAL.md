@@ -39,7 +39,9 @@ sampling**
 
 ## 2.1 Basic motor parameters
 
-### 2.1.1 Position sensor
+### 2.1.1 Position Sensor
+
+`AngleDetect` in the app.
 
 The controller is divided into 4 types of hardware according to different position sensors:
 
@@ -105,11 +107,13 @@ Special codes can tell whether it is a special program:
 
 There are also various specific programs with special user requirements that are not reflected in the code.
 
-### 2.1.2 Temperature Sensor:
+### 2.1.2 Temperature Sensor
+
+`TempSensor` in the app.
 
 | Options | Hxx Version | Old version |
 |---|---|---|
-| not have | √ | √ |
+| None | √ | √ |
 | PTC-1000 | √ | √ |
 | NTC-230K | √ | √ |
 | KTY84-130 | √ | Program fixing KTY84-130/KTY83-122 |
@@ -120,62 +124,66 @@ There are also various specific programs with special user requirements that are
 
 ### 2.1.3 Phase Shift
 
+`PhaseOffset` in the app.
+
 The angular position of the motor is a key characteristic, which is usually indicated by the motor manufacturer. Most of the hub motors on the market are 30°, 210° and 90°, but there are some special motors. Note that the motor factory labeling method is different from the far drive logo, if you are not sure about the angle, you can find this value through self-learning methods.
 
 Generally, the error of phase shift between two operations is not more than 2°, which proves that there is no problem in the operation method and the phase shift is not a problem.
 
-#### 2.1.3.1 Passed 11.3 Upper computer initiated self-learning.
+#### 2.1.3.1 Start Self-learning With a Host
 
-By clicking on the upper unit self-learning button, 2 short and one long sound will be heard inside the controller to indicate that self-learning has been initiated.
+Click the self-learning button on the host (computer, phone), and you will hear 2 short and 1 long sounds inside the controller, prompting that self-learning has been started.
 
-In addition, when you click on the upper computer to cancel the self-learning button, the sound disappears, i.e., the self-learning is canceled.
+In addition, click the cancel self-learning button on the host, and the prompt sound disappears, indicating that self-learning has been canceled.
 
-#### 2.1.3.2 A method of initiating phase-shift self-learning by squeezing the brakes only, without a computer:
+#### 2.1.3.2 Start Self-learning Without a Host
 
-This method is applicable to all controllers with brake line function installed, ND series, CN series, BN series controllers with software version 783 or above. Version A01 or above requires that the turn knob be pinched and turned on before powering up, do not let go, and do the following.
+This method is applicable to all controllers with brake line function installed, ND series, CN series, BN series controllers with software version 783 or above. Version A01 and above requires that you hold the handlebars before turning on the machine, and do not let go, following these operations:
 
 1. Keep the brake connected, the controller is off and the motor is stationary.
-2. Turn the handle to the end, boot, this time the controller alarm, the motor does not turn.
-3. Enter self-study, Morse code 8 bits: 11000000. 1="Long squeeze brake 0.5 sec-2 sec", 0="Short squeeze brake less than 0.5 sec"
+2. Turn the throttle wide open and turn on the machine. At this time, the controller alarms and the motor does not rotate.
+3. Enter self-learning sequence, Morse code 8 bits: `11000000`:
+    * 1: Long squeeze brake 0.5 sec-2 sec
+    * 0: Short squeeze brake less than 0.5 sec
 
 When you hear 2 short and 1 long, you are in self-learning mode. If you don't hear it, consider that you have made a mistake and try to re-enter the Morse code.
 
-#### 2.1.3.3 Self-learning process
+#### 2.1.3.3 Self-learning Process
 
-After entering the self-learning state, with the wheels overhead and the throttle in the bottom, the motor should turn at this time, if it doesn't, the hall wires may have been swapped, or the motor wires may have been swapped. At this time just need to swap the big blue and green wires, it will turn up.
+After entering the self-learning state, suspend the wheel off the ground and hold the throttle wide open. At this time, the motor should start to rotate. If it does not rotate, it may be that the Hall line has been swapped or the motor line has been swapped. At this time, you only need to swap the blue and green large lines to make it rotate.
 
-After turning up the speed will be close to the motor fixed speed, then it will automatically adjust the phase shift to fit the motor, followed by the motor will be reversed and fit the motor, after the automatic completion, the motor stops. You can release the throttle. Finish the self-learning.
+After it rotates, the speed will be close to the motor fixed speed, and then the phase shift will be automatically adjusted to adapt to the motor. Then the motor will reverse and adapt to the motor. After the automatic completion, the motor stops. You can release the throttle. The self-learning is completed.
 
-Self-learning good motors will remain quiet.
+A well-trained motor will remain quiet.
 
-#### 2.1.3.4 Morse code changes the direction of the motor
+#### 2.1.3.4 Changing the direction of the motor via Morse code
 
-After the self-learning is completed, if you find that the normal startup motor is reversed, then you can modify the motor direction through the host computer, you can also change the motor direction through the Morse code:
+After the self-learning is completed, if you find that the normal startup motor is reversed, then you can modify the motor direction through a host, you can also change the motor direction through the Morse code sequence `11110000`. If you find that the motor is reversed after the motor self-learning, you can correct the direction of the motor through this instruction.
 
-Morse code 8 bits: 11110000. if you find that the motor is reversed after the motor self-learning, you can correct the direction of the motor through this instruction.
+#### 2.1.3.5 Limit the speed via Morse code:
 
-#### 2.1.3.5 Morse code to change the speed limit:
+`MorseCode` in the app.
 
-The Morse code can be changed through the host computer to set 6 digits to release the speed, no restriction when 000000, restriction when any other code: it is necessary to operate the Morse code every time the power is turned on in order to release the speed limit.
+The Morse code can be changed through a host to set 6 digits to release the speed limit. There is no restriction when the value is `000000` (default). When enabled, you must enter the Morse code every time the unit is powered on in order to release the speed limit.
 
-Setting the 7-digit Morse code is the speed limit, which also operates on the last 6 digits, and the speed limit is converted once: if it was a speed limit state, it becomes a non-limit state, and vice versa. This conversion is saved in the controller, and it will be switched to this state when the controller is turned on in the future.
+Setting the 7-digit Morse code is the speed limit, which is also the 6-digit number after the operation. The speed limit will be converted once after each operation: if it is originally a speed-limited state, it will become a non-speed-limited state, and vice versa. This conversion is saved inside the controller, and it will switch to this state every time it is turned on.
 
 ### 2.1.4 Pole Pairs
 
-Default 4 for Hall motors No need to change. The pole pair setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16-30, Encoder: 3-8 pairs of poles display the actual rotation speed, above 10 pairs of poles display the rotation speed according to 4 pairs of poles. To modify the number of pole pairs, you have to save the points to make it effective.
+Hall motors default to 4 and does not need to change. The pole pair setting for encoder motors must be accurate otherwise it can not rotate. Selectable values 3, 4, 5, 6, 7, 8, 10, 12, 14, 16-30, Encoder: 3-8 Pole Pairs display the actual rotation speed, above 10 pole pairs display the rotation speed according to 4 poles pairs. To modify the number of pole pairs, you have to click save to make it effective.
 
-### 2.1.5 Motor direction
+### 2.1.5 Motor Direction
 
-Specifies the motor direction when advancing 
+Specifies the motor direction when moving forward.
 
-* 0: motor right setting
-* 1: motor left setting
+* 0: Sprocket is on the right
+* 1: Sprocket is on the left
 
-Effective only after reset is saved.
+Only effective after reset and save.
 
 ### 2.1.6 Rated Speed
 
-The speed of the motor at the rated voltage, referred to as the rated speed, is often referred to as the constant speed in the electric motorcycle industry. This fixed speed determines the highest motor speed. Generally speaking, a common controller can drive the motor to the maximum speed near the fixed speed under the rated voltage. The controller will recognize the rated speed at the current voltage during self-learning.
+The speed of the motor at the rated voltage, referred to as the rated speed, is often referred to as the fixed speed in the electric motorcycle industry. This fixed speed determines the highest motor speed. Generally speaking, a common controller can drive the motor to the maximum speed near the fixed speed under the rated voltage. The controller will recognize the rated speed at the current voltage during self-learning.
 
 ### 2.1.7 Rated Voltage
 
@@ -195,7 +203,7 @@ The maximum number of strings of batteries for the NJ Far Drive Controller for d
 
 Note that the rated voltage affects the power display, the setting can not be higher than 🎧factory voltage, after setting the parameters, you have to tap save again, valid after reset.
 
-### 2.1.8 Rated power
+### 2.1.8 Rated Power
 
 The rated power of the motor, please set it according to the actual condition of the motor.
 
@@ -207,7 +215,7 @@ Depth of weak magnetization: `(Maximum speed - Fixed speed) / Fixed speed * 100%
 
 Some hub motors can have a weak magnetic depth of more than 100%. Therefore, we stipulate that the weak magnetic depth of surface-mounted motors should not exceed 50%, while the weak magnetic depth of embedded motors should not exceed 150%.
 
-### 2.1.10 Maximum phase current
+### 2.1.10 Maximum Phase Current
 
 Maximum value of phase line current of the operating motor. Determines the motor output 🎧 maximum torque at standstill to rated speed.
 
@@ -215,7 +223,7 @@ The maximum phase current has a maximum limit on the controller hardware, and th
 
 Different types of motors will exhibit different output 🎧 torque for the same maximum phase current setting. The torque version of the motor has a high output 🎧 torque, the balanced version has a slightly lower output 🎧 torque, and the speed version of the motor has the smallest output 🎧 torque. The motor with low fixed speed has a high loss 🎧 torque and the motor with high fixed speed has a low loss 🎧 torque.
 
-### 2.1.11 Maximum line current
+### 2.1.11 Maximum Line Current
 
 The maximum value of the controller's working battery bus current. Determines the maximum power output of the motor. Controller maximum input power = battery voltage * maximum line current. This current is limited to the customer's maximum line current. This value determines the maximum output power, and thus the maximum speed.
 
@@ -223,7 +231,9 @@ The maximum value of the controller's working battery bus current. Determines th
 
 Maximum RPM for reverse.
 
-### 2.1.13 Swap phase wires
+### 2.1.13 Swap Phase Wires
+
+`PhaseExchange` in the app.
 
 Default is 0, if the blue and green lines are swapped, it is 1. Note that if this parameter is incorrect, the motor will not rotate.
 
