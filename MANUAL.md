@@ -592,7 +592,7 @@ The phase line meter voltage indicates the coefficient used by the meter for spe
 
 Command number, Hxx version defaults to 60, previous versions have different command numbers according to different protocols
 
-CAN=59: supports unmanned driving system, requires special CAN configuration parameters
+CAN=59: supports autonomous driving system, requires dedicated CAN configuration parameters
 
 CAN=48: (H80 version) switch from serial port to CAN analyzer debugging
 
@@ -1471,10 +1471,9 @@ Byte7   -   -   -   -   -   -   -   -
 Byte8   -   -   -   -   -   -   -   -
 ```
 
-Physical conversion example:
-RPM=4000RPM, physical signal value=precision*signal logic
-value+bias, precision=0.25, bias=0; then hexadecimal is
-0x3E80(16000d), message BYTE1=80H,BYTE2=3EH
+Conversion example:
+
+RPM=4000RPM, physical signal value=precision*signal logic value+bias, precision=0.25, bias=0; then hexadecimal is 0x3E80(16000d), message BYTE1=80H,BYTE2=3EH
 
 MOTOROLA Format: Big End Mode:
 
@@ -1491,10 +1490,9 @@ Byte7   -   -   -   -   -   -   -   -
 Byte8   -   -   -   -   -   -   -   -
 ```
 
-Physical conversion example:
-RPM=4000RPM,physical signal value=precision*signal logic
-value+bias,precision=0.25,bias=0;then hexadecimal is
-0x3E80(16000d),message BYTE1=3EH,BYTE2=80H
+Conversion example:
+
+RPM=4000RPM,physical signal value=precision*signal logic value+bias,precision=0.25,bias=0;then hexadecimal is 0x3E80(16000d),message BYTE1=3EH,BYTE2=80H
 
 #### 13.3.1.2 Receive frame type
 
@@ -1512,37 +1510,37 @@ Selectable standard frame, extended frame
 * SOP Low byte position (0-7 corresponds to BYTE1-BYTE8)
 * SOP value = (value of SOP high byte position * 256 + value of SOP low byte position) * SOP unit (A).
 
-#### 13.3.1.5 SOC_ID,SOC Location
+#### 13.3.1.5 SOC_ID, SOC Location
 
-The current power percentage value of BMS,
-full power=100, no power=0. SOC_ID: ID
-number of SOC command.
+The current power percentage value of BMS, full power=100, no power=0. SOC_ID: ID number of SOC command.
+
 SOC Position: 0-7 corresponds to BYTE1-BYTE8.
 
-#### 13.3.1.6 Charge ID, Charge Byte Position, Charge BIT Position
+#### 13.3.1.6 Charge ID, Charge Byte Position, Charge Bit Position
 
 Charge ID: ID number of the charge command.
-When both the byte position and the BIT position are
-0, stopping occurs as long as there is an ID number.
-When the position is not 0, it stops when the
-position is set to 1.
 
-#### 13.3.1.7 Edge Support ID, Edge Support Byte Position, Edge Support B Position
+When both the byte position and the Bit position are 0, stopping occurs as long as there is an ID number. When the position is not 0, it stops when the position is set to 1.
 
-Edge Support ID: The ID number of the edge support command.
-Set to 1 when the side supports are up to disallow traveling, and set to 0 when the side supports are closed to allow traveling.
-**In the case of a dual battery system, this ID is the charging anti-running ID of the second battery, the contents of which are the same as in 12.3.1.6.
+#### 13.3.1.7 Side Stand ID, Side Stand Byte Position, Side Stand Bit Position
 
-#### 13.3.1.8 3-Speed ID, 3-Speed Byte Position, 3-Speed BIT Position
+Side Stand ID: The ID number of the edge support command.
+
+Set to 1 when the side stand down to disallow traveling, and set to 0 when the side stand is up to allow traveling.
+
+In the case of a dual battery system, this ID is the charging anti-running ID of the second battery, the contents of which are the same as in 12.3.1.6.
+
+#### 13.3.1.8 3-Speed ID, 3-Speed Byte Position, 3-Speed Bit Position
 
 3-Speed ID: ID number of the 3-speed command.
-The three speeds total 2 positions, 0 for 1st gear speed, 1 for 2nd gear speed, 2 for 3rd gear speed, and 3 for 4th gear/boost speed. The low position of the three speeds is in the specified BIT position and the high position is in the BIT+1 position.
 
-#### 13.3.1.9 Gear ID, Gear Byte Position, Gear BIT Positio
+The three speeds total 2 positions, 0 for 1st gear speed, 1 for 2nd gear speed, 2 for 3rd gear speed, and 3 for 4th gear/boost speed. The low position of the three speeds is in the specified Bit position and the high position is in the Bit+1 position.
 
-Gear ID: ID number of the gear command. Note that the gear control is used and the
-reverse is fast.
-The gears have a total of 2 positions, 0 for N, 1 for forward and 2 for reverse. The low position of the gear is in the specified BIT position, and the high position is in the BIT+1 position.
+#### 13.3.1.9 Gear ID, Gear Byte Position, Gear Bit Position
+
+Gear ID: ID number of the gear command. Note that the gear control is used and the reverse is fast.
+
+The gears have a total of 2 positions, 0 for N, 1 for forward and 2 for reverse. The low position of the gear is in the specified Bit position, and the high position is in the Bit+1 position.
 
 #### 13.3.1.10 Control ID, control type, control byte position
 
@@ -1562,7 +1560,8 @@ Control Type:
 
 On-demand commands: 12, 13, 14, 15 correspond to Send ID2, Send ID3, Send ID4, Send
 ID5 respectively.
-**Under the dual power system, this control ID is the SOPID of the second
+
+In a dual-battery system, this control ID is the SOPID of the second
 battery, the content is the same as 12.3.1.4, and the SOC ID of the second
 BMS is the same as this ID.
 
@@ -1573,10 +1572,16 @@ OBD ID number, standard frame is 0x7DF.
 ### 13.3.2 CAN Transmit ID
 
 The controller has set up 6 ID numbers to send data.
-Send ID0 Timing-Send ID5 Timing is the timing count in 10ms, 0 means
-10ms, 1 means 20ms, 2 means 30ms...,199 means 2000ms.
-Send ID2 timer - Send ID5 timer must be >=4 i.e. 50ms. less than 4, it will be
-sent on demand according to the command received from CAN.
+
+Send ID0-ID5 timer is the timing count in units of 10ms:
+
+* `0` = 10ms
+* `1` = 20ms
+* `2` = 30ms
+* ...
+* `199` = 2000ms
+
+Send ID2-ID5 timer must be >=4 i.e. 50ms. If it is less than 4, it will be sent on demand according to the command received by CAN.
 
 ### 13.3.3 CAN Rule Description
 
@@ -1588,7 +1593,7 @@ content includes the following definitions:
 It refers to the number of BITs required for the data. For example, speed,
 current and voltage are usually 16 bits, gear position is 2 bits and alarm status is usually 1 bit.
 
-#### 13.3.3.2 placement
+#### 13.3.3.2 Placement
 
 For the position of the LSB of this data in the CAN frame, see the "CAN Data Segment Information Byte Position Diagram" above.
 
@@ -1613,16 +1618,16 @@ The coefficients * are required for this data. Default gain = 1
 15.  Battery level in %, gain=1
 16.  Status, Alarm: Gain = 1
 
-
 #### 13.3.3.4 ID
 
-Serial number of this data transmission ID (0-5, corresponding to CAN transmission ID0-CAN transmission ID5)
+ID of this data transmission (0-5, corresponding to CAN transmission ID0-ID5)
 
-#### 13.3.3.5 active symbol
+#### 13.3.3.5 Valid Flag
 
-Valid: This data is reported to the CAN bus in the specified BIT,BYTE position. Invalid: This data is not reported on the CAN bus.
+* Valid (1): This data is reported to the CAN bus in the specified BIT, BYTE position. 
+* Invalid (0): This data is not reported on the CAN bus.
 
-#### 13.3.3.6 bias voltage
+#### 13.3.3.6 Bias
 
 Temperature bias 40, other default bias = 0:
 
