@@ -916,28 +916,27 @@ Internal setting based on rated voltage
 
 ### 7.1.2 Undervoltage protection, recovery
 
-When the battery voltage is close to the undervoltage protection point, the controller reduces the power transmission 🎧 so that the battery will not be too discharged and damaged. The general battery undervoltage settings are as follows:
+When the battery voltage approaches the undervoltage protection point, the controller reduces the power output so that the battery will not be over-discharged and damaged. The general battery undervoltage setting is as follows:
 
 | Voltage | 48V | 60V | 72V | 84V | 96V | 108V |
 |---|---|---|---|---|---|---|
-| Thresold | 42V | 52.5V | 63V | 73.5V | 84V | 94.5V |
+| Undervoltage Point | 42V | 52.5V | 63V | 73.5V | 84V | 94.5V |
 
 ### 7.1.3 Undervoltage mode
 
-* 2V: No power drop above 2V higher than the undervoltage point, and power drop starts when it reaches +2V of the undervoltage point.
-* 4V: No power drop above 4V higher than the undervoltage point, and power drop starts when it reaches the undervoltage point +4V.
-* 8V: No power reduction above 8V higher than the undervoltage point, and power reduction starts when it reaches the undervoltage point +8V.
-* 12V: No power reduction above 12V higher than the undervoltage point, and power reduction starts when it reaches the undervoltage point +12V.
-* 16V: No power drop above 16V higher than the undervoltage point, and start to drop power when it reaches the undervoltage point +16V.
-* Turtle power 5%: Battery capacity less than or equal to 20% power
-reduction, less than or equal to 5% adopts turtle speed home. 
-* Turtle power 6%: Battery capacity less than or equal to 30% power reduction, less than or equal to 6% of the turtle speed home. 
-* Turtle power 7%: Battery capacity less than or equal to 40% power down, less than or equal to 7% using the tortoise speed home. 
-* Turtle power 8%: Battery capacity less than or equal to 50% power down, less than or equal to 8% using turtle speed home. 
-* Turtle power 9%: Battery capacity less than or equal to 60% down power, less than or equal to 9% turtle speed home.
-* Turtle power 10%: Battery capacity less than or equal to 70% power reduction, less than or equal to 10% using turtle home. 
+* +2V: Power reduction starts when the voltage reaches 2V above the undervoltage point.
+* +4V: Power reduction starts when the voltage reaches 4V above the undervoltage point.
+* +8V: Power reduction starts when the voltage reaches 8V above the undervoltage point.
+* +12V: Power reduction starts when the voltage reaches 12V above the undervoltage point.
+* +16V: Power reduction starts when the voltage reaches 16V above the undervoltage point.
+* SOC 5%: Power reduction when the battery capacity is less than or equal to 20%, and slow mode when less than or equal to 5%. 
+* SOC 6%: Power reduction when the battery capacity is less than or equal to 30%, and slow mode when less than or equal to 6%.
+* SOC 7%: Power reduction when the battery capacity is less than or equal to 40%, and slow mode when less than or equal to 7%.
+* SOC 8%: Power reduction when the battery capacity is less than or equal to 50%, and slow mode when less than or equal to 8%.
+* SOC 9%: Power reduction when the battery capacity is less than or equal to 60%, and slow mode when less than or equal to 9%.
+* SOC 10%: Power reduction when the battery capacity is less than or equal to 70%, and slow mode when less than or equal to 10%.
 * SOP value: Limit power according to the maximum allowable line current SOP value received by the BMS/CAN bus.
-* Other:
+* Other
 
 ## 7.2 Temperature Protection
 
