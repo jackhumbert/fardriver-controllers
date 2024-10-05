@@ -24,7 +24,7 @@ enum PIN {
     PB4 = 8,
     PINInvalid1 = 9,
     PIN2 = 10,
-    PIN18 = 11, // Not available in YJCAN
+    PIN18 = 11, // Not available in YJCAN, GPIOD_0
     PIN9 = 12, // Not available in YJCAN
     PD1 = 13,
     PINInvalid2 = 14,
@@ -381,9 +381,11 @@ struct Addr1E {
 
     uint16_t LowVolProtect; // / 10
     // local float LowVolRestore = LowVolProtect / 10.0 + 2.0;
+
+    // 0x20
     char CustomCode[2];
 
-    // 8
+    // 8, 0x21
     // uint16_t RelayDelay; // ms
     uint8_t BCState : 1; // Edge support
     uint8_t SeatEnable : 1; // Zuotong, "bucket"
@@ -526,7 +528,7 @@ struct Addr69 {
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceLSB; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
-    char SpecialCode;
+    char SpecialCode; // Y makes A11 output
 } addr69;
 
 #ifndef _010EDITOR
@@ -602,10 +604,11 @@ struct Addr82 {
     uint8_t MosTempProtect; // 0x85
     uint8_t MosTempRestore;
     
-    // 10
-    uint8_t CANConfig : 6; // 0x86
+    // 10, 0x86
+    uint8_t CANConfig : 6;
     uint8_t unk86b : 2;
 
+    // 11, 0x87
     char HardwareVersion; // Version0
     char SoftwareVersionMajor; // Version1
     uint8_t SoftwareVersionMinor;
@@ -810,7 +813,7 @@ struct AddrBE {
     } LowVolWay : 8; // cfg190l, CurrLimitWay
 
     // 3, cfg190h
-    uint8_t unkBEb : 4; 
+    uint8_t unkBEb : 4; // < 8 with (SpecialCode - A < 7) makes GPIOB_9 output
     uint8_t AccCoeff : 4; 
 
     uint16_t BstTime; // / 500, seconds
@@ -819,9 +822,12 @@ struct AddrBE {
     
     uint16_t ParkTime; // / 500, seconds
 
+    // C2a
     uint8_t ReverseTime : 6; // InverseTime
     uint8_t JLNationalStandardStatus : 1;
     uint8_t Press2ForP : 1;
+
+    // C2b
     uint8_t LowMediumToHighSpeed : 1;
     uint8_t NoSoundPrompt : 1;
     uint8_t Reserved : 1;
@@ -869,6 +875,8 @@ struct AddrCA {
     uint8_t AngleLearn;
     PIN SpeedLimitPin : 4;
     PIN RepairPin : 4; // OneKeyPin
+
+    // CB
     uint8_t NoCanCnt; // CAN Detect, ms, if >= 6 then * 2 else * 500
 
 #ifndef _010EDITOR
@@ -903,6 +911,7 @@ struct AddrCA {
     uint8_t LongBack : 1; // Push RE, toggle vs momentary?
     uint8_t ThrottleLost : 1;
 
+    // CD
     uint8_t LearnThrottle;
     uint8_t SpeedLowCap; // LmtSpdMinCap
     uint8_t MidSpeedCap; // LmtSpdStartCap

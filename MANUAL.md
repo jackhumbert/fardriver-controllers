@@ -68,15 +68,18 @@ The controller is divided into 4 types of hardware according to different positi
 | 16 | 60° Hall | Hall Version Controller | | H,R,I |
 | 2 - 15 | 2-15 Corresponding rotation to pole number | Rotary Controller |  | X, U | 
 
+* < 4 uses GPIOB_5
+* < 8 uses GPIOB_8
+
 Modify the sensor and click Save to make it effective. Hxx and above versions support this option. Old versions cannot select this option.
 
-| Hardware Version | Description |
-|---|---|
+| Hardware Version | Description | Possible MCU |
+|---|---|---|
 | 7 | Controller version from some years ago, single function, relatively solidified |
 | G | Earlier versions of the controller, single-function and relatively solidified |
 | A | New version, support some parameter settings, single function, relatively solidified |
-| B | New version, support some parameter settings, single function, relatively solidified |
-| H | Newest, universal, 30P, rich parameters |
+| B | New version, support some parameter settings, single function, relatively solidified | F103
+| H | Newest, universal, 30P, rich parameters | F303
 | L | Newest, universal, dual-band, 30P, rich parameters |
 | R | Latest, national standard, dual-band, 6-pole + 8-pole + 16-pole socket, rich in  |parameters
 | Q | Newest, national standard, 6-pole+8-pole+16-pole socket, rich parameters |
@@ -392,7 +395,8 @@ Matching of idling noise in high speed section and balance between power and pow
 | 513 | The AB15 alarm is ignored in the case of CN controller absolute encoders. Other controllers: easy to use when AB15 reports an error. |
 | +1024 | Fixed Bluetooth password is product number related |
 | | (Do not use other options) |
-
+| +4096| EN: Firmware checks for this |
+| +32768 | EN: Firmware will check/assign this |
 
 ### 3.2.6 L2, L4: reserved
 
@@ -624,14 +628,15 @@ Default 0: not 0 when customized
 
 #### 0-1 Not connected by a single thread  
 
-0. Speed pulse, (display adjustment: the larger the speed pulse base, the slower the display speed) 500-65530, V39 and earlier versions are 5000-65530)
-1. READY Lamp: (READY status is Loss🎧High, otherwise Loss🎧Low)
-2. Fan control: (Temperature below 40° is output 🎧 high, above 40° is output 🎧 low)
-3. Special Serial Command BF_ZHULI
-4. Special serial port command ZHULI assists pulse detection (PIN3)
-5. Special Serial Command KM5
-6. Special serial port command UK1
-7. Special serial port commands Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1 SEC0-SEC7 Invalid
+* 0: Speed pulse, (display adjustment: the larger the speed pulse base, the slower the display speed) 500-65530, V39 and earlier versions are 5000-65530
+* 1: READY Lamp: (READY status is Loss🎧High, otherwise Loss🎧Low)
+* 2: Fan control: (Temperature below 40° is output 🎧 high, above 40° is output 🎧 low)
+* 3: Special Serial Command BF_ZHULI
+* 4: Special serial port command ZHULI assists pulse detection (PIN3)
+* 5: Special Serial Command KM5
+* 6: Special serial port command UK1
+* 7: Special serial port commands Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1 SEC0-SEC7 Invalid
+* 14: ??, D0 available as input (pulled-up) 
 
 #### 16-31 General One Line 2
 
@@ -658,12 +663,12 @@ all 0 by default.
 #### 32-40 No one-line pass, built-in Bluetooth
 
 Special Frames: 
-* 32 TBIT
-* 33 XZ_CONTROL
-* 34 XMZSBXX
-* 35 XM3SPEED
-* 36 M2S
-* 37 CN
+* 32: TBIT
+* 33: XZ_CONTROL
+* 34: XMZSBXX
+* 35: XM3SPEED
+* 36: M2S
+* 37: CN
 
 Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1,SEC0-SEC7 Invalid
 
