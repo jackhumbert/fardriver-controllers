@@ -236,6 +236,8 @@ struct Addr06 {
     uint8_t ThrottleHigh; // / 20
 
     // 8-9, 0x09
+    // 0x1000 triggers something where it's |= 0x8000
+    //  else 0x800 is checked & 0x8000 flipped based on conditions
     int16_t FAIF;
 
     // 10-11, 0x0A
@@ -262,19 +264,19 @@ struct Addr06 {
     uint8_t PhaseExchange : 1;
 
     // 13, cfg11h
-    uint8_t SlowDown : 3;
-    uint8_t PC13Config : 1; // RaceResponse
+    uint8_t SlowDown : 3; // 0x07
+    uint8_t PC13Config : 1; // RaceResponse 0x08
     // CurrFD, Current Anti-Theft
     // 0: provide resistance to motor, does not consume battery
     // 1: lock motor, consumes battery
-    uint8_t CurrAntiTheft : 1;
+    uint8_t CurrAntiTheft : 1; // 0x10
     enum EParkConfig {
         ReversePark = 0,
         SwitchPark = 1,
         SlowDownPark = 2,
         ParkDisabled = 3
-    } ParkConfig : 2;
-    uint8_t Direction : 1; // Send(0x12, 0x07)
+    } ParkConfig : 2; // 0x60
+    uint8_t Direction : 1; // Send(0x12, 0x07) 0x80
 } addr06;
 
 #ifndef _010EDITOR
@@ -482,7 +484,8 @@ struct Addr5D {
     uint16_t unk5F; 
     uint16_t unk60;
     uint16_t unk61;
-    uint16_t unk62;
+    uint8_t unk62; // set to 0xCC when reading ADC1?
+    uint8_t unk62b;
 } addr5D;
 
 #ifndef _010EDITOR
@@ -493,7 +496,7 @@ ASSERT_SIZE(addr5D, 12);
 struct Addr63 {
     uint16_t MaxLineCurr2;
     uint16_t MaxPhaseCurr2; // 0x64
-    uint8_t MotorDia;  // 65
+    uint8_t MotorDia;  // 0x65, maybe not MotorDia - values include 4
     uint8_t unk65b;
     uint16_t TempCoeff; // 66
     uint16_t ProdMaxVol; // / 10.0 67, paracnt_0
@@ -528,7 +531,7 @@ struct Addr69 {
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceLSB; // / 10 6D
     uint8_t ParaIndex; // ParaIndex 6E
-    char SpecialCode; // Y makes A11 output
+    char SpecialCode; // Y makes A11 output. X may be needed for CAN??
 } addr69;
 
 #ifndef _010EDITOR
@@ -825,7 +828,7 @@ struct AddrBE {
     // C2a
     uint8_t ReverseTime : 6; // InverseTime
     uint8_t JLNationalStandardStatus : 1;
-    uint8_t Press2ForP : 1;
+    uint8_t Press2ForP : 1; // doesn't use D1 maybe?
 
     // C2b
     uint8_t LowMediumToHighSpeed : 1;
@@ -965,6 +968,7 @@ struct AddrD0 {
         Stop216ms = 3
     } Stop : 2;
     uint8_t ByteOption : 4; // Byte89Sel
+    // if SpecialCode == 'Z', 0xF may trigger USART3 (one-line??) at different speeds
     enum ESpecialFrame {
         SpeedPulse = 0,
         ReadyLamp = 1,
