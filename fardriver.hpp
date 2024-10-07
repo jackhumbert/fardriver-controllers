@@ -339,10 +339,10 @@ struct Addr18 {
     } ThrottleResponse : 2; // ECOConfig
     uint8_t WeakA : 2;
     enum ERXD {
-        AF = 0,
-        OD = 1,
-        PP = 2
-    } RXD : 2;
+        AF = 0, // AF_PP
+        OD = 1, // Out_OD
+        PP = 2 // Out_PP
+    } RXD : 2; // B10 GPIO config
 
     // 7 cfg26h
     uint8_t SpeedPulse : 5;
@@ -782,11 +782,11 @@ struct AddrB8 {
         Baud500K = 1,
         Baud1M = 2
     } CANBaud : 2; // CanSel
-    uint8_t unkBC : 2;
+    uint8_t unkBC : 2; // set by CAN processing? resets baud to 250K as well
     enum EPasswordStatus {
-        PasswordProtected = 0,
-        AlsoPasswordProtected = 1,
-        NoPassword = 2
+        PasswordProtected = 0, // default password maybe? 0s to serial
+        AlsoPasswordProtected = 1, // password stored in sram? AT+PASS=... to serial
+        NoPassword = 2 // AT+PAWD=... to serial
     } PasswordStatus : 2;
     uint8_t unkBCb : 2;
 

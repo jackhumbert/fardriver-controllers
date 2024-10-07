@@ -51,7 +51,19 @@ AddrD0 addrD0;
 
 // 384, 0x180 bytes (0xC0 addresses?) for CAN config
 
-uint32_t unk00[8];
+struct CanConfig {
+    uint32_t unk : 1;
+    uint16_t SpeedPulse : 16;
+};
+
+CanConfig unk00;
+CanConfig unk01;
+CanConfig unk02;
+CanConfig unk03;
+CanConfig unk04;
+CanConfig unk05;
+CanConfig unk06;
+CanConfig unk07;
 
 enum EFrameType {
     Standard = 0,
