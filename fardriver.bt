@@ -114,6 +114,11 @@ ushort CalculateOldCRC(ubyte data[]) {
     return crc | ((ushort)~crc) << 8;
 }
 
+local uint8_t command[8] = { 0xAA, 0x04, ~0x04, 0x01, 0x55, 0x55, 0, 0};
+local ushort crc = CalculateOldCRC(command);
+command[6] = crc & 0xFF;
+command[7] = crc >> 8;
+
 local uint64 packet_start = FTell();
 
 struct {

@@ -189,10 +189,10 @@ else: ??
 
 mobile app also handles 32071
 
-then this follows after a 50 loop delay, or if "NewApp", SysCmd 0x5 or 0xF (when filename contains "ISOLATE_"):
+This may be sent first, or this follows after a 50 loop delay, or if "NewApp", SysCmd 0x5 or 0xF (when filename contains "ISOLATE_"):
 
 ```
-0xAA 0x04 ~0x04 0x01 0x55 0x55 CRC ~CRC
+0xAA 0x04 0xFB 0x01 0x55 0x55 0x54 0xAB
 ```
 
 then packets are sent, tracking an index. If a variable is 1, it starts at index `54`, 2: `58`, and otherwise starts at `0`.
