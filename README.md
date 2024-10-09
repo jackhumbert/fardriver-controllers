@@ -98,10 +98,10 @@ System commands can be sent by writing `0x88 XX` to the address `0xA0`:
 * `0x02` starts self-learning/balance?
 * `0x03` stops balancing
 * `0x04` gets CAN parameters?
-* `0x05` related to `0x0F`
+* `0x05` related to `0x0F`, resets
 * `0x06` starts data gathering
 * `0x07` stops something?
-* `0x08` unknown
+* `0x08` unknown, phase_active?
 * `0x0F` same as `0x05` if Version0 == 73 or filename contains `ISOLATE_`
 
 ### Sending commands
@@ -133,17 +133,20 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
     * `0x6F` related to starting/stopping balance and MOS charging/discharging
 * `0x05` sent after updating date & time
     * `0x01 0x5F 0x5F` may get CAN params
-* `0x06` ??
+* `0x06` gets:
+    * `0x41 AT+BAUD=19200`
 * `0x07` starts the gathering of data and returns 300 frames of recent data logging?
 * `0x08` Starts USART3 (21/22) maybe? with 19200 baud, with other stuff
 * `0x09` sets the CAN number
 * `0x0A` gets name? `AT+NAME=CONTROLDM` + something - 02 does same, sets some variable
+    * `0x41 AT+NAME=CONTROLDM <unk1> <unk2> <unk3>`
 * `0x0B`
 * `0x0C` ??
 * `0x0D`
 * `0x0E` ??
 * `0x0F`
 * `0x10` gets controller TUUID? `AT+TUUID=FFEC` + something - 04, 0C, 06, 0E do the same
+    * `0x41 AT+TUUID=FFEC`
 * `0x11` may be used to update params
 * `0x12` updates params with 0x14 something
 * `0x13` interacts with the login/binding system, can set password, phone number
