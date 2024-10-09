@@ -157,7 +157,9 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
 
 ### Updating Firmware
 
-When loading the firmware .bin file, a crc array is created with the bytes at 0xE000, populated in the array from 4 to 124.
+When loading the firmware .bin file, a crc array is created with the bytes at 0x3E000, populated in the array from 4 to 124.
+
+For the 32303, the first 0x2000 (4 packets) aren't important, so they're skipped.
 
 During "Detect Controller", where something (at +0x448dc, based on file size/format?) is 0x7e2f / 32303: (GD32F303?)
 
@@ -188,22 +190,70 @@ This may be sent first, or this follows after a 50 loop delay, or if "NewApp", S
 * SysCmd 0x5: `0xAA 0xC6 0xA0 0xA0 0x88 0x05 0x04 0xCC`
 * SysCmd 0xF: `0xAA 0xC6 0xA0 0xA0 0x88 0x0F 0x84 0xCB`
 
+followed by `0xAA 0x04 0xFB 0x01 0x26 0x26 0xF6 0x09` (only on the mobile app apparently, after 10ms)
+
 then packets are sent, tracking an index. If a variable is 1, it starts at index `54`, 2: `58`, and otherwise starts at `0`.
 
-controller should send some sort of response with the crc of the packet sent.
+controller should send some sort of response with the crc of the packet sent:
 
-* `0xAA 0x1F <index> <index> <crc_packet[8]> <crc_msg[2]>`
+* `0xAA 0x1F <index or error> <index> <crc_packet[8]> <crc_msg[2]>`
+
+with error codes `0x7C`, `0x7D` or `0x7E`. index will be `0x1` for first packet (packet_crc should be mapped to crc_table[4])
 
 if 32303:
 
-if crc matches && (not at the end or file_type == 0), confirming the crc:
+if packet_crc matches && (not at the end or func == 0), confirming the packet_crc:
 
-* `0x5a 0xa5 <index + 5> 0x72 0x73 0x74 0x75 0x76 `
+* `0x5a 0xbb <index + 1> 0x72 0x73 0x74 0x75 0x76`
 
-otherwise, packet info, total length 0x804, separated into 0x403 & 0x404 packages:
+if the second half of the packet_crc doesn't match, this is sent, and index isn't incremented:
 
-* `0x5a 0xa5 <index + 4> <data[0x800]> <crc>`
+* `0x5a 0xbb <index> 0x72 0x73 0x74 0x75 0x76`
 
+otherwise, packet info, total length 0x807, separated into 0x403 & 0x404 packages:
+
+* `0x5a 0xa5 <index> <data[2048]> <crc[4]>`
+
+crc is calculated by:
+
+```
+uint32_t crc = 0xFFFFFFFF;
+crc = crc32[crc & 0xFF ^ index] ^ crc >> 8;
+for (i=0..2048) {
+    crc = crc32[crc & 0xFF ^ data[i]] ^ crc >> 8;
+}
+crc = ~crc;
+```
+
+crc32 is created by:
+
+```
+for (i=0..256) {
+    uint num = i;
+    for (0..8) {
+        if (((int) num & 1) != 0)
+            num = num >> 1 ^ 0xedb88320;
+        else
+            num >>= 1;
+    }
+    this.crc32[i] = num;
+}
+```
+
+mobile app does 2055 (0x807) length packets:
+
+```
+for (;i<102) {
+    send 20;
+    sleep(10);
+}
+send 15;
+sleep(10);
+```
+
+last packet is all the crcs that start at 0x3E000 (without the 0xaa 0x55, which is added manually), handled differently:
+
+* `0x5a 0xa5 <data[484]> 0xaa 0x55 0xFF[2048-486] <crc[4]>`
 
 ## Wiring
 

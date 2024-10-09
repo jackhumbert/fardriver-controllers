@@ -119,6 +119,11 @@ local ushort crc = CalculateOldCRC(command);
 command[6] = crc & 0xFF;
 command[7] = crc >> 8;
 
+local uint8_t command_26[8] = { 0xAA, 0x04, ~0x04, 0x01, 0x26, 0x26, 0, 0};
+crc = CalculateOldCRC(command_26);
+command_26[6] = crc & 0xFF;
+command_26[7] = crc >> 8;
+
 
 local uint8_t sys_command_5[8] = { 0xAA, 0xC6, 0xA0, 0xA0, 0x88, 0x05, 0, 0};
 crc = CalculateCRC(sys_command_5, 6);
