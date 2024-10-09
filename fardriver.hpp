@@ -733,7 +733,7 @@ struct AddrA0 {
     // 05 ?? non-ISOLATE_? reset maybe? or bootloader enter
     // 06 gather data
     // 07 ?? sets one variable
-    // 08 ?? copies flashmem somehow
+    // 08 resets to factor default, copies from flashmem    0xAA 0xC6 0xA0 0xA0 0x88 0x08 0xC5 0x09
     // 09 resets Pins
     // 0A resets Pins (differently)
     // 0B resets Ratio*, nratio* (off), FreeThrottle, BackCurr
