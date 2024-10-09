@@ -80,7 +80,7 @@ Modify the sensor and click Save to make it effective. Hxx and above versions su
 | A | New version, support some parameter settings, single function, relatively solidified |
 | B | New version, support some parameter settings, single function, relatively solidified | F103
 | H | Newest, universal, 30P, rich parameters | F303
-| L | Newest, universal, dual-band, 30P, rich parameters |
+| L | Newest, universal, dual-band, 30P, rich parameters | F303?
 | R | Latest, national standard, dual-band, 6-pole + 8-pole + 16-pole socket, rich in  |parameters
 | Q | Newest, national standard, 6-pole+8-pole+16-pole socket, rich parameters |
 | I | Newest, isolated, 30P, rich parameters |
