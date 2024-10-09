@@ -536,16 +536,36 @@ struct Addr69 {
 
 #ifndef _010EDITOR
 ASSERT_SIZE(addr69, 12);
-#endif
 
-    // local char ParaIndex3 = SpecialCode < '0' || SpecialCode >= 0x7F ? '_' : SpecialCode;
-    // if (ParaIndex < 10) {
-    //     local char ParaIndex2 = ParaIndex + 48;
-    // } else if (ParaIndex < 20) {
-    //     local char ParaIndex2 = ParaIndex + 48 - 10;
-    // } else {
-    //     local char ParaIndex2 = ParaIndex;
-    // }
+char GetFunctionCode() {
+    if (addr69.ParaIndex < 10) {
+        return addr69.ParaIndex + '0';
+    } else if (addr69.ParaIndex < 20) {
+        return addr69.ParaIndex + '&';
+    } else if (addr69.ParaIndex < 91) {
+        return addr69.ParaIndex;
+    } else {
+        return addr69.ParaIndex - 32;
+    }
+}
+
+char GetExtensionCode() {
+    if (addr69.ParaIndex < 10) {
+        return '_';
+    } else if (addr69.ParaIndex < 20) {
+        return 'R';
+    } else if (addr69.ParaIndex < 94) {
+        if (addr69.SpecialCode < 48 || addr69.SpecialCode > 126) {
+            return '_';
+        } else {
+            return addr69.SpecialCode;
+        }
+    } else {
+        return 'R';
+    }
+}
+
+#endif
 
 // skip 26 bytes (0x0D addresses)
     uint16_t unk6F; // 6F
