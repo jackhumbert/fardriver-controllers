@@ -119,6 +119,17 @@ local ushort crc = CalculateOldCRC(command);
 command[6] = crc & 0xFF;
 command[7] = crc >> 8;
 
+
+local uint8_t sys_command_5[8] = { 0xAA, 0xC6, 0xA0, 0xA0, 0x88, 0x05, 0, 0};
+crc = CalculateCRC(sys_command_5, 6);
+sys_command_5[6] = crc & 0xFF;
+sys_command_5[7] = crc >> 8;
+
+local uint8_t sys_command_F[8] = { 0xAA, 0xC6, 0xA0, 0xA0, 0x88, 0x0F, 0, 0};
+crc = CalculateCRC(sys_command_F, 6);
+sys_command_F[6] = crc & 0xFF;
+sys_command_F[7] = crc >> 8;
+
 local uint64 packet_start = FTell();
 
 struct {
