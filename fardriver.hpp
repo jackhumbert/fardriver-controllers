@@ -496,7 +496,7 @@ ASSERT_SIZE(addr5D, 12);
 struct Addr63 {
     uint16_t MaxLineCurr2;
     uint16_t MaxPhaseCurr2; // 0x64
-    uint8_t MotorDia;  // 0x65, maybe not MotorDia - values include 4
+    uint8_t MotorDia;  // 0x65, maybe not MotorDia - values include 4 - sensor/application type?
     uint8_t unk65b;
     uint16_t TempCoeff; // 66
     uint16_t ProdMaxVol; // / 10.0 67, paracnt_0
@@ -817,7 +817,7 @@ struct AddrBE {
     } LowVolWay : 8; // cfg190l, CurrLimitWay
 
     // 3, cfg190h
-    uint8_t unkBEb : 4; // < 8 with (SpecialCode - A < 7) makes GPIOB_9 output
+    uint8_t unkBEb : 4; // < 8 with (SpecialCode - A < 7) makes GPIOB_9 output, affects Sensor/Application type
     uint8_t AccCoeff : 4; 
 
     uint16_t BstTime; // / 500, seconds
@@ -843,6 +843,18 @@ struct AddrBE {
 
     uint16_t TorqueCoff; // C3
 } addrBE;
+
+#ifndef _010EDITOR
+    uint32_t GetSensorApplicationType() {
+        if (addrBE.unkBEb == 0) {
+            return addr63.MotorDia + 10;
+        } else if (addrBE.unkBEb < 10) {
+            return addr63.MotorDia + addrBE.unkBEb * 10;
+        } else {
+            return 0;
+        }
+    }
+#endif
 
 // 0xC4
 struct AddrC4 {

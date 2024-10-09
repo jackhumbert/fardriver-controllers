@@ -1711,6 +1711,8 @@ A total of 14 alarms, user can choose to report or not to report:
 
 Example: ND72530B_13_ARH68
 
+`%c%c%d%d_%d_%c%c%c%c%d`
+
 * Customer code (AA-ZZ): `ND`
 * Rated voltage (V): `72`
 * Maximum phase current (A): `530`
