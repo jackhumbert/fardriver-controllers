@@ -611,8 +611,9 @@ struct Addr82 {
     uint8_t CANConfig : 6;
     uint8_t unk86b : 2;
 
-    // 11, 0x87
+    // 11
     char HardwareVersion; // Version0
+    // 12, 0x87
     char SoftwareVersionMajor; // Version1
     uint8_t SoftwareVersionMinor;
 } addr82;
