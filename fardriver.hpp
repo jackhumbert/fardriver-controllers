@@ -1248,7 +1248,6 @@ ASSERT_SIZE(FardriverData, 512);
 // PRINT_SIZEOF(FardriverData)
 
 #ifndef _010EDITOR
-#pragma pack(pop)
 
 static_assert(offsetof(FardriverData, addr06) == (0x06 << 1));
 static_assert(offsetof(FardriverData, addr0C) == (0x0C << 1));
@@ -1284,4 +1283,8 @@ static_assert(offsetof(FardriverData, addrF4) == (0xF4 << 1));
 static_assert(offsetof(FardriverData, addrFA) == (0xFA << 1));
 #endif
 
+#endif
+
+#ifndef _010EDITOR
+#pragma pack(pop)
 #endif
