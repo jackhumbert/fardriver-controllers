@@ -154,11 +154,17 @@ struct FardriverController {
     }
 
     bool VerifyCRCMessage(uint32_t index, const uint8_t * file_crc) {
-        while(serial->available() < 14);
         // wait for 0xaa 0x1f <error> <index> <packet_crc[8]> <crc[2]>
         // no error if error < 0x7E && error == index
+        while(serial->available() < 14);
         uint8_t message[14] = { 0 };
         serial->read(message, 14);
+        if (message[0] != 0xAA)
+            return false;
+        if (message[1] != 0x1F)
+            return false;
+        if (message[2] != message[3])
+            return false;
         uint8_t * read_crc = &message[3];
         for (uint8_t index = 0; index < 8; index++) {
             if (file_crc[index] != read_crc[index]) {

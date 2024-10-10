@@ -2,7 +2,6 @@
 
 struct CRC {
     CRC() {
-        printf("  Creating CRC table\n");
         for (uint16_t i = 0; i < 256; i++) {
             uint32_t num = i;
             for (uint8_t j = 0; j < 8; j++) {
