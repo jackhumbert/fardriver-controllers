@@ -1,6 +1,7 @@
 #ifndef _010EDITOR
 #include <cstdint>
 #include "fardriver_message.hpp"
+#include <math.h>
 
 #pragma pack(push, 1)
 
@@ -86,100 +87,16 @@ struct big_end_24b {
     auto name() -> type& { return addr.name; }; \
     auto name() const -> const type& { return addr.name; }
 
-extern HardwareSerial * FardriverSerial;
 #endif
 
 struct FardriverData {
 #ifndef _010EDITOR
-    // used when App.NewVersion
-    static void WriteAddr(uint8_t * data, uint8_t addr, uint16_t length) {
-        length += 4;
-        data[0] = 0xAA; // 170
-        if (length == 0x184) {
-            // CAN Data, 0x180 bytes long
-            // addr is 0
-            data[1] = 0xFF; 
-        } else if (length == 0x13C) {
-            // All params?, 0x138 bytes long
-            // addr is 0 or 1
-            data[1] = 0xFE;
-        } else if (length == 0x8C) {
-            data[1] = 0xFD;
-        } else {
-            // Normal flash memory
-            data[1] = 0xC0 + length; 
-        }
-        data[2] = addr;
-        data[3] = addr;
-        uint8_t a = 0x3C; // 60
-        uint8_t b = 0x7F; // 127
-        for (uint8_t pos = 0; pos < length; ++pos) {
-            auto crc_i = a ^ data[pos];
-            a = b ^ FardriverMessage::crcTableHi[crc_i];
-            b = FardriverMessage::crcTableLo[crc_i];
-        }
-        data[length] = a;
-        data[length + 1] = b;
-        FardriverSerial->write(data, length + 2);
-    }
-
-    static void UpdateWord(uint8_t addr, uint8_t first, uint8_t second) {
-        uint8_t data[8];
-        data[4] = first;
-        data[5] = second;
-        WriteAddr(data, addr, 2);
-    }
-
-    // used when !App.NewVersion
-    static void SendRS323Data(uint8_t command, uint8_t sub_command, uint8_t value_1, uint8_t value_2) {
-        uint8_t data[8];
-        data[0] = 0xAA; // 170
-        data[1] = command;
-        data[2] = ~command;
-        data[3] = sub_command;
-        data[4] = value_1;
-        data[5] = value_2;
-        data[6] = data[0] + data[1] + data[2] + data[3] + data[4] + data[5];
-        data[7] = ~data[6];
-        FardriverSerial->write(data, 8);
-    }
-
     uint8_t * GetAddr(uint16_t addr) {
         return (uint8_t*)this + (addr << 1);
     }
 
     uint16_t GetWord(uint16_t addr) {
         return *((uint16_t*)this + addr);
-    }
-
-    // sent immediately after opening port
-    void Open(void) {
-       SendRS323Data(0x13, 0x07, 0x01, 0xF1);
-    }
-
-    // saves "cflash"
-    void SaveCANParameters(void) {
-        uint8_t data[0x180 + 4];
-        uint8_t * pos = data + 4;
-        uint16_t size = (0x180) * 2;
-        memcpy(pos, GetAddr(0x100), size);
-        WriteAddr(data, 0x00, 0x180);
-    }
-
-    // saves "wflash"
-    void SaveParameters(void) {
-        uint8_t data[0x138 + 4];
-        uint8_t * pos = data + 4;
-        uint16_t size = (0x36) * 2;
-        memcpy(pos, GetAddr(0x00), size);
-        pos += size;
-        size = (0x6F - 0x63) * 2;
-        memcpy(pos, GetAddr(0x63), size);
-        pos += size;
-        size = (0xD6 - 0x7C) * 2;
-        memcpy(pos, GetAddr(0x7C), size);
-        pos += size;
-        WriteAddr(data, 0x01, 0x138);
     }
 #endif
 
