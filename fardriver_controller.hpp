@@ -3,8 +3,8 @@
 #include <string.h>
 
 struct FardriverSerial {
-    void (*write)(const uint8_t * data, uint32_t length);
-    void (*read)(const uint8_t * data, uint32_t length);
+    uint32_t (*write)(const uint8_t * data, uint32_t length);
+    uint32_t (*read)(uint8_t * data, uint32_t length);
 };
 
 struct FardriverController {
