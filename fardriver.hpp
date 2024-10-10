@@ -12,6 +12,8 @@
 
 #endif
 
+#ifndef __GNUC__
+
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
 enum PIN {
     NC = 0, // Normally Closed
@@ -119,12 +121,12 @@ ASSERT_SIZE(Addr00, 12);
 
 #ifndef _010EDITOR
 
-GETSET(VolCoeff, int16_t, addr00);
-GETSET(Voltage2Coeff, int16_t, addr00);
-GETSET(PhaseACoeff, int16_t, addr00);
-GETSET(LineCoeff, int16_t, addr00);
-GETSET(PhaseCCoeff, int16_t, addr00);
-GETSET(SaveNum, int16_t, addr00);
+// GETSET(VolCoeff, int16_t, addr00);
+// GETSET(Voltage2Coeff, int16_t, addr00);
+// GETSET(PhaseACoeff, int16_t, addr00);
+// GETSET(LineCoeff, int16_t, addr00);
+// GETSET(PhaseCCoeff, int16_t, addr00);
+// GETSET(SaveNum, int16_t, addr00);
 
 #endif
 
@@ -1280,4 +1282,6 @@ static_assert(offsetof(FardriverData, addrE8) == (0xE8 << 1));
 static_assert(offsetof(FardriverData, addrEE) == (0xEE << 1));
 static_assert(offsetof(FardriverData, addrF4) == (0xF4 << 1));
 static_assert(offsetof(FardriverData, addrFA) == (0xFA << 1));
+#endif
+
 #endif
