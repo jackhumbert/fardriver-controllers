@@ -2,12 +2,13 @@
 #include "fardriver_crc.hpp"
 #include <string.h>
 
-struct ISerial {
-    virtual void write(const uint8_t * data, uint32_t length) {}
+struct FardriverSerial {
+    void (*write)(const uint8_t * data, uint32_t length);
+    void (*read)(const uint8_t * data, uint32_t length);
 };
 
 struct FardriverController {
-    FardriverController(ISerial * _serial) : serial(_serial) {
+    FardriverController(FardriverSerial * _serial) : serial(_serial) {
 
     }
 
@@ -131,7 +132,9 @@ struct FardriverController {
     }
 
     // can be used for regular packets & crc packet
-    void SendPacket(uint8_t index, uint8_t * data, uint32_t length) {
+    bool SendPacket(uint8_t index, uint8_t * data, uint32_t length) {
+        if (length > 2048)
+            return false;
         CRC crc;
         uint8_t message[2048 + 3 + 4];
         message[0] = 0x5A;
@@ -142,6 +145,7 @@ struct FardriverController {
         crc.Add(&message[2], 1 + 2048);
         crc.Assign(&message[3 + 2048]);
         serial->write(message, 3 + 2048 + 4);
+        return true;
     }
 
     bool VerifyCRCMessage(uint32_t index, uint8_t * file_crc) {
@@ -157,5 +161,5 @@ struct FardriverController {
         return true;
     }
 
-    ISerial * serial;
+    FardriverSerial * serial;
 };
