@@ -135,7 +135,6 @@ struct FardriverController {
     bool SendPacket(uint8_t index, const uint8_t * data, uint32_t length) {
         if (length > 2048)
             return false;
-        CRC crc;
         uint8_t message[2048 + 3 + 4];
         message[0] = 0x5A;
         message[1] = 0xA5;
@@ -145,6 +144,7 @@ struct FardriverController {
         if (2048 - length > 0) {
             memset(&message[3 + length], 0xFF, 2048 - length);
         }
+        crc.Reset();
         crc.Add(&message[2], 1 + 2048);
         crc.Assign(&message[3 + 2048]);
         printf("  Writing message\n");
@@ -165,5 +165,6 @@ struct FardriverController {
         return true;
     }
 
+    CRC crc;
     FardriverSerial * serial;
 };

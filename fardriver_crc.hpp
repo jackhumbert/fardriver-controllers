@@ -20,6 +20,7 @@ struct CRC {
     }
 
     void Add(const uint8_t * data, uint32_t length) {
+        printf("  Adding %u bytes\n", length);
         for (uint32_t i = 0; i < length; i++) {
             crc = crc32[(crc & 0xFF) ^ data[i]] ^ (crc >> 8);
         }
