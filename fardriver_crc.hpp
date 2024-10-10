@@ -2,13 +2,13 @@
 
 struct CRC {
     CRC() {
+        printf("  Creating CRC table\n");
         for (uint8_t i = 0; i < 256; i++) {
             uint32_t num = i;
             for (uint8_t j = 0; j < 8; j++) {
-                if (((int)(num) & 1) != 0) {
-                    num = (num >> 1) ^ 0xEDB88320;
-                } else {
-                    num >>= 1;
+                num >>= 1;
+                if ((num & 1) != 0) {
+                    num ^= 0xEDB88320;
                 }
             }
             crc32[i] = num;
@@ -19,7 +19,7 @@ struct CRC {
         crc = 0xFFFFFFFF;
     }
 
-    void Add(uint8_t * data, uint32_t length) {
+    void Add(const uint8_t * data, uint32_t length) {
         for (uint32_t i = 0; i < length; i++) {
             crc = crc32[(crc & 0xFF) ^ data[i]] ^ (crc >> 8);
         }

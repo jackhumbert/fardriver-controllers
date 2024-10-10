@@ -132,7 +132,7 @@ struct FardriverController {
     }
 
     // can be used for regular packets & crc packet
-    bool SendPacket(uint8_t index, uint8_t * data, uint32_t length) {
+    bool SendPacket(uint8_t index, const uint8_t * data, uint32_t length) {
         if (length > 2048)
             return false;
         CRC crc;
@@ -140,18 +140,22 @@ struct FardriverController {
         message[0] = 0x5A;
         message[1] = 0xA5;
         message[2] = index;
+        printf("  Copying packet data\n");
         memcpy(&message[3], data, length);
-        memset(&message[3 + length], 0xFF, 2048 - length);
+        if (2048 - length > 0) {
+            memset(&message[3 + length], 0xFF, 2048 - length);
+        }
         crc.Add(&message[2], 1 + 2048);
         crc.Assign(&message[3 + 2048]);
+        printf("  Writing message\n");
         serial->write(message, 3 + 2048 + 4);
         return true;
     }
 
-    bool VerifyCRCMessage(uint32_t index, uint8_t * file_crc) {
+    bool VerifyCRCMessage(uint32_t index, const uint8_t * file_crc) {
         // wait for 0xaa 0x1f <error> <index> <packet_crc[8]> <crc[2]>
         // no error if error < 0x7E && error == index
-        uint8_t * message;
+        uint8_t message[12] = { 0 };
         uint8_t * read_crc = &message[3];
         for (uint8_t index = 0; index < 8; index++) {
             if (file_crc[index] != read_crc[index]) {
