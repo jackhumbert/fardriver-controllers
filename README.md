@@ -205,7 +205,7 @@ with error codes `0x7C`, `0x7D` or `0x7E`. index will be `0x1` for first packet 
 
 if 32303:
 
-if packet_crc matches && (not at the end or func == 0), confirming the packet_crc:
+if packet_crc matches && (not at the end or func == 0), send this confirming the packet_crc:
 
 * `0x5a 0xbb <index + 1> 0x72 0x73 0x74 0x75 0x76`
 
@@ -258,9 +258,30 @@ last packet is all the crcs that start at 0x3E000 (without the 0xaa 0x55, which 
 
 * `0x5a 0xa5 <data[484]> 0xaa 0x55 0xFF[2048-486] <crc[4]>`
 
-## Wiring
+## Hardware Info:
 
-### ND84530
+### .BIN files
+
+* 32303:
+    * uses crc_filetable
+    * takes .bin files larger than 131072
+    * crc starts at 253952
+* 32071: 
+    * uses crc_filetable
+    * takes .bin files less than or equal to 131072
+    * crc starts at 126976
+* 32101:
+    * uses crc_total
+    * filename contains BMS
+    * crc starts at 60410
+* 32103:
+    * uses crc_total
+    * filename doesn't contain BMS
+    * crc starts at 64506
+
+### Wiring
+
+#### ND84530
 
 Pin | Color        | FD Name | Description
 ---|---|---|---|
