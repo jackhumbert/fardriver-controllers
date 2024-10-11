@@ -156,9 +156,9 @@ struct FardriverController {
     bool VerifyCRCMessage(uint32_t index, const uint8_t * file_crc) {
         // wait for 0xaa 0x1f <error> <index> <packet_crc[8]> <crc[2]>
         // no error if error < 0x7E && error == index
-        while(serial->available() < 14);
-        uint8_t message[14] = { 0 };
-        serial->read(message, 14);
+        while(serial->available() < 16);
+        uint8_t message[16] = { 0 };
+        serial->read(message, 16);
         if (message[0] != 0xAA)
             return false;
         if (message[1] != 0x1F)
