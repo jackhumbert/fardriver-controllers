@@ -258,10 +258,11 @@ struct Addr18 {
     } ThrottleResponse : 2; // ECOConfig
     uint8_t WeakA : 2;
     enum ERXD {
-        AF = 0, // AF_PP
+        AF = 0, // AF_PP, something specialCode
         OD = 1, // Out_OD
-        PP = 2 // Out_PP
-    } RXD : 2; // B10 GPIO config
+        PP = 2, // Out_PP
+        AF2 = 3 // AF_PP
+    } RXD : 2; // B10 GPIO config, == 3 affects A12 & USART2
 
     // 7 cfg26h
     uint8_t SpeedPulse : 5;
@@ -341,10 +342,20 @@ ASSERT_SIZE(addr1E, 12);
 struct Addr24 {
     uint8_t TimeMin;
     uint8_t TimeSecond;
+
+    // 0x25
     uint16_t HighVolProtect; // / 10
+
+    // 0x26
     uint16_t CustomMaxLineCurr; // / 4
+
+    // 0x27
     uint16_t CustomMaxPhaseCurr; // / 4
+
+    // 0x28
     uint16_t BackSpeed; // Send(0x11, 0x03)
+
+    // 0x29
     uint16_t LowSpeed; // Send(0x11, 0x02)
 } addr24;
 
@@ -400,8 +411,9 @@ ASSERT_SIZE(addr30, 12);
 struct Addr5D {
     uint16_t unk5D;
     uint16_t unk5E;
-    uint16_t unk5F; 
-    uint16_t unk60;
+    uint16_t unk5F;
+    uint8_t unk60;
+    uint8_t unk60b; // counter of some sort? assigned 'a', 'b', 'c'
     uint16_t unk61;
     uint8_t unk62; // set to 0xCC when reading ADC1?
     uint8_t unk62b;
@@ -415,7 +427,7 @@ ASSERT_SIZE(addr5D, 12);
 struct Addr63 {
     uint16_t MaxLineCurr2;
     uint16_t MaxPhaseCurr2; // 0x64
-    uint8_t MotorDia;  // 0x65, maybe not MotorDia - values include 4 - sensor/application type?
+    uint8_t MotorDia;  // 0x65,  maybe not MotorDia - values include 4. prolly Application type
     uint8_t unk65b;
     uint16_t TempCoeff; // 66
     uint16_t ProdMaxVol; // / 10.0 67, paracnt_0
@@ -443,13 +455,13 @@ struct Addr69 {
     PIN ReversePin : 4; // REPin
     PIN ForwardPin : 4; // FWPin
     // 0x6B uint16_t ChgFdSeatVol;
-    PIN SwitchVolPin : 4; // Switch Voltage Pin
+    PIN SwitchVolPin : 4; // Switch Voltage Pin 7 -> C15
     PIN SeatPin : 4; // ZuotongPin
     PIN AntiTheftPin : 4; // FDPin, "Steel" Pin
     PIN ChargePin : 4; // CHGPin
     uint16_t LmtSpeed; // LmtSpeed 6C
     uint16_t DistanceLSB; // / 10 6D
-    uint8_t ParaIndex; // ParaIndex 6E
+    uint8_t ParaIndex; // ParaIndex 6E, prolly Function Code
     char SpecialCode; // Y makes A11 output. X may be needed for CAN??
 } addr69;
 
@@ -547,7 +559,7 @@ struct Addr82 {
     uint8_t MosTempRestore;
     
     // 10, 0x86
-    uint8_t CANConfig : 6;
+    uint8_t CANConfig : 6; // != 0 -> A12 = AF_PP
     uint8_t unk86b : 2;
 
     // 11
@@ -645,6 +657,8 @@ struct AddrA0 {
     // setting A0 to 0x3C79 does something special
     uint8_t unkA0; // 0x88 usually?
     uint8_t SysCmd;
+    // 00
+
     // 01 non-following status
     // 02 self-learning/balance status - 0xAA
     // 03 self-learning/balance status - 0x55
@@ -665,6 +679,7 @@ struct AddrA0 {
 // 0xA6
 struct AddrA6 { 
     char ModelName[10];
+    // uint8_t addrA9[4]; // first 4 chars of ControlDM, last 4 of serial
     uint16_t unkAB; // where password is stored?
 } addrA6;
 
@@ -756,7 +771,7 @@ struct AddrBE {
     } LowVolWay : 8; // cfg190l, CurrLimitWay
 
     // 3, cfg190h
-    uint8_t unkBEb : 4; // < 8 with (SpecialCode - A < 7) makes GPIOB_9 output, affects Sensor/Application type
+    uint8_t unkBEb : 4; // < 8 with (SpecialCode - A < 7) makes GPIOB_9 output, affects Sensor/Application type. prolly Current sensor type
     uint8_t AccCoeff : 4; 
 
     uint16_t BstTime; // / 500, seconds
@@ -826,9 +841,9 @@ struct AddrC4 {
 
 // 0xCA
 struct AddrCA {
-    // can be set to 0x55, 0xAA in firmware
+    // can be set to 0x55, 0xAA in firmware. 0xAA on reset?
     uint8_t AngleLearn;
-    PIN SpeedLimitPin : 4;
+    PIN SpeedLimitPin : 4; // 4 -> A15, 5 -> C13
     PIN RepairPin : 4; // OneKeyPin
 
     // CB
@@ -866,11 +881,15 @@ struct AddrCA {
     uint8_t LongBack : 1; // Push RE, toggle vs momentary?
     uint8_t ThrottleLost : 1;
 
-    // CD
+    // CC
     uint8_t LearnThrottle;
     uint8_t SpeedLowCap; // LmtSpdMinCap
+
+    // CD
     uint8_t MidSpeedCap; // LmtSpdStartCap
     uint8_t SpeedLimitByCap;
+
+    // CE
     uint8_t MinSpeedCapCoeff; // LmtSpdMaxCoeff
     uint8_t ParkCoeff : 4; // SlowDownCoeff
     enum EBattSignal {
@@ -881,6 +900,8 @@ struct AddrCA {
         LeadAcidBattery = 4,
         LFPBattery = 5
     } BattSignal : 4; // BatSel
+
+    // CF
     uint16_t ReIsinAcc;
 } addrCA;
 
@@ -1051,7 +1072,7 @@ struct AddrD6 {
 // 0xDC
 struct AddrDC {
     // all formatted as %d
-    int16_t unkDC;
+    int16_t unkDC; // related to hall/ADC
     int16_t unkDD;
     int16_t unkDE; 
     int16_t unkDF; // changed from 0x57 00 to 0x01 40
@@ -1166,13 +1187,13 @@ struct AddrEE {
     // 4-5, 0xEF
     int16_t unkEF;
 
-    // 6-8
+    // 6-8 0xF0
     big_end_24b PhaseACurr; // 1.953125 * Math.Sqrt(num)
 
     // 9-11
     big_end_24b PhaseCCurr; // 1.953125 * Math.Sqrt(num)
 
-    // 12-13
+    // 12-13 0xF3
     int16_t volts; // mabe / 16
 } addrEE;
 
@@ -1219,18 +1240,45 @@ ASSERT_SIZE(addrF4, 12);
 
 // 0xFA
 struct AddrFA {
+    // 2-3
     int16_t PhaseAZero2; // FA
+
+    // 4-5
     int16_t PhaseCZero2; // FB
-    uint8_t motor_stop_state; // FC
+
+    // 6, 0xFC
+    // uint8_t motor_stop_state;
+    uint8_t ErrorStop : 1;
+    uint8_t pad_6 : 7;
+    // 7
     uint8_t unkFCa : 1;
     uint8_t old_blue : 1;
-    uint8_t unkFCb : 6;
-    
+    uint8_t unkFCb : 2;
+
+    uint8_t unkFCc : 1;
+    uint8_t BlockStat : 1;
+    uint8_t EABSStat : 1;
+    uint8_t BrakeControl : 1;
+
+    // 8
     uint8_t unkFDa; // FD
+    // 9
     uint8_t unkFDb;
 
-    uint8_t motor_running_state; // FE
-    uint8_t unkFEb;
+    // 10, 0xFE
+    uint8_t motor_running_state_0 : 1;
+    uint8_t motor_running_state_1 : 1;
+    uint8_t motor_running_state_2 : 2;
+    uint8_t motor_running_state_4 : 1;
+    uint8_t motor_running_state_5 : 1;
+    uint8_t motor_running_state_6 : 2;
+
+    // 11
+    uint8_t unkFEb : 4;
+    uint8_t GearControl : 1;
+    uint8_t HXControl : 1;
+    uint8_t TbarControl : 1;
+    uint8_t HbarControl : 1;
 
     uint16_t unkFF;
 } addrFA;

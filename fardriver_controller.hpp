@@ -27,6 +27,7 @@ struct FardriverController {
             data[1] = 0xFE;
         } else if (length == 0x8C) {
             // idk, not used in mobile
+            // may set password? 30 bytes in length
             data[1] = 0xFD;
         } else {
             // Normal flash memory

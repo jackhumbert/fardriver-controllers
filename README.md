@@ -158,6 +158,18 @@ Some valid `command` values I've seen - children to each list item are `sub_comm
 * `0x15` sets the time
 * `0x17`
 
+### Other messages
+
+* `xx 0xFF 0x01 0x01 <data[0x180]>`
+* `xx 0xFE 0x01 0x01 <data[0x138ish]>`
+* `xx 0xFD 0x01 0x01 <password[30]>`
+
+### CAN messages
+
+* `0xCFE55B0` 6 & 7 set MaxLineCurr
+* `0xCFE55B1` 6 & 7 set additional MaxLineCurr (adds)
+* `0xCFF55B0` sets battery cap
+
 ### Updating Firmware
 
 When loading the firmware .bin file, a crc array is created with the bytes at 0x3E000, populated in the array from 4 to 124.
@@ -258,6 +270,16 @@ last packet is all the crcs that start at 0x3E000 (without the 0xaa 0x55, which 
 
 * `0x5a 0xa5 <data[484]> 0xaa 0x55 0xFF[2048-486] <crc[4]>`
 
+### Other messages sent from controller
+
+* `xx xx xx xx xx xx 0x01 <temp >> 3>`
+* `0x55 0xAA 0x00 <var> 0x00 0x0D 0x6F 0x76 0x31 0x33 0x64 0x65 0x77 0x77 <hardware> <softwareMajor> 0x2E <softwareMinor + '0'>`
+
+when something is `0xD`, full model number is received with extension code `X`:
+
+* `xx xx xx xx xx 0x16 0x67 0x03 0x00 0x12 <model_number>`
+
+
 ## Hardware Info:
 
 ### .BIN files
@@ -279,9 +301,41 @@ last packet is all the crcs that start at 0x3E000 (without the 0xaa 0x55, which 
     * filename doesn't contain BMS
     * crc starts at 64506
 
+### Hardware `H`
+
+Pins definitions:
+
+* `1` ADC0 > 0x7FF, A2? related to A10 somewhere
+* `4` A15
+* `5` C13
+* `6` C14
+* `7` C15
+
+A14?
+B11 used by SpecialCode X
+B10 uses OneLine, ReverseOneLine affects via B2?
+A12 is serial RTS
+B6,7,8 used by Hall?
+
+Mode_AF_PP:
+
+* A8
+* A9
+* A10
+* B13
+* B14
+* B15
+
+Possible Interrupts (AntiTheft checked on started I think):
+
+* A15
+* C13
+* C14
+* C15
+
 ### Wiring
 
-#### ND84530
+#### ND84530_24_ABH64
 
 Pin | Color        | FD Name | Description
 ---|---|---|---|
