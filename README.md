@@ -311,7 +311,25 @@ Pins definitions:
 * `6` C14
 * `7` C15
 
-A14?
+* `0`   NC                   Normally Closed
+* `1`   PIN24        ADC       
+* `2`   PIN15            P4  CAN RX, High speed
+* `3`   PIN5             P5  CAN TX, Low speed
+* `4`   PIN17        A15     Used by encoder units
+* `5`   PIN14        C13 P17
+* `6`   PIN3         C14 P7
+* `7`   PIN8         C15 P8  Reverse
+* `8`   PB4             
+* `9`   PINInvalid1             
+* `10`  PIN2                
+* `11`  PIN18        D0      Not available in YJCAN
+* `12`  PIN9                 Not available in YJCAN
+* `13`  PD1             
+* `14`  PINInvalid2             
+* `15`  PINInvalid3             
+
+
+A14? Out_PP
 B11 used by SpecialCode X
 B10 uses OneLine, ReverseOneLine affects via B2?
 A12 is serial RTS
@@ -326,12 +344,64 @@ Mode_AF_PP:
 * B14
 * B15
 
+Another setup:
+* A8, A9, A10: Out_PP
+* B13, B14, B15: Out_PP
+* A2, A14: Out_PP
+* SpecialFrame == 14
+    * D1: IPU
+* else
+    * D1: Out_PP
+* If no inputs using pin 11:
+    * D0: Out_PP
+* else
+    * D0: IPU
+* B0, B1: AIN
+* if (sensorType < 4)
+    * B3, B4, B5, B6, B7, B8, B12: IN_FLOATING
+* else if (sensorType < 8)
+    * B3, B4, B6, B7, B8, B12: IN_FLOATING
+* else
+    * B2, B4, B7, B12: IN_FLOATING
+    * B3, B5: AF_99
+    * B6: Out_PP
+* SpecialCodes A-G:
+    * B9, B2: Out_PP
+* else 
+    * B2: Out_PP
+* B2, B10: AF_PP
+* B11: IPU
+* A15: IN_FLOATING
+* C13: IPU
+* C14, C15: IN_FLOATING
+* if (SpecialCode == 'Y')
+    * A11: Out_PP
+* else
+    * A11: IPU
+* A12: IPU
+
+RXD:
+* `0` B10: AF_PP
+* `1` B10: Out_OD
+* `2` B10: Out_PP
+* `3` B10: AF_PP
+
+Also makes A12 Out_PP or AF_PP
+
 Possible Interrupts (AntiTheft checked on started I think):
 
 * A15
 * C13
 * C14
 * C15
+
+SpeedLimitPin:
+* 4 A15
+* 5 C13
+* 
+
+SwitchVolPin:
+
 
 ### Wiring
 

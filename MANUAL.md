@@ -631,10 +631,23 @@ Default 0: not 0 when customized
 * 0: Speed pulse, (display adjustment: the larger the speed pulse base, the slower the display speed) 500-65530, V39 and earlier versions are 5000-65530
 * 1: READY Lamp: (READY status is Loss🎧High, otherwise Loss🎧Low)
 * 2: Fan control: (Temperature below 40° is output 🎧 high, above 40° is output 🎧 low)
-* 3: Special Serial Command BF_ZHULI
+* 3: Special Serial Command BF_ZHULI, possibly using baud 1200
+    * `0x06`
+    * `0x08` may get pin states
+    * `0x0A` rx 2 bytes
+    * `0x0B` rx 3 bytes
+    * `0x0C` rx 1 byte
+    * `0x0F` rx 1 byte
+    * `0x10` rx 1 byte
+    * `0x11` rx 2 bytes, batt_cap
+    * `0x20` rx 3 bytes
+    * `0x31` 
 * 4: Special serial port command ZHULI assists pulse detection (PIN3)
+    * rx 14 bytes, pin summary @ byte 3?
 * 5: Special Serial Command KM5
+    * rx 13 bytes
 * 6: Special serial port command UK1
+    * rx 11 bytes
 * 7: Special serial port commands Step length, interval duration, PULSE=0, SQH=0,DATA0-DATA1 SEC0-SEC7 Invalid
 * 14: ??, D0 available as input (pulled-up) 
 

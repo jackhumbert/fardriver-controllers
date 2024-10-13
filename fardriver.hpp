@@ -157,6 +157,14 @@ struct Addr06 {
     // 8-9, 0x09
     // 0x1000 triggers something where it's |= 0x8000
     //  else 0x800 is checked & 0x8000 flipped based on conditions
+    // 0 | Starting Resonance Characteristic Matching Option 1. Note that when the vehicle motor is performing well, VQH+64 = six times the speed Hall detection energy. Further reduces resonance noise. |
+    // 0x10-0x3f | Starting Resonance Characteristic Matching Option 2 |
+    // 0x40-0x100 | General Vehicle Motor Hall Characteristics |
+    // 0x180,0x200 | Select 384/512 when the jumping car AB15 is prone to reporting errors. |
+    // 0x201 | The AB15 alarm is ignored in the case of CN controller absolute encoders. Other controllers: easy to use when AB15 reports an error. |
+    // +0x400 | Fixed Bluetooth password is product number related |
+    // +0x1000| EN: Firmware checks for this |
+    // +0x8000 | EN: Firmware will check/assign this |
     int16_t FAIF;
 
     // 10-11, 0x0A
@@ -309,7 +317,7 @@ struct Addr1E {
 
     // 8, 0x21
     // uint16_t RelayDelay; // ms
-    uint8_t BCState : 1; // Edge support
+    uint8_t BCState : 1; // Edge support, Side stand?
     uint8_t SeatEnable : 1; // Zuotong, "bucket"
     uint8_t PEnable : 1; // PGear, "P file"
     uint8_t AutoBackPEnable : 1; // AutoBackPStat
@@ -660,16 +668,17 @@ struct AddrA0 {
     // 00
 
     // 01 non-following status
-    // 02 self-learning/balance status - 0xAA
-    // 03 self-learning/balance status - 0x55
+    // 02 self-learning/balance status - AngleLearn to 0xAA
+    // 03 self-learning/balance status - AngleLearn to 0x55
     // 04 ??
     // 05 ?? non-ISOLATE_? reset maybe? or bootloader enter
     // 06 gather data
     // 07 ?? sets one variable
-    // 08 resets to factor default, copies from flashmem    0xAA 0xC6 0xA0 0xA0 0x88 0x08 0xC5 0x09
+    // 08 resets to factor default, copies from flashmem? 0x0803f494    0xAA 0xC6 0xA0 0xA0 0x88 0x08 0xC5 0x09
     // 09 resets Pins
     // 0A resets Pins (differently)
-    // 0B resets Ratio*, nratio* (off), FreeThrottle, BackCurr
+    // ~~0B resets Ratio*, nratio* (off), FreeThrottle, BackCurr~~
+    // 0B sets AngleLearn to 0x55 & everything 0D does
     // 0C resets Ratio*, nratio* (on), etc
     // 0D resets Ratio*, nratio* (off), etc
     // 0F ISOLATE_
@@ -685,7 +694,7 @@ struct AddrA6 {
 
 // 0xAC
 struct AddrAC {
-    uint16_t unkAC; // more password
+    uint16_t unkAC; // more password, pin states?
     uint16_t unkAD; // phone number start1[14]
     uint16_t unkAE; // phone number start0[14] 
     uint16_t unkAF;
@@ -822,6 +831,7 @@ struct AddrC4 {
     uint8_t SingleCellNoBoost : 1; // H72
     uint8_t LearnVolLow; // LearnVol, VQL
 
+    // C5
     uint8_t TapForwardAndBack : 1; // H67
     uint8_t DualThrottleVoltage : 1; // H72
     uint8_t CenterThrottleNeutral : 1; // H74
@@ -830,8 +840,9 @@ struct AddrC4 {
     uint8_t UnlimitedCruiseSpeed : 1; // H72
     uint8_t HallDetectionX6 : 1; // H72
     uint8_t NewMTPAVector : 1; // H72
-    uint8_t LearnVolHigh; // LearnVoh, VQH
+    uint8_t LearnVolHigh; // LearnVoh, VQH, related to A11
 
+    // C6
     uint16_t SlowDownRpm; // ParkDiff
     uint16_t StartIs; // IsInStart
     uint16_t ThrottleInsert; // & 0x20 TCS
