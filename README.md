@@ -452,14 +452,14 @@ LEFT:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
-1  | 20K to U                                   | 
+1  | 20K to U                                   | PB1 19, through 20ks, 1K PD
 2  | Key, 72V in                                | 
 3  | Key, 72V in                                | 
 4  | 7.6K to GND, 10.4K to 12V, 2.7k to H*      | 14V
 5  | 60VC, 72V out                              | 
 6  | BM5V, 5V out                               | 
-7  | RXD, 3.3V                                  | 
-8  | TXD, 3.3V                                  | 
+7  | RXD, 3.3V                                  | PB10 21
+8  | TXD, 3.3V                                  | PB11 22
 9  | FW/FD, 3.3V                                | 
 10 | GND                                        | 1k to 3.3V
 
@@ -467,16 +467,16 @@ CENTER:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
-1  | 4K to BW5V                                 | 6.5k to 5V
-2  | 15K to BW5V, 7.1K to GND                   | 
-3  | GND, 8K to BW5V                            | 
-4  | 10K to HALL+, 7.1K to GND, 13.3K to SPD    | 
+1  | 4K to BW5V                                 | PA15 38, 6.5k to 5V
+2  | 15K to BW5V, 7.1K to GND                   | PB4 40
+3  | GND, 8K to BW5V                            | GND
+4  | 10K to HALL+, 7.1K to GND, 13.3K to SPD    | PB5 41
 5  | NC, Speaker maybe?                         | 
-6  | 10K to HALL+                               | 
+6  | 10K to HALL+                               | PB8 45
 7  | BH, 12V in                                 | 
 8  | NC                                         | 
-9  | BH, 12V in                                 | 
-10 | BL, 3.3V                                   | 
+9  | BH, 12V in                                 | PB3 39, kinda
+10 | BL, 3.3V                                   | PB3 39
 
 RIGHT:
 
@@ -485,13 +485,13 @@ Pin| Daughterboard | Mainboard
 1  | TEMP                                       | 
 2  | SPA                                        | 
 3  | 12K to GND, 12R to SPD                     | 
-4  | SV, 5V in,5K to GND                      | 
+4  | SV, 5V in,5K to GND                        | 
 5  | NC                                         | 
 6  | SERIAL:1                                   | 
 7  | RE                                         | 
-8  | 7K to GND, 5k to 5V                        | 
-9  | GND, 3k to 12V, 8k to 5V                   | 
-10 | 10k to 12V, 7k to GND                      | 
+8  | 7K to GND, 5k to 5V                        | PA11 32
+9  | GND, 3k to 12V, 8k to 5V                   | GND
+10 | 10k to 12V, 7k to GND                      | PA12 33
 
 SERIAL header in upper right:
 
