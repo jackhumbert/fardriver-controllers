@@ -407,35 +407,97 @@ SwitchVolPin:
 
 #### ND84530_24_ABH64
 
+GigaDevice GD32F303CCT6A
+
+##### 30 Pin plug:
+
 Pin | Color        | FD Name | Description
 ---|---|---|---|
-1   | Orange       | KEY     | Ignition for Anti-theft
-2   | Pink         | 60VC    | Anti-theft power (+72V)
-3   | Red          | RXD     | Serial RX (3.3V)
-4   | Yellow/White | SDH     | High speed, pull-down to enable (3.3V)
-5   | Blue/White   | SDL     | Low speed, pull-down to enable (3.3V)
-6   | Brown        | BOOST   | Boost, pull-down to enable
-7   | Black/white  | FW/FD   | Anti-theft signal, pull-down to enable
-8   | Brown/white  | RE      | Reverse, pull-down to enable
-9   | Light Blue   | SPD     | Speed pulse/one wire (12V)
-10  | Purple       | SPA     | Speedometer PWM (72V)
+ 1  | Brown/Red    | U       | Anti-theft phase wire
+ 2  | Brown/Green  | BW5V    | Serial power (5V)
+ 3  | Red/White    | ACC+    | Throttle power (5V)
+ 4  | Black        | GND     | Throttle GND
+ 5  | White        | TEMP    | Motor temperature sensor
+ 6  | Red          | HALL+   | 12V for motor
+ 7  | Blue         | HC      | Motor C sensor
+ 8  | Green        | HB      | Motor B sensor
+ 9  | Yellow       | HA      | Motor A sensor
+10  | NC           | -       | -
+
 11  | Orange       | KEY     | Ignition that accepts battery plus (72V, etc)
 12  | Brown/Blue   | TXD     | Serial TX (3.3V)
-13  | White/Black  | GND     | Reverse/Serial GND
-14  | Green        | SV      | Throttle signal (5V)
+13  | Black        | GND     | Reverse/Serial GND
+14  | Green/White  | SV      | Throttle signal (5V)
 15  | Black        | GND     | Anti-theft GND
 16  | Black        | GND     | Motor GND
-17  | Blue/Red     | XH      | Cruise
+17  | Red/Blue     | XH      | Cruise
 18  | Black        | GND     | Brake/Speed selection GND
 19  | Grey         | BH      | Brake, pull-up to enable (12V)
 20  | Yellow/Green | BL      | Brake, pull-down to enable (3.3V)
-21  | Brown/Red    | U       | Anti-theft phase wire
-22  | Brown/Green  | BW5V    | Serial power (5V)
-23  | White/Red    | ACC+    | Throttle power (5V)
-24  | Black        | GND     | Throttle GND
-25  | White        | TEMP    | Motor temperature sensor
-26  | Red          | HALL+   | 12V for motor
-27  | Blue         | HC      | Motor C sensor
-28  | Green        | HB      | Motor B sensor
-29  | Yellow       | HA      | Motor A sensor
-30  | NC           | -       | -
+
+21  | Orange       | KEY     | Ignition for Anti-theft
+22  | Pink         | 60VC    | Anti-theft power (+72V)
+23  | Red/Black    | RXD     | Serial RX (3.3V)
+24  | Yellow/White | SDH     | High speed, pull-down to enable (3.3V)
+25  | Blue/White   | SDL     | Low speed, pull-down to enable (3.3V)
+26  | Brown        | BOOST   | Boost, pull-down to enable
+27  | Black/white  | FW/FD   | Anti-theft signal, pull-down to enable
+28  | Brown/white  | RE      | Reverse, pull-down to enable
+29  | Light Blue   | SPD     | Speed pulse/one wire (12V)
+30  | Purple       | SPA     | Speedometer PWM (72V)
+
+##### Daughter board
+
+LEFT:
+
+Pin| Daughterboard | Mainboard
+---|---|---|
+1  | 20K to U                                |   
+2  | Key, 72V in                             |       
+3  | Key, 72V in                             |       
+4  | 7.6K to GND, 10.4K to 12V, 2.7k to H*   |                               
+5  | 60VC, 72V out                           |       
+6  | BM5V, 5V out                            |       
+7  | RXD, 3.3V                               |   
+8  | TXD, 3.3V                               |   
+9  | FW/FD, 3.3V                             |       
+10 | GND                                     |   
+
+CENTER:
+
+Pin| Daughterboard | Mainboard
+---|---|---|
+1  | 4K to BW5V                                 |                
+2  | 15K to BW5V, 7.1K to GND                   |                                
+3  | GND, 8K to BW5V                            |                        
+4  | 10K to HALL+, 7.1K to GND, 13.3K to SPD    |                                                
+5  | NC, Speaker maybe?                         |                        
+6  | 10K to HALL+                               |                    
+7  | BH, 12V in                                 |                
+8  | NC                                         |        
+9  | BH, 12V in                                 |                
+10 | BL, 3.3V                                   |                
+
+RIGHT:
+
+Pin| Daughterboard | Mainboard
+---|---|---|
+1  | TEMP                                |           
+2  | SPA                                 |           
+3  | 12K to GND, 12R to SPD              |                           
+4  | SV, 5V in,5K to GND               |                            
+5  | NC                                  |       
+6  | SERIAL:1                            |               
+7  | RE                                  |       
+8  | 7K to GND, 5k to 5V                 |                           
+9  | GND, 3k to 12V, 8k to 5V            |                               
+10 | 10k to 12V, 7k to GND               |                           
+
+SERIAL header in upper right:
+
+Pin| Description
+---|---|
+1  | RIGHT:6
+2  | GND, 8k to BM5V
+3  | RXD
+4  | TXD
