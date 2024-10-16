@@ -313,12 +313,12 @@ Pins definitions:
 
 * `0`   NC                   Normally Closed
 * `1`   PIN24        ADC       
-* `2`   PIN15            P4  CAN RX, High speed
-* `3`   PIN5             P5  CAN TX, Low speed
+* `2`   PIN15            P24 CAN RX, High speed
+* `3`   PIN5             P25 CAN TX, Low speed
 * `4`   PIN17        A15     Used by encoder units
 * `5`   PIN14        C13 P17
-* `6`   PIN3         C14 P7
-* `7`   PIN8         C15 P8  Reverse
+* `6`   PIN3         C14 P27 AntiTheft?
+* `7`   PIN8         C15 P28  Reverse
 * `8`   PB4             
 * `9`   PINInvalid1             
 * `10`  PIN2                
@@ -461,20 +461,20 @@ Pin| Daughterboard | Mainboard
 7  | RXD, 3.3V                                  | PB10 21
 8  | TXD, 3.3V                                  | PB11 22
 9  | FW/FD, 3.3V                                | PC14-OSC32IN 3
-10 | GND                                        | 1k to 3.3V
+10 | GND                                        | GND, 1k to 3.3V
 
 CENTER:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
 1  | 4K to BW5V                                 | PA15 38, 6.5k to 5V
-2  | 15K to BW5V, 7.1K to GND                   | PB4 40
+2  | Motor C sensor                             | PB4 40
 3  | GND, 8K to BW5V                            | GND
-4  | 10K to HALL+, 7.1K to GND, 13.3K to SPD    | PB5 41
-5  | NC, Speaker maybe?                         | 
-6  | 10K to HALL+                               | PB8 45
-7  | BH, 12V in                                 | PC13-TAMPER-RTC 2
-8  | NC                                         | 
+4  | Motor B sensor                             | PB5 41
+5  | NC, Speaker maybe?                         | PB2 20
+6  | Motor A sensor                             | PB8 45
+7  | Cruise                                     | PC13-TAMPER-RTC 2
+8  | Boost                                      | PC13-TAMPER-RTC 2
 9  | BH, 12V in                                 | PB3 39, kinda
 10 | BL, 3.3V                                   | PB3 39
 
@@ -482,18 +482,18 @@ RIGHT:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
-1  | TEMP                                       | 
-2  | SPA                                        | 
-3  | 12K to GND, 12R to SPD                     | OSCOUT 6 (PD1)
-4  | SV, 5V in,5K to GND                        | PA1 11
-5  | NC                                         | 
+1  | TEMP                                       | PAO-WKUP 10
+2  | SPA                                        | PA2 12
+3  | SPD, 12K to GND, 12R to SPD                | OSCOUT 6 (PD1)
+4  | SV, 5V in,5K to GND                        | PA1 11, ADC0_12
+5  | NC                                         | OSCIN	5 (PD0)
 6  | SERIAL:1                                   | 3.3V
 7  | RE                                         | PC15-OSC32OUT 4
-8  | 7K to GND, 5k to 5V                        | PA11 32
+8  | High Speed, 7K to GND, 5k to 5V            | PA11 32
 9  | GND, 3k to 12V, 8k to 5V                   | GND
-10 | 10k to 12V, 7k to GND                      | PA12 33
+10 | Low Speed, 10k to 12V, 7k to GND           | PA12 33
 
-SERIAL header in upper right:
+SERIAL header in upper right (left-to-right):
 
 Pin| Description
 ---|---|
@@ -501,3 +501,12 @@ Pin| Description
 2  | GND, 8k to BM5V
 3  | RXD
 4  | TXD
+
+JTAG header on mainboard (left-to-right):
+
+Pin| Description
+---|---|
+1  | GND
+2  | PA14 37 I/O 5VT JTCK, SWCLK
+3  | PA13 34 I/O 5VT JTMS, SWDIO
+4  | 5V
