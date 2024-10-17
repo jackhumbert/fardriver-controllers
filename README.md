@@ -313,12 +313,12 @@ Pins definitions:
 
 * `0`   NC                   Normally Closed
 * `1`   PIN24        ADC       
-* `2`   PIN15            P24 CAN RX, High speed
-* `3`   PIN5             P25 CAN TX, Low speed
-* `4`   PIN17        A15     Used by encoder units
+* `2`   PIN15        A11 P24 CAN RX, High speed
+* `3`   PIN5         A12 P25 CAN TX, Low speed
+* `4`   PIN17        A15 P10 Used by encoder units
 * `5`   PIN14        C13 P17
 * `6`   PIN3         C14 P27 AntiTheft?
-* `7`   PIN8         C15 P28  Reverse
+* `7`   PIN8         C15 P28 Reverse
 * `8`   PB4             
 * `9`   PINInvalid1             
 * `10`  PIN2                
@@ -408,6 +408,10 @@ SwitchVolPin:
 #### ND84530_24_ABH64
 
 GigaDevice GD32F303CCT6A
+https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2208012200_GigaDevice-Semicon-Beijing-GD32F303CCT6A_C5119567.pdf
+
+UMW 78M05 FZA1
+https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5027/78Mxx.pdf
 
 ##### 30 Pin plug:
 
@@ -467,11 +471,11 @@ CENTER:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
-1  | 4K to BW5V                                 | PA15 38, 6.5k to 5V
+1  | 30P10, 4K to BW5V                          | PA15 38, 6.5k to 5V
 2  | Motor C sensor                             | PB4 40
 3  | GND, 8K to BW5V                            | GND
 4  | Motor B sensor                             | PB5 41
-5  | NC, Speaker maybe?                         | PB2 20
+5  | Speaker -                                  | PB2 20
 6  | Motor A sensor                             | PB8 45
 7  | Cruise                                     | PC13-TAMPER-RTC 2
 8  | Boost                                      | PC13-TAMPER-RTC 2
@@ -482,9 +486,9 @@ RIGHT:
 
 Pin| Daughterboard | Mainboard
 ---|---|---|
-1  | TEMP                                       | PAO-WKUP 10
+1  | TEMP                                       | PA0-WKUP 10
 2  | SPA                                        | PA2 12
-3  | SPD, 12K to GND, 12R to SPD                | OSCOUT 6 (PD1)
+3  | Speaker +, SPD, 12K to GND, 12R to SPD     | OSCOUT 6 (PD1)
 4  | SV, 5V in,5K to GND                        | PA1 11, ADC0_12
 5  | NC                                         | OSCIN	5 (PD0)
 6  | SERIAL:1                                   | 3.3V
@@ -497,7 +501,7 @@ SERIAL header in upper right (left-to-right):
 
 Pin| Description
 ---|---|
-1  | RIGHT:6
+1  | 3.3V, RIGHT:6
 2  | GND, 8k to BM5V
 3  | RXD
 4  | TXD
