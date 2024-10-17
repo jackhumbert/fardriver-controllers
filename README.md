@@ -427,7 +427,6 @@ Pin | Color        | FD Name | Description
  8  | Green        | HB      | Motor B sensor
  9  | Yellow       | HA      | Motor A sensor
 10  | NC           | -       | -
-
 11  | Orange       | KEY     | Ignition that accepts battery plus (72V, etc)
 12  | Brown/Blue   | TXD     | Serial TX (3.3V)
 13  | Black        | GND     | Reverse/Serial GND
@@ -438,7 +437,6 @@ Pin | Color        | FD Name | Description
 18  | Black        | GND     | Brake/Speed selection GND
 19  | Grey         | BH      | Brake, pull-up to enable (12V)
 20  | Yellow/Green | BL      | Brake, pull-down to enable (3.3V)
-
 21  | Orange       | KEY     | Ignition for Anti-theft
 22  | Pink         | 60VC    | Anti-theft power (+72V)
 23  | Red/Black    | RXD     | Serial RX (3.3V)
