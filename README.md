@@ -316,7 +316,7 @@ Pins definitions:
 * `2`   PIN15        A11 P24 CAN RX, High speed
 * `3`   PIN5         A12 P25 CAN TX, Low speed
 * `4`   PIN17        A15 P10 Used by encoder units
-* `5`   PIN14        C13 P17
+* `5`   PIN14        C13 P17 Cruise/Boost
 * `6`   PIN3         C14 P27 AntiTheft?
 * `7`   PIN8         C15 P28 Reverse
 * `8`   PB4             
@@ -413,6 +413,9 @@ https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2208012200_GigaDevice-Semicon
 UMW 78M05 FZA1
 https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5027/78Mxx.pdf
 
+RE7
+http://www.semtech.ru/pdf/diodes/4221629408481.pdf
+
 ##### 30 Pin plug:
 
 Pin | Color        | FD Name | Description
@@ -491,9 +494,9 @@ Pin| Daughterboard | Mainboard
 5  | NC                                         | OSCIN	5 (PD0)
 6  | SERIAL:1                                   | 3.3V
 7  | RE                                         | PC15-OSC32OUT 4
-8  | High Speed, 7K to GND, 5k to 5V            | PA11 32
+8  | High Speed, 7K to GND, 5k to 5V            | PA11 32, CAN RX
 9  | GND, 3k to 12V, 8k to 5V                   | GND
-10 | Low Speed, 10k to 12V, 7k to GND           | PA12 33
+10 | Low Speed, 10k to 12V, 7k to GND           | PA12 33, CAN TX
 
 SERIAL header in upper right (left-to-right):
 
