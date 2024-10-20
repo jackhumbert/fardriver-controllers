@@ -52,18 +52,17 @@ AddrD0 addrD0;
 // 384, 0x180 bytes (0xC0 addresses?) for CAN config
 
 struct CanConfig {
-    uint32_t unk : 1;
-    uint16_t SpeedPulse : 16;
+    uint32_t ID;
 };
 
-CanConfig unk00;
-CanConfig unk01;
-CanConfig unk02;
-CanConfig unk03;
-CanConfig unk04;
-CanConfig unk05;
-CanConfig unk06;
-CanConfig unk07;
+CanConfig SOP;
+CanConfig SOC;
+CanConfig Charge;
+CanConfig SideStand;
+CanConfig SpeedLimit;
+CanConfig Gear;
+CanConfig Control;
+CanConfig OBD;
 
 enum EFrameType {
     Standard = 0,
@@ -123,7 +122,7 @@ uint8_t ControlBytePos;
 uint8_t unkCAN[7];
 */
 
-uint8_t _unk4b[15];
+//uint8_t _unk4b[15];
 
 uint32_t SendID0;
 uint32_t SendID1;
