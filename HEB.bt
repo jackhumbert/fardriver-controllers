@@ -123,6 +123,8 @@ uint8_t ControlBytePos;
 uint8_t unkCAN[7];
 */
 
+uint8_t _unk4b[15];
+
 uint32_t SendID0;
 uint32_t SendID1;
 uint32_t SendID2;
