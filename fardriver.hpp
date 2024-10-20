@@ -144,7 +144,8 @@ struct Addr06 {
     uint8_t Protocol485 : 4;
 
     // 3
-    uint8_t MorseCode;
+    uint8_t MorseCode : 7;
+    uint8_t unk06b : 1;
 
     // 4, 0x07
     uint8_t SpeedKI;
@@ -406,7 +407,7 @@ ASSERT_SIZE(addr30, 12);
 
 // skip 78 bytes (0x27 addresses)
 // omitted in save
-    uint16_t unk36[6];
+    uint16_t unk36[6]; // something self-learning
     uint16_t unk3A[6];
     uint16_t unk42[6];
     uint16_t unk48[6];
@@ -418,7 +419,7 @@ ASSERT_SIZE(addr30, 12);
 // omitted in save
 struct Addr5D {
     uint16_t unk5D;
-    uint16_t unk5E;
+    uint16_t unk5E; // RPM index?
     uint16_t unk5F;
     uint8_t unk60;
     uint8_t unk60b; // counter of some sort? assigned 'a', 'b', 'c'
@@ -436,10 +437,10 @@ struct Addr63 {
     uint16_t MaxLineCurr2;
     uint16_t MaxPhaseCurr2; // 0x64
     uint8_t MotorDia;  // 0x65,  maybe not MotorDia - values include 4. prolly Application type
-    uint8_t unk65b;
-    uint16_t TempCoeff; // 66
+    uint8_t unk65b; // 33, 35, 36 - MaxPhaseCurr2 multipler?
+    uint16_t TempCoeff; // 0x66
     uint16_t ProdMaxVol; // / 10.0 67, paracnt_0
-    uint16_t ISMax; // 68, paracnt_1
+    uint16_t ISMax; // 0x68, paracnt_1
     // uint16_t paracnt_2; // / 4.0 69
     // uint16_t paracnt_4; // / 4.0 6A
     // uint8_t paracnt_5;
@@ -706,9 +707,9 @@ struct AddrAC {
 struct AddrB2 {
     uint16_t unkB2;
     uint16_t unkB3;
-    uint8_t OneCommSec_0; // SEC0
+    uint8_t OneCommSec_0; // SEC0 B4
     uint8_t OneCommSec_1; // SEC1
-    uint8_t OneCommSec_2; // SEC2
+    uint8_t OneCommSec_2; // SEC2 B5
     uint8_t OneCommSec_3; // SEC3
     uint8_t OneCommSec_4; // SEC4
     uint8_t OneCommSec_5; // SEC5
@@ -1173,7 +1174,7 @@ struct AddrE8 {
     // 10-11
     int16_t unk4; // something throttle?
     // 12-13
-    int16_t throttle_depth;
+    int16_t ThrottleDepth; // related to LowSpeed maybe?
 } addrE8;
 
 #ifndef _010EDITOR
