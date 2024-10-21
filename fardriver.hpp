@@ -539,7 +539,7 @@ struct Addr7C {
     uint8_t SpeedMeterConfig2 : 1; // IsolatedPulse
     uint8_t FastRE : 1;
     uint8_t SpecialWeak : 1; // DeepWeak Special
-    uint8_t ZeroSwitch : 1; // SpeedSwitch Valid
+    uint8_t ZeroSwitch : 1; // SpeedSwitch Valid, marked when Control_ID recevied via CAN
     uint8_t unk7Cc : 1;
     uint8_t MOE : 1;
     uint8_t SpeedMeterConfig3 : 1; // Analog
@@ -805,10 +805,15 @@ struct AddrBE {
     uint8_t AllowBrakeFaultRepair : 1;
     uint8_t ReverseOneLine : 1;
 
-    uint16_t TorqueCoff; // C3
+    uint16_t TorqueCoeff; // C3
 } addrBE;
 
 #ifndef _010EDITOR
+
+    uint32_t GetTorque() {
+        return ((addrE2.unkE6 * addrE2.unkE6 + addrE2.unkE7 * addrE2.unkE7) << 9) /  addrBE.TorqueCoeff;
+    }
+
     uint32_t GetSensorApplicationType() {
         if (addrBE.unkBEb == 0) {
             return addr63.MotorDia + 10;
@@ -1149,10 +1154,10 @@ struct AddrE2 {
     uint16_t MeasureSpeed;
 
     // 10-11
-    int16_t unk1;
+    int16_t unkE6;
 
     // 12-13
-    int16_t unk2; // throttle request?
+    int16_t unkE7; // throttle request?
 } addrE2;
 
 #ifndef _010EDITOR

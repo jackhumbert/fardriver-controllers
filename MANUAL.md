@@ -1571,8 +1571,7 @@ Control Type:
 | BIT6-BIT4 Special Control | 0=+0: unmanned 9  <br /> 3=+48: Unmanned 59 <br />6=+96: Dual battery system <br /> 7=+112: Dual battery systems - TCSID| 1=+16: ZN/YJ Calculation of SOC based on BMS residual battery capacity<br />2 = +32: total mileage handshake<br />4=+64: Feedback on demand<br />5=+80: TCS-ID
 | BIT7 | =+128 Display current mileage | Display of remaining mileage
 
-On-demand commands: 12, 13, 14, 15 correspond to Send ID2, Send ID3, Send ID4, Send
-ID5 respectively.
+On-demand commands: 12, 13, 14, 15 correspond to Send ID2, Send ID3, Send ID4, Send ID5 respectively.
 
 In a dual-battery system, this control ID is the SOPID of the second
 battery, the content is the same as 12.3.1.4, and the SOC ID of the second
