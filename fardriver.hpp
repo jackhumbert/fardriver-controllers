@@ -12,7 +12,8 @@
 
 #endif
 
-#ifndef __GNUC__
+// initially was trying to ignore for many assert size failings
+// #ifndef __GNUC__
 
 // Pins with PINInvalid3 assigned to it disables the feature, except for PausePin, which requires NC to disable
 enum PIN {
@@ -1348,7 +1349,7 @@ static_assert(offsetof(FardriverData, addrF4) == (0xF4 << 1));
 static_assert(offsetof(FardriverData, addrFA) == (0xFA << 1));
 #endif
 
-#endif
+// #endif
 
 #ifndef _010EDITOR
 #pragma pack(pop)

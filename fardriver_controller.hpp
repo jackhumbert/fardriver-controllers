@@ -1,6 +1,8 @@
+#include <string.h>
+#include <stdio.h>
 #include "fardriver.hpp"
 #include "fardriver_crc.hpp"
-#include <string.h>
+#include "fardriver_message.hpp"
 
 struct FardriverSerial {
     uint32_t (*write)(const uint8_t * data, uint32_t length);
@@ -76,8 +78,55 @@ struct FardriverController {
     }
 
     // sent immediately after opening port
+    // name is a guess
     void Open(void) {
        SendRS323Data(0x13, 0x07, 0x01, 0xF1);
+    }
+
+    // just a guess
+    void KeepAlive(void) {
+       SendRS323Data(0x13, 0x07, 0x5F, 0x5F);
+    }
+
+    void Reset(void) {
+        WriteSysCmd(0x5);
+    }
+
+    enum EReadError {
+        Success = 0,
+        NotEnoughBytesAvailable = 1,
+        IncorrectMessageStart = 2,
+        UnhandleMessageHeader = 3,
+        CouldNotVerifyCRC = 4
+    };
+
+    struct ReadResult {
+        EReadError error = Success;
+        uint8_t addr = 0;
+    };
+
+    // gets data from a message, if available
+    ReadResult Read(FardriverData * data) {
+        if (serial->available() < sizeof(message))
+            return { NotEnoughBytesAvailable };
+        
+        serial->read(&message.start, 1);
+        if (!message.VerifyStart())
+            return { IncorrectMessageStart };
+
+        serial->read((uint8_t*)&message.header, 1);
+        if (message.header.flag != 2 || message.header.id >= 0x37)
+            return { UnhandleMessageHeader };
+
+        serial->read(message.data, sizeof(message.data));
+        serial->read(message.crc, sizeof(message.crc));
+        if (!message.VerifyCRC())
+            return { CouldNotVerifyCRC };
+
+        uint8_t addr = FardriverMessage::flashReadAddr[message.header.id];
+        memcpy(data->GetAddr(addr), &message.data, 12);
+
+        return { Success, addr };
     }
 
 #ifndef __GNUC__
@@ -177,4 +226,5 @@ struct FardriverController {
 
     CRC crc;
     FardriverSerial * serial;
+    FardriverMessage message;
 };

@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <stdio.h>
 
 struct CRC {
     CRC() {
