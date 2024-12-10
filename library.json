@@ -1,0 +1,24 @@
+{
+  "name": "Fardriver Controllers",
+  "version": "0.0.0+20241208112021",  
+  "keywords": "fardriver, electric motor controller",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/jackhumbert/fardriver-controllers.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Jack Humbert",
+      "url": "https://jackhumbert.com",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "build" : {
+    "includeDir" : "."
+  }
+}

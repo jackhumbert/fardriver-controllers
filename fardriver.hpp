@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef _010EDITOR
 #include <cstdint>
 #include "fardriver_message.hpp"

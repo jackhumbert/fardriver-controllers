@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string.h>
 #include <stdio.h>
 #include "fardriver.hpp"
@@ -101,27 +103,27 @@ struct FardriverController {
     };
 
     struct ReadResult {
-        EReadError error = Success;
-        uint8_t addr = 0;
+        EReadError error;
+        uint8_t addr;
     };
 
     // gets data from a message, if available
     ReadResult Read(FardriverData * data) {
         if (serial->available() < sizeof(message))
-            return { NotEnoughBytesAvailable };
+            return { NotEnoughBytesAvailable, 0 };
         
         serial->read(&message.start, 1);
         if (!message.VerifyStart())
-            return { IncorrectMessageStart };
+            return { IncorrectMessageStart, 0 };
 
         serial->read((uint8_t*)&message.header, 1);
         if (message.header.flag != 2 || message.header.id >= 0x37)
-            return { UnhandleMessageHeader };
+            return { UnhandleMessageHeader, 0 };
 
         serial->read(message.data, sizeof(message.data));
         serial->read(message.crc, sizeof(message.crc));
         if (!message.VerifyCRC())
-            return { CouldNotVerifyCRC };
+            return { CouldNotVerifyCRC, 0 };
 
         uint8_t addr = FardriverMessage::flashReadAddr[message.header.id];
         memcpy(data->GetAddr(addr), &message.data, 12);
