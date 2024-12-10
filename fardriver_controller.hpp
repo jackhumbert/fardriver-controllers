@@ -104,6 +104,7 @@ struct FardriverController {
 
     struct ReadResult {
         EReadError error;
+        // address of the message received, if no error
         uint8_t addr;
     };
 
