@@ -479,35 +479,6 @@ struct Addr69 {
 
 #ifndef _010EDITOR
 ASSERT_SIZE(addr69, 12);
-
-char GetFunctionCode() {
-    if (addr69.ParaIndex < 10) {
-        return addr69.ParaIndex + '0';
-    } else if (addr69.ParaIndex < 20) {
-        return addr69.ParaIndex + '&';
-    } else if (addr69.ParaIndex < 91) {
-        return addr69.ParaIndex;
-    } else {
-        return addr69.ParaIndex - 32;
-    }
-}
-
-char GetExtensionCode() {
-    if (addr69.ParaIndex < 10) {
-        return '_';
-    } else if (addr69.ParaIndex < 20) {
-        return 'R';
-    } else if (addr69.ParaIndex < 94) {
-        if (addr69.SpecialCode < 48 || addr69.SpecialCode > 126) {
-            return '_';
-        } else {
-            return addr69.SpecialCode;
-        }
-    } else {
-        return 'R';
-    }
-}
-
 #endif
 
 // skip 26 bytes (0x0D addresses)
@@ -810,23 +781,6 @@ struct AddrBE {
 
     uint16_t TorqueCoeff; // C3
 } addrBE;
-
-#ifndef _010EDITOR
-
-    uint32_t GetTorque() {
-        return ((addrE2.unkE6 * addrE2.unkE6 + addrE2.unkE7 * addrE2.unkE7) << 9) /  addrBE.TorqueCoeff;
-    }
-
-    uint32_t GetSensorApplicationType() {
-        if (addrBE.unkBEb == 0) {
-            return addr63.MotorDia + 10;
-        } else if (addrBE.unkBEb < 10) {
-            return addr63.MotorDia + addrBE.unkBEb * 10;
-        } else {
-            return 0;
-        }
-    }
-#endif
 
 // 0xC4
 struct AddrC4 {
@@ -1164,9 +1118,7 @@ struct AddrE2 {
 } addrE2;
 
 #ifndef _010EDITOR
-
 GETSET(MeasureSpeed, uint16_t, addrE2);
-
 #endif
 
 // 0xE8
@@ -1305,6 +1257,69 @@ struct AddrFA {
 
 #ifndef _010EDITOR
 ASSERT_SIZE(addrFA, 12);
+#endif
+
+// Helper functions
+
+#ifndef _010EDITOR
+
+uint32_t GetTorque() {
+    return ((addrE2.unkE6 * addrE2.unkE6 + addrE2.unkE7 * addrE2.unkE7) << 9) /  addrBE.TorqueCoeff;
+}
+
+uint32_t GetSensorApplicationType() {
+    if (addrBE.unkBEb == 0) {
+        return addr63.MotorDia + 10;
+    } else if (addrBE.unkBEb < 10) {
+        return addr63.MotorDia + addrBE.unkBEb * 10;
+    } else {
+        return 0;
+    }
+}
+
+// Speed in KPH?
+float GetSpeed() {
+    return addrE2.MeasureSpeed * (0.00376991136f * (addrD0.WheelRadius * 1270.f + addrD0.WheelWidth * addrD0.WheelRatio) / addrD0.RateRatio);
+}
+
+// Motor Temperature in F
+float GetMotorTemp() {
+    return addrF4.motor_temp * 9.f / 5.f + 32.f;
+}
+
+// MosFET Temperature in F
+float GetMosTemp() {
+    return addrD6.MosTemp * 9.f / 5.f + 32.f;
+}
+
+char GetFunctionCode() {
+    if (addr69.ParaIndex < 10) {
+        return addr69.ParaIndex + '0';
+    } else if (addr69.ParaIndex < 20) {
+        return addr69.ParaIndex + '&';
+    } else if (addr69.ParaIndex < 91) {
+        return addr69.ParaIndex;
+    } else {
+        return addr69.ParaIndex - 32;
+    }
+}
+
+char GetExtensionCode() {
+    if (addr69.ParaIndex < 10) {
+        return '_';
+    } else if (addr69.ParaIndex < 20) {
+        return 'R';
+    } else if (addr69.ParaIndex < 94) {
+        if (addr69.SpecialCode < 48 || addr69.SpecialCode > 126) {
+            return '_';
+        } else {
+            return addr69.SpecialCode;
+        }
+    } else {
+        return 'R';
+    }
+}
+
 #endif
 
 };

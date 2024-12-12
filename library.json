@@ -1,6 +1,6 @@
 {
   "name": "Fardriver Controllers",
-  "version": "0.0.0+20241208112021",  
+  "version": "0.0.1",  
   "keywords": "fardriver, electric motor controller",
   "repository":
   {
