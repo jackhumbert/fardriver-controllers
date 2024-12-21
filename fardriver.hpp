@@ -1336,6 +1336,10 @@ float GetLineCurrent() {
     return addrE8.lineCurrent / 4.f;
 }
 
+float GetVoltage() {
+    return addrE8.deci_volts / 10.f;
+}
+
 char GetFunctionCode() {
     if (addr69.ParaIndex < 10) {
         return addr69.ParaIndex + '0';
