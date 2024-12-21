@@ -98,7 +98,7 @@ struct big_end_24b {
 struct FardriverData {
 #ifndef _010EDITOR
     FardriverData() {
-
+        memset(this, 0, sizeof(FardriverData));
     }
 
     FardriverData(const uint8_t * heb_data) {
