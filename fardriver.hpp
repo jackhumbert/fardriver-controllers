@@ -1323,6 +1323,11 @@ float GetMosTemp() {
     return addrD6.MosTemp * 9.f / 5.f + 32.f;
 }
 
+// Battery Percentage
+float GetBatteryP() {
+    return map(addrE8.deci_volts, addr0C.ZeroBattCoeff, addr0C.FullBattCoeff, 0, 1000) / 10.f;
+}
+
 char GetFunctionCode() {
     if (addr69.ParaIndex < 10) {
         return addr69.ParaIndex + '0';
