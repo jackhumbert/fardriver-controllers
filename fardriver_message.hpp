@@ -50,7 +50,3 @@ struct FardriverMessage {
     uint8_t crc[2];
 
 };
-
-constexpr const uint8_t FardriverMessage::crcTableLo[256];
-constexpr const uint8_t FardriverMessage::crcTableHi[256];
-constexpr const uint8_t FardriverMessage::flashReadAddr[55];
