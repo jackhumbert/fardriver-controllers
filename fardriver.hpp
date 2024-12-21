@@ -100,7 +100,7 @@ struct FardriverData {
     FardriverData() {
 
     }
-    
+
     FardriverData(const uint8_t * heb_data) {
         Addr00 * p = (Addr00*)heb_data;
         memcpy(GetAddr(0x00), p + 0, 12);
@@ -1330,6 +1330,10 @@ float GetMosTemp() {
 // Battery Percentage
 float GetBatteryP() {
     return map(addrE8.deci_volts, addr0C.ZeroBattCoeff, addr0C.FullBattCoeff, 0, 1000) / 10.f;
+}
+
+float GetLineCurrent() {
+    return addrE8.lineCurrent / 4.f;
 }
 
 char GetFunctionCode() {
