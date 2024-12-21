@@ -97,36 +97,36 @@ struct big_end_24b {
 
 struct FardriverData {
 #ifndef _010EDITOR
-    FardriverData(uint8_t * heb_data) {
-        uint16_t * p = (uint16_t*)heb_data;
-        memcpy(GetAddr(0x00), p + 0x00, 6);
-        memcpy(GetAddr(0x06), p + 0x06, 6);
-        memcpy(GetAddr(0x0C), p + 0x0C, 6);
-        memcpy(GetAddr(0x12), p + 0x12, 6);
-        memcpy(GetAddr(0x18), p + 0x18, 6);
-        memcpy(GetAddr(0x1E), p + 0x1E, 6);
-        memcpy(GetAddr(0x24), p + 0x24, 6);
-        memcpy(GetAddr(0x2A), p + 0x2A, 6);
-        memcpy(GetAddr(0x30), p + 0x30, 6);
-        memcpy(GetAddr(0x63), p + 0x63, 6);
-        memcpy(GetAddr(0x69), p + 0x69, 6);
-        memcpy(GetAddr(0x7C), p + 0x7C, 6);
-        memcpy(GetAddr(0x82), p + 0x82, 6);
-        memcpy(GetAddr(0x88), p + 0x88, 6);
-        memcpy(GetAddr(0x8E), p + 0x8E, 6);
-        memcpy(GetAddr(0x94), p + 0x94, 6);
-        memcpy(GetAddr(0x9A), p + 0x9A, 6);
-        memcpy(GetAddr(0xA0), p + 0xA0, 6);
-        memcpy(GetAddr(0xA6), p + 0xA6, 6);
-        memcpy(GetAddr(0xAC), p + 0xAC, 6);
-        memcpy(GetAddr(0xB2), p + 0xB2, 6);
-        memcpy(GetAddr(0xB8), p + 0xB8, 6);
-        memcpy(GetAddr(0xBE), p + 0xBE, 6);
-        memcpy(GetAddr(0xC4), p + 0xC4, 6);
-        memcpy(GetAddr(0xCA), p + 0xCA, 6);
-        memcpy(GetAddr(0xD0), p + 0xD0, 6);
+    FardriverData(const uint8_t * heb_data) {
+        Addr00 * p = (Addr00*)heb_data;
+        memcpy(GetAddr(0x00), p + 0, 12);
+        memcpy(GetAddr(0x06), p + 1, 12);
+        memcpy(GetAddr(0x0C), p + 2, 12);
+        memcpy(GetAddr(0x12), p + 3, 12);
+        memcpy(GetAddr(0x18), p + 4, 12);
+        memcpy(GetAddr(0x1E), p + 5, 12);
+        memcpy(GetAddr(0x24), p + 6, 12);
+        memcpy(GetAddr(0x2A), p + 7, 12);
+        memcpy(GetAddr(0x30), p + 8, 12);
+        memcpy(GetAddr(0x63), p + 9, 12);
+        memcpy(GetAddr(0x69), p + 10, 12);
+        memcpy(GetAddr(0x7C), p + 11, 12);
+        memcpy(GetAddr(0x82), p + 12, 12);
+        memcpy(GetAddr(0x88), p + 13, 12);
+        memcpy(GetAddr(0x8E), p + 14, 12);
+        memcpy(GetAddr(0x94), p + 15, 12);
+        memcpy(GetAddr(0x9A), p + 16, 12);
+        memcpy(GetAddr(0xA0), p + 17, 12);
+        memcpy(GetAddr(0xA6), p + 18, 12);
+        memcpy(GetAddr(0xAC), p + 19, 12);
+        memcpy(GetAddr(0xB2), p + 20, 12);
+        memcpy(GetAddr(0xB8), p + 21, 12);
+        memcpy(GetAddr(0xBE), p + 22, 12);
+        memcpy(GetAddr(0xC4), p + 23, 12);
+        memcpy(GetAddr(0xCA), p + 24, 12);
+        memcpy(GetAddr(0xD0), p + 25, 12);
     }
-    
+
     uint8_t * GetAddr(uint16_t addr) {
         return (uint8_t*)this + (addr << 1);
     }
