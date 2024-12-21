@@ -1329,7 +1329,7 @@ float GetMosTemp() {
 
 // Battery Percentage
 float GetBatteryP() {
-    return map(addrE8.deci_volts, addr0C.ZeroBattCoeff, addr0C.FullBattCoeff, 0, 1000) / 10.f;
+    return 100.f * (addrE8.deci_volts - addr0C.ZeroBattCoeff) / (addr0C.FullBattCoeff - addr0C.ZeroBattCoeff);
 }
 
 float GetLineCurrent() {
