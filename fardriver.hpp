@@ -97,6 +97,10 @@ struct big_end_24b {
 
 struct FardriverData {
 #ifndef _010EDITOR
+    FardriverData() {
+
+    }
+    
     FardriverData(const uint8_t * heb_data) {
         Addr00 * p = (Addr00*)heb_data;
         memcpy(GetAddr(0x00), p + 0, 12);
